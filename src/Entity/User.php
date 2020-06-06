@@ -62,7 +62,12 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+    private $date_deb_valid;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_fin_valid;
 
     public function getId(): ?int
     {
@@ -129,25 +134,37 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getDateDebValid(): ?\DateTimeInterface
     {
-        return $this->created_at;
+        return $this->date_deb_valid;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+    public function setDateDebValid(\DateTimeInterface $date_deb_valid): self
     {
-        $this->created_at = $created_at;
+        $this->date_deb_valid = $date_deb_valid;
 
         return $this;
 	}
+
+	public function getDateFinValid(): ?\DateTimeInterface
+    {
+        return $this->date_fin_valid;
+    }
+
+    public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
+    {
+        $this->date_fin_valid = $date_fin_valid;
+
+        return $this;
+    }
 	
 	/**
      * @return (Role|string)[] The user roles
      */
 	public function getRoles() 
-	{
-		return ['ROLE_USER'];
-	}
+         	{
+         		return ['ROLE_USER'];
+         	}
 
     /**
      * @return string|null The salt

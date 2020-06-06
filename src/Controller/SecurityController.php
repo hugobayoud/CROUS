@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Helper\DateHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +19,11 @@ class SecurityController extends AbstractController
 	public function registration(UserPasswordEncoderInterface $encoder, Request $request, EntityManagerInterface $em)
 	{
 		$user = new User();
-		$user->setCreatedAt(new \DateTime());
+		//Par défaut, dateDebValid à la date de l'incription et dsi sur false, calcul de dateFinValid
+		$user
+			->setDateDebValid(new \DateTime(null, new \DateTimeZone('Europe/Paris')))
+			->setDateFinValid(DateHelper::calculDateFin($user->getDateDebValid()))
+			->setDsi(0);
 		$form = $this->createForm(RegistrationType::class, $user);
 
 		$form->handleRequest($request);
@@ -43,5 +48,13 @@ class SecurityController extends AbstractController
 	public function login()
 	{
 		return $this->render('security/login.html.twig');
+	}
+
+	/**
+	 * @Route("/deconnexion", name="security.logout")
+	 */
+	public function logout()
+	{
+		
 	}
 }

@@ -68,22 +68,22 @@
   </head>
   <body>
 	<div class="container text-center">
-		<form class="form-signin">
 		<img class="mb-4" src="ressource\logo_Crous.png" alt="" width="120" height="120">
 		<h1 class="h3 mb-3 font-weight-normal"><strong>CROUS Clermont-Auvergne</strong></h1>
 		<h5 class="h3 mb-3 font-weight-normal">Connexion</h5>
-		<label for="inputEmail" class="sr-only">Adresse email</label>
-		<input type="email" id="inputEmail" class="form-control" placeholder="adresse email" required autofocus>
-		<label for="inputPassword" class="sr-only">Mot de passe</label>
-		<input type="password" id="inputPassword" class="form-control" placeholder="mot de passe" required>
-		<button class="btn btn-lg btn-perso btn-block" type="submit">Se connecter</button>
+		<form class="form-signin" action="{{ path('security.login') }}" method="POST">
+			<label for="inputEmail" class="sr-only">Adresse email</label>
+			<input type="email" id="inputEmail" name="_username" class="form-control" placeholder="adresse email" required autofocus>
+			<label for="inputPassword" class="sr-only">Mot de passe</label>
+			<input type="password" id="inputPassword" name="_password" class="form-control" placeholder="mot de passe" required>
+			<button class="btn btn-lg btn-perso btn-block" type="submit">Se connecter</button>
 		</form>
 		<div class="form-signin">
 			Pas encore de compte ? <a href="{{ path('security.registration') }}">créer un compte </a>
 		</div>
 	</div>
  	<p style="text-align: center;">
-		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.0.0</r>
+		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.0.1</r>
 	</p>
   </body>
 </html>
