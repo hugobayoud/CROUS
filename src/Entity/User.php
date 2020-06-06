@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -67,7 +67,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime")
      */
-    private $date_fin_valid;
+	private $date_fin_valid;
 
     public function getId(): ?int
     {
@@ -156,7 +156,12 @@ class User implements UserInterface
         $this->date_fin_valid = $date_fin_valid;
 
         return $this;
-    }
+	}
+
+
+
+
+	/* AUTRES FONCTIONS !*/
 	
 	/**
      * @return (Role|string)[] The user roles
