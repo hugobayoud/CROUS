@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Service;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -68,6 +71,16 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      */
 	private $date_fin_valid;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Service::class, mappedBy="users")
+     */
+    private $services;
+
+    public function __construct()
+    {
+        $this->services = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -147,9 +160,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-    {
-        return $this->date_fin_valid;
-    }
+                            {
+                                return $this->date_fin_valid;
+                            }
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -159,6 +172,33 @@ class User implements UserInterface
 	}
 
 
+    /**
+     * @return Collection|Service[]
+     */
+    public function getServices(): Collection
+    {
+        return $this->services;
+    }
+
+    public function addService(Service $service): self
+    {
+        if (!$this->services->contains($service)) {
+            $this->services[] = $service;
+            $service->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        if ($this->services->contains($service)) {
+            $this->services->removeElement($service);
+            $service->removeUser($this);
+        }
+
+        return $this;
+    }
 
 
 	/* AUTRES FONCTIONS !*/
@@ -167,9 +207,9 @@ class User implements UserInterface
      * @return (Role|string)[] The user roles
      */
 	public function getRoles() 
-         	{
-         		return ['ROLE_USER'];
-         	}
+                                 	{
+                                 		return ['ROLE_USER'];
+                                 	}
 
     /**
      * @return string|null The salt
@@ -184,4 +224,5 @@ class User implements UserInterface
      * @return string The username
      */
     public function getUsername() {}
+
 }

@@ -40,7 +40,7 @@ class Service
     private $libelle_long;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class)
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="services")
      */
     private $users;
 
@@ -98,19 +98,19 @@ class Service
         return $this->users;
     }
 
-    public function setUsers(User $users): self
+    public function addUser(User $user): self
     {
-        if (!$this->users->contains($users)) {
-            $this->users[] = $users;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
         }
 
         return $this;
     }
 
-    public function removeUsers(User $idUser): self
+    public function removeUser(User $user): self
     {
-        if ($this->users->contains($idUser)) {
-            $this->users->removeElement($idUser);
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
         }
 
         return $this;
