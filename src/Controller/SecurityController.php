@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Service;
 use App\Entity\User;
 use App\Form\RegistrationType;
 use App\Helper\DateHelper;
@@ -24,6 +25,9 @@ class SecurityController extends AbstractController
 			->setDateDebValid(new \DateTime(null, new \DateTimeZone('Europe/Paris')))
 			->setDateFinValid(DateHelper::calculDateFin($user->getDateDebValid()))
 			->setDsi(0);
+
+		
+		
 		$form = $this->createForm(RegistrationType::class, $user);
 
 		$form->handleRequest($request);

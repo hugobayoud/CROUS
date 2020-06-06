@@ -40,7 +40,7 @@ class Service
     private $libelle_long;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="services")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="services")
      */
     private $users;
 

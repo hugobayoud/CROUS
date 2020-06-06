@@ -73,7 +73,7 @@ class User implements UserInterface
 	private $date_fin_valid;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Service::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Service::class, inversedBy="users")
      */
     private $services;
 

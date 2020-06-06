@@ -3,10 +3,12 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class RegistrationType extends AbstractType
 {
@@ -18,6 +20,11 @@ class RegistrationType extends AbstractType
             ->add('email')
 			->add('password', PasswordType::class)
 			->add('confirm_password', PasswordType::class)
+			->add('services', EntityType::class, [
+				'class' => Service::class,
+				'choice_label' => 'libelle_court',
+				'multiple' => true
+			])
         ;
     }
 

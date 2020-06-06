@@ -11,40 +11,9 @@
 		{{ form_row(form.email, {'label': 'Adresse mail', 'attr': {'placeholder': 'prenom.nom@crous-clermont.fr'}}) }}
 		{{ form_row(form.password, {'label': 'Mot de passe', 'attr': {'placeholder': 'mot de passe'}}) }}
 		{{ form_row(form.confirm_password, {'label': 'Confirmer mot de passe', 'attr': {'placeholder': 'confirmation mot de passe'}}) }}
-		<button type="submit" class="btn btn-success">Insciption</button>
-		{{ form_end(form) }}
-
-
-
-
-
-
 		
 		<hr>
-		<div style="visibility:hidden">
-					<div>Pour chaque service dont vous faites parti, veuillez :
-						<ul>
-							<li>Cocher la case correspondante à ce service</li>
-							<li>Indiquer votre rôle dans ce service</li>
-						</ul>
-					</div>
-					<div>Si ce formulaire n'est pas correctement rempli, la DSI se réserve le droit d'annuler votre insciption à la plateforme</div>
-					<div style="background-color: grey;">
-						<ul>
-							<li>Restauration</li>
-							<li>Marketing</li>
-							<li>Comptabilité</li>
-							<li>Bourse</li>
-							<li>Logement</li>
-							<li>...</li>
-						</ul>
-						<div>
-							Un de vos services ne se trouve pas dans la liste ? L'ajouter :
-							<input type="text">
-						</div>
-					</div>
-						<input type="checkbox" name="cgu" id="cgu_check" required checked>
-						<label for="cgu_check">J'accepte les CGU</label>
-					
-		</div>
+		{{ form_rest(form) }}
+		<button type="submit" class="btn btn-success">Insciption</button>
+		{{ form_end(form) }}
 {% endblock %}
