@@ -1,19 +1,59 @@
 {% extends "base.html.twig" %}
 
-{% block body %}
-	<h1 class="text-center">S'inscrire pour faire votre demande d'accès aux outils informatiques</h1>
-		{{ form_start(form) }}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
-		<div class="row">
-			<div class="col-md-6">{{ form_row(form.prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}</div>
-			<div class="col-md-6">{{ form_row(form.nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}</div>
-		</div>
-		{{ form_row(form.email, {'label': 'Adresse mail', 'attr': {'placeholder': 'prenom.nom@crous-clermont.fr'}}) }}
-		{{ form_row(form.password, {'label': 'Mot de passe', 'attr': {'placeholder': 'mot de passe'}}) }}
-		{{ form_row(form.confirm_password, {'label': 'Confirmer mot de passe', 'attr': {'placeholder': 'confirmation mot de passe'}}) }}
-		
-		<hr>
-		{{ form_rest(form) }}
-		<button type="submit" class="btn btn-success">Insciption</button>
+{% block body %}
+	<h1 class="text-center">Créer votre compte pour faire une demande d'accès aux outils informatiques</h1>
+		<div style="margin-top: 30px;">
+		{{ form_start(form) }}
+			<div class="row">
+				<div class="col-md-4">{{ form_row(form.prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}</div>
+				<div class="col-md-4">{{ form_row(form.nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8">{{ form_row(form.email, {'label': 'Adresse mail', 'attr': {'placeholder': 'prenom.nom@crous-clermont.fr'}}) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8">{{ form_row(form.password, {'label': 'Mot de passe', 'attr': {'placeholder': 'mot de passe'}}) }}</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8">{{ form_row(form.confirm_password, {'label': 'Confirmer mot de passe', 'attr': {'placeholder': 'confirmation mot de passe'}}) }}</div>
+			</div>
+			
+			<hr>
+			
+			<p style="font-size: 1.2em;"><strong>Sélectionner tous les services dont vous faites partis :</strong></p>
+			{{ form_rest(form) }}
+
+			<div class="row">
+				<div class="col-md-12">
+						<input type="checkbox" name="charte_info" id="charte">
+						<label for="charte">J'atteste avoir pris connaissance de la charte informatique et je m'engage à la respecter</label>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<input type="checkbox" name="signature" id="signature">
+					<label for="signature">J'atteste que les informations données sont correctes. Validation vaut pour signature</label>
+				</div>
+			</div>
+
+			<div style="text-align: center;">
+				<button type="submit" class="btn bouton-perso">Créer son compte</button>
+			</div>
+			
 		{{ form_end(form) }}
+		</div>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script>
+	$('select').select2();
+</script>
 {% endblock %}
