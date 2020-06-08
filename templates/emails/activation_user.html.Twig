@@ -1,0 +1,8 @@
+<h1>Vous venez de vous inscrire sur la plateforme de demande d'ouverture d'accès aux outils informatiques du CROUS Clermont-Auvergne</h1>
+
+<p>
+	{{ user.prenom }} {{ user.nom }}, vous venez de vous inscrire sur la plateforme d'ouverture d'accès aux outils informatiques du CROUS Clermont-Auvergne. Notez qu'avant de pouvoir faire votre premiere demande, un DSI doit activer votre compte.
+</p>
+<p>
+	Un mail vous sera envoyé quand vous pourrez vous connecter sur le site à cette adresse : <a href="{{ absolute_url(path('security.login')) }}">connexion</a>
+</p>

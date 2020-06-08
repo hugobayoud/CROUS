@@ -1,0 +1,11 @@
+<h1>Un nouvel utilisateur a besoin d'une validation</h1>
+<h5>{{ user.prenom }} {{ user.nom }}</h5>
+<p>
+	Un nouvel utilisateur a creer un compte sur la plateforme d'ouverture de droit aux outils informatiques du CROUS Clermont-Auvergne. Un agent de la DSI et administrateur de cette plateforme doit alors valider ce nouvel utilisateur avant qu'il ne puisse faire une demande.
+</p>
+<p>
+	Vous pouvez cliquer sur le lien ci-dessous pour vous connecter à la plateforme
+</p>
+<p>
+	<a href="{{ absolute_url(path('security.activation', {'token': token})) }}">Valider le compte</a>
+</p>

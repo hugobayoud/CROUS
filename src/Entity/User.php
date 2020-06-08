@@ -77,6 +77,11 @@ class User implements UserInterface
      */
     private $services;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $activation_token;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -160,9 +165,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-                            {
-                                return $this->date_fin_valid;
-                            }
+	{
+		return $this->date_fin_valid;
+	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -198,7 +203,20 @@ class User implements UserInterface
         }
 
         return $this;
+	}
+	
+	public function getActivationToken(): ?string
+    {
+        return $this->activation_token;
     }
+
+    public function setActivationToken(?string $activation_token): self
+    {
+        $this->activation_token = $activation_token;
+
+        return $this;
+    }
+
 
 
 	/* AUTRES FONCTIONS !*/
@@ -207,9 +225,9 @@ class User implements UserInterface
      * @return (Role|string)[] The user roles
      */
 	public function getRoles() 
-                                 	{
-                                 		return ['ROLE_USER'];
-                                 	}
+	{
+		return ['ROLE_USER'];
+	}
 
     /**
      * @return string|null The salt
@@ -224,5 +242,4 @@ class User implements UserInterface
      * @return string The username
      */
     public function getUsername() {}
-
 }

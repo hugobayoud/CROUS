@@ -71,12 +71,19 @@
 		<img class="mb-4" src="ressource\logo_Crous.png" alt="" width="120" height="120">
 		<h1 class="h3 mb-3 font-weight-normal"><strong>CROUS Clermont-Auvergne</strong></h1>
 		<h5 class="h3 mb-3 font-weight-normal">Connexion</h5>
+		
+		{% for message in app.flashes('message') %}
+			<div class="alert alert-success" role="alert">
+				{{ message }}
+			</div>
+		{% endfor %}
+
 		<form class="form-signin" action="{{ path('security.login') }}" method="POST">
 			<label for="inputEmail" class="sr-only">Adresse email</label>
 			<input type="email" id="inputEmail" name="_username" class="form-control" placeholder="adresse email" required autofocus>
 			<label for="inputPassword" class="sr-only">Mot de passe</label>
 			<input type="password" id="inputPassword" name="_password" class="form-control" placeholder="mot de passe" required>
-			<a href="{{ path('security.connexion') }}">mot de passe oublié ?</a>
+			<a href="{{ path('security.login') }}">mot de passe oublié ?</a>
 			<button class="btn btn-lg btn-perso btn-block" type="submit">Se connecter</button>
 		</form>
 		<div class="form-signin">
@@ -84,7 +91,7 @@
 		</div>
 	</div>
  	<p style="text-align: center;">
-		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.0.3</r>
+		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.1.0</r>
 	</p>
   </body>
 </html>

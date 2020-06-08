@@ -7,6 +7,7 @@ use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
@@ -17,7 +18,7 @@ class RegistrationType extends AbstractType
         $builder
             ->add('nom')
             ->add('prenom')
-            ->add('email')
+            ->add('email', EmailType::class)
 			->add('password', PasswordType::class)
 			->add('confirm_password', PasswordType::class)
 			->add('services', EntityType::class, [
