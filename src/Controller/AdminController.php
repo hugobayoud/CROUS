@@ -8,6 +8,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/admin", name="admin.")
@@ -71,5 +72,23 @@ class AdminController extends AbstractController
 		return $this->render('admin/editUser.html.twig', [
 			'form' => $form->createView()
 		]);
+	}
+
+	/**
+	 * @Route("/admin/utilisateur/{id}", name="utilisateur.delete", methods="DELETE")
+	 * @param int $id : id de l'utilisateur a refuser et enlever de la BDD
+	 * @return Response
+	 */
+	public function delete(int $id, Request $request): Response
+	{
+		$user = $this->getDoctrine()->getManager()->find(User::class, $id);
+		if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
+			$em = $this->getDoctrine()->getManager();
+			$em->remove($user);
+			$em->flush();
+			$this->addFlash('success', 'Suppression correctement effectuée');
+		}
+		
+		return $this->redirectToRoute('admin.utilisateurs.validation');
 	}
 }
