@@ -87,6 +87,11 @@ class User implements UserInterface
      */
     private $reset_token;
 
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -170,9 +175,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-         	{
-         		return $this->date_fin_valid;
-         	}
+               	{
+               		return $this->date_fin_valid;
+               	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -211,9 +216,9 @@ class User implements UserInterface
 	}
 	
 	public function getActivationToken(): ?string
-             {
-                 return $this->activation_token;
-             }
+                   {
+                       return $this->activation_token;
+                   }
 
     public function setActivationToken(?string $activation_token): self
     {
@@ -226,13 +231,25 @@ class User implements UserInterface
 
 	/* AUTRES FONCTIONS !*/
 	
-	/**
-     * @return (Role|string)[] The user roles
+    /**
+     * @see UserInterface
      */
-	public function getRoles() 
-         	{
-         		return ['ROLE_USER'];
-         	}
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
 
     /**
      * @return string|null The salt

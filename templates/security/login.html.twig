@@ -73,6 +73,17 @@
 		<h5 class="h3 mb-3 font-weight-normal">Connexion</h5>
 	
 		<form class="form-signin" method="POST">
+			
+			{% for message in app.flashes('message') %}
+			<div class="alert alert-success" role="alert">
+				{{ message }}
+			</div>
+			{% endfor %}
+			{% for message in app.flashes('warning') %}
+			<div class="alert alert-danger" role="alert">
+				{{ message }}
+			</div>
+			{% endfor %}
 			{% if error %}
 			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 			{% endif %}
@@ -100,7 +111,7 @@
 		</div>
 	</div>
  	<p style="text-align: center;">
-		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.2.0</r>
+		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.2.1</r>
 	</p>
   </body>
 </html>

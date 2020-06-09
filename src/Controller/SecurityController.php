@@ -165,7 +165,7 @@ class SecurityController extends AbstractController
 				// On génère un token
 				$token = $tokenGenerator->generateToken();
 
-				// On essaie decrire en BDD, si on y arrive pas, pas besoin de dire à l'user qu'on va lui envoyer un mail
+				// On essaie d'ecrire en BDD, si on y arrive pas, pas besoin de dire à l'user qu'on va lui envoyer un mail
 				try {
 					$user->setResetToken($token);
 					$em = $this->getDoctrine()->getManager();
