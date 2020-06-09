@@ -26,10 +26,10 @@
 				{% if app.user %}
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-					<a class="nav-link" href="{{ path('demande.create') }}">Faire une demande</a>
+					<a class="nav-link" href="{{ path('admin.utilisateurs.roles') }}">Gestion des rôles</a>
 					</li>
 					<li class="nav-item">
-					<a class="nav-link" href="#">Valider les demandes</a>
+					<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
 					</li>
 				</ul>
 				{% endif %}

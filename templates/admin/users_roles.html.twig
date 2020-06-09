@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="text-center" style="margin-top: 30px;">
+	<h1>Gestion des rôles</h1> 
+	<h5>Si un utilisateur spécifique n'apparait pas, c'est surement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></h5>
+</div>
+
+<table class="table" style="margin-top: 50px;">
+	<thead>
+		<th>Identité</th>
+		<th>Email</th>
+		<th>Rôles</th>
+		<th>Actions</th>
+	</thead>
+	<tbody>
+		{% for user in users %}
+			{% if user != app.user %}
+				<tr>
+					<td>{{ user.prenom }} {{ user.nom }}</td>
+					<td>{{ user.email }}</td>
+					<td>
+						{% for role in user.roles %}
+							{% if role == "ROLE_USER" %}
+								Agent
+							{% elseif role == "ROLE_DSI" %}
+								DSI
+							{% elseif role == "ROLE_ADMIN" %}
+								Administrateur
+							{% else %}
+								{{ role }}
+							{% endif %}
+							|
+						{% endfor %}
+					</td>
+					<td><a href="{{ path('admin.utilisateurs.roles.modifier', {'id' : user.id}) }}" class="btn btn-warning">Modifier</a></td>
+				</tr>
+			{% endif %}
+		{% else %}
+			<tr>
+				<td colspan="4">Il n'y a pas d'utilisateur a valider</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

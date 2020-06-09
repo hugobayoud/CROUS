@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="text-center" style="margin-top: 30px;">
+	<h1>Gestion des validations de compte</h1>
+	<h5>Pour attribuer un rôle aux utilisateurs dont le compte a été validé, veuillez vous rendre <a href="{{ path('admin.utilisateurs.roles') }}">ici</a></h5>
+</div>
+
+<table class="table" style="margin-top: 50px;">
+	<thead>
+		<th>Identité</th>
+		<th>Email</th>
+		<th>Action</th>
+	</thead>
+	<tbody>
+		{% for user in users %}
+			<tr>
+				<td>{{ user.prenom }} {{ user.nom }}</td>
+				<td>{{ user.email }}</td>
+				<td><a href="{{ path('security.activation', {'token': user.activation_token}) }}" class="btn btn-success">Valider</a> <a href="" class="btn btn-danger">Refuser</a></td>
+			</tr>
+		{% else %}
+			<tr>
+				<td colspan="4">Il n'y a pas d'utilisateur a valider</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

@@ -214,11 +214,16 @@ class User implements UserInterface
 
         return $this;
 	}
+
+	public function getactivation_token(): ?string
+	{
+		return $this->getActivationToken();
+	}
 	
 	public function getActivationToken(): ?string
-                   {
-                       return $this->activation_token;
-                   }
+	{
+		return $this->activation_token;
+	}
 
     public function setActivationToken(?string $activation_token): self
     {

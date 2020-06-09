@@ -19,7 +19,45 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // /**
+	/**
+	 * @return User[]
+	 */
+	public function findAllNotValidated(): array
+	{
+		// automatically knows to select Users
+		// the "p" is an alias you'll use in the rest of the query
+		$qb = $this->createQueryBuilder('p')
+			->where('p.activation_token IS NOT NULL')
+			->orderBy('p.date_deb_valid', 'ASC');
+	
+		$query = $qb->getQuery();
+	
+		return $query->execute();
+	
+		// to get just one result:
+		// $product = $query->setMaxResults(1)->getOneOrNullResult();
+	}
+
+		/**
+	 * @return User[]
+	 */
+	public function findAllValidated(): array
+	{
+		// automatically knows to select Users
+		// the "p" is an alias you'll use in the rest of the query
+		$qb = $this->createQueryBuilder('p')
+			->where('p.activation_token IS NULL')
+			->orderBy('p.date_deb_valid', 'ASC');
+	
+		$query = $qb->getQuery();
+	
+		return $query->execute();
+	
+		// to get just one result:
+		// $product = $query->setMaxResults(1)->getOneOrNullResult();
+	}
+	
+	// /**
     //  * @return User[] Returns an array of User objects
     //  */
     /*
@@ -46,5 +84,5 @@ class UserRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+	*/
 }

@@ -137,7 +137,7 @@ class SecurityController extends AbstractController
 		// On envoie un message flash
 		// $this->addFlash('message', "Compte activé");
 
-		return $this->redirectToRoute('home');
+		return $this->redirectToRoute('admin.utilisateurs.validation');
 	}
 
 	/**
