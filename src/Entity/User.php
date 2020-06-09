@@ -82,6 +82,11 @@ class User implements UserInterface
      */
     private $activation_token;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $reset_token;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -165,9 +170,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-	{
-		return $this->date_fin_valid;
-	}
+         	{
+         		return $this->date_fin_valid;
+         	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -206,9 +211,9 @@ class User implements UserInterface
 	}
 	
 	public function getActivationToken(): ?string
-    {
-        return $this->activation_token;
-    }
+             {
+                 return $this->activation_token;
+             }
 
     public function setActivationToken(?string $activation_token): self
     {
@@ -225,9 +230,9 @@ class User implements UserInterface
      * @return (Role|string)[] The user roles
      */
 	public function getRoles() 
-	{
-		return ['ROLE_USER'];
-	}
+         	{
+         		return ['ROLE_USER'];
+         	}
 
     /**
      * @return string|null The salt
@@ -242,4 +247,16 @@ class User implements UserInterface
      * @return string The username
      */
     public function getUsername() {}
+
+    public function getResetToken(): ?string
+    {
+        return $this->reset_token;
+    }
+
+    public function setResetToken(?string $reset_token): self
+    {
+        $this->reset_token = $reset_token;
+
+        return $this;
+    }
 }
