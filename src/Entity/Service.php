@@ -69,7 +69,12 @@ class Service
     public function getLibelleCourt(): ?string
     {
         return $this->libelle_court;
-    }
+	}
+	
+	public function getlibelle_court(): ?string
+	{
+		return $this->getLibelleCourt();
+	}
 
     public function setLibelleCourt(?string $libelle_court): self
     {
@@ -114,5 +119,7 @@ class Service
         }
 
         return $this;
-    }
+	}
+	
+	/* AUTRES FONCTIONS */
 }

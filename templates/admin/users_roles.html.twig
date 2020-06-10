@@ -9,31 +9,30 @@
 <table class="table" style="margin-top: 50px;">
 	<thead>
 		<th>Identité</th>
-		<th>Email</th>
-		<th>Rôles</th>
-		<th>Actions</th>
+		<th>DSI</th>
+		<th>Date de début DSI</th>
+		<th>Date de fin DSI</th>
+		<th>Gestion du rôle valideur</th>
+		<th>Supprimer agent</th>
 	</thead>
 	<tbody>
 		{% for user in users %}
 			{% if user != app.user %}
 				<tr>
-					<td>{{ user.prenom }} {{ user.nom }}</td>
-					<td>{{ user.email }}</td>
+					<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
 					<td>
-						{% for role in user.roles %}
-							{% if role == "ROLE_USER" %}
-								Agent
-							{% elseif role == "ROLE_DSI" %}
-								DSI
-							{% elseif role == "ROLE_ADMIN" %}
-								Administrateur
-							{% else %}
-								{{ role }}
-							{% endif %}
-							|
-						{% endfor %}
+						<input type="checkbox" name="DSI" id="dsi_check">
 					</td>
-					<td><a href="{{ path('admin.utilisateurs.roles.modifier', {'id' : user.id}) }}" class="btn btn-warning">Modifier</a></td>
+					<td>xx/xx/xxxx</td>
+					<td>xx/xx/xxxx</td>
+					<td><a href="{{ path('admin.utilisateurs.roles.modifier', {'id' : user.id}) }}" class="btn btn-secondary" disabled>Gestion</a></td>
+					<td>
+						<form action="{{ path('admin.utilisateur.delete', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Confirmation : souhaitez-vous supprimer cet agent de la base de donnée ?')">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+							<input type="hidden" name="_method" value="DELETE">
+							<button class="btn btn-danger">Supprimer</button>
+						</form>
+					</td>
 				</tr>
 			{% endif %}
 		{% else %}

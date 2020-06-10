@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\EditUserRoleType;
+use App\Form\EditUserDSIType;
 use App\Repository\UserRepository;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,16 +50,16 @@ class AdminController extends AbstractController
 	}
 
 	/**
-	 * Modifier le rôle d'un user
+	 * Modifier les rôles d'un user
 	 * 
 	 * @Route("/utilisateurs_roles/modifier/{id}", name="utilisateurs.roles.modifier")
 	 */
-	public function editUser(User $user, Request $request)
+	public function editUserRoles(User $user, Request $request)
 	{
-		$form = $this->createForm(EditUserRoleType::class, $user);
-		$form->handleRequest($request);
+		$formDSI = $this->createForm(EditUserDSIType::class, $user);
+		$formDSI->handleRequest($request);
 
-		if ($form->isSubmitted() && $form->isValid()) {
+		if ($formDSI->isSubmitted() && $formDSI->isValid()) {
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($user);
 			$em->flush();
@@ -69,8 +69,9 @@ class AdminController extends AbstractController
 			return $this->redirectToRoute('admin.utilisateurs.roles');
 		}
 
-		return $this->render('admin/editUser.html.twig', [
-			'form' => $form->createView()
+		return $this->render('admin/editUserRoles.html.twig', [
+			'formDSI' => $formDSI->createView(),
+			'user' => $user
 		]);
 	}
 
@@ -88,7 +89,13 @@ class AdminController extends AbstractController
 			$em->flush();
 			$this->addFlash('success', 'Suppression correctement effectuée');
 		}
+
+
+		// On cherche la bonne redirection car le bouton suppr est utilisé à plusieurs endroits
+		$url = $_SERVER['HTTP_REFERER'];
+		$end = substr($url, stripos($url, '_') + 1);
+		$target = 'admin.utilisateurs.' . $end;
 		
-		return $this->redirectToRoute('admin.utilisateurs.validation');
+		return $this->redirectToRoute($target);
 	}
 }

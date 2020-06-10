@@ -20,14 +20,20 @@
 <table class="table" style="margin-top: 50px;">
 	<thead>
 		<th>Identité</th>
-		<th>Email</th>
+		<th>Services demandés</th>
 		<th>Action</th>
 	</thead>
 	<tbody>
 		{% for user in users %}
 			<tr>
-				<td>{{ user.prenom }} {{ user.nom }}</td>
-				<td>{{ user.email }}</td>
+				<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
+				<td>
+					<ul>
+					{% for service in user.services %}
+						<li>{{ service.libelle_court }}</li>
+					{% endfor %}
+					</ul>
+				</td>
 				<td>
 					<a href="{{ path('security.activation', {'token': user.activation_token}) }}" class="btn btn-success" onclick="return confirm('Valider ce compte ?')">Valider</a>
 					<form action="{{ path('admin.utilisateur.delete', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">

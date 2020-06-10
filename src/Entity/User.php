@@ -92,6 +92,16 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_deb_dsi;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $date_fin_dsi;
+
     public function __construct()
     {
         $this->services = new ArrayCollection();
@@ -175,9 +185,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-               	{
-               		return $this->date_fin_valid;
-               	}
+                                 	{
+                                 		return $this->date_fin_valid;
+                                 	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -216,14 +226,14 @@ class User implements UserInterface
 	}
 
 	public function getactivation_token(): ?string
-	{
-		return $this->getActivationToken();
-	}
+                  	{
+                  		return $this->getActivationToken();
+                  	}
 	
 	public function getActivationToken(): ?string
-	{
-		return $this->activation_token;
-	}
+                  	{
+                  		return $this->activation_token;
+                  	}
 
     public function setActivationToken(?string $activation_token): self
     {
@@ -278,6 +288,30 @@ class User implements UserInterface
     public function setResetToken(?string $reset_token): self
     {
         $this->reset_token = $reset_token;
+
+        return $this;
+    }
+
+    public function getDateDebDsi(): ?\DateTimeInterface
+    {
+        return $this->date_deb_dsi;
+    }
+
+    public function setDateDebDsi(?\DateTimeInterface $date_deb_dsi): self
+    {
+        $this->date_deb_dsi = $date_deb_dsi;
+
+        return $this;
+    }
+
+    public function getDateFinDsi(): ?\DateTimeInterface
+    {
+        return $this->date_fin_dsi;
+    }
+
+    public function setDateFinDsi(?\DateTimeInterface $date_fin_dsi): self
+    {
+        $this->date_fin_dsi = $date_fin_dsi;
 
         return $this;
     }
