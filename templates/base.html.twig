@@ -31,6 +31,9 @@
 					<li class="nav-item">
 					<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{{ path('service_index') }}">Creation services</a>
+					</li>
 				</ul>
 				{% endif %}
 			  	<ul class="navbar-nav mr-auto">
@@ -43,7 +46,12 @@
 						<a href="{{ path('security.logout') }}" class="nav-link">Se déconnecter</a>
 				  	</li>
 				  {% endif %}
-			  	</ul>
+				  </ul>
+				  {% if app.user %}
+				  	<ul class="navbar-nav mr-auto">
+						<li class="nav-item" style="font-size: 0.8em;">(connecté(e) avec : <em>{{ app.user.email }}</em>)</li>
+					</ul>
+				  {% endif %}
 			</div>
 		</nav>
 		<div class="container">

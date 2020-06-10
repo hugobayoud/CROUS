@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Service;
+use App\Helper\DateHelper;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -53,7 +54,10 @@ class User implements UserInterface
     private $password;
 
 	/**
-	 * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas tapé le même mot de passe")
+	 * @Assert\EqualTo(
+	 * 		propertyPath="password", 
+	 * 		message="Vous n'avez pas tapé le même mot de passe"
+	 * 	)
 	 */
 	public $confirm_password;
 	
@@ -100,11 +104,17 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $date_fin_dsi;
+	private $date_fin_dsi;
+	
+	/**
+     * @ORM\OneToMany(targetEntity=Validateur::class, mappedBy="id_user")
+     */
+    private $validateurs;
 
     public function __construct()
     {
-        $this->services = new ArrayCollection();
+		$this->services = new ArrayCollection();
+		$this->validateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -240,6 +250,37 @@ class User implements UserInterface
         $this->activation_token = $activation_token;
 
         return $this;
+	}
+	
+	/**
+     * @return Collection|Validateur[]
+     */
+    public function getValidateurs(): Collection
+    {
+        return $this->validateurs;
+    }
+
+    public function addValidateur(Validateur $validateur): self
+    {
+        if (!$this->validateurs->contains($validateur)) {
+            $this->validateurs[] = $validateur;
+            $validateur->setIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidateur(Validateur $validateur): self
+    {
+        if ($this->validateurs->contains($validateur)) {
+            $this->validateurs->removeElement($validateur);
+            // set the owning side to null (unless already changed)
+            if ($validateur->getIdUser() === $this) {
+                $validateur->setIdUser(null);
+            }
+        }
+
+        return $this;
     }
 
 
@@ -314,5 +355,17 @@ class User implements UserInterface
         $this->date_fin_dsi = $date_fin_dsi;
 
         return $this;
-    }
+	}
+	
+	/* AUTRES FONCTIONS */
+
+	/**
+	 * Formate la date pour présentation sous la forme jj/mm/yyyy
+	 * 
+	 * @return string|NULL
+	 */
+	public function formatDate(\DateTime $date = NULL): ?string
+	{
+		return DateHelper::formatMyDate($date);
+	}
 }

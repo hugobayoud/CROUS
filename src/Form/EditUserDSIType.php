@@ -10,7 +10,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EditUserDSIType extends AbstractType
 {
@@ -19,8 +21,18 @@ class EditUserDSIType extends AbstractType
 		$builder
 			->add('email', EmailType::class)
             ->add('dsi', CheckboxType::class, [
-                'label_attr' => ['class' => 'switch-custom'],
-            ])
+				'label_attr' => ['class' => 'switch-custom'],
+				'required' => false
+			])
+			->add('date_deb_dsi', DateTimeType::class, [
+				'widget' => 'single_text',
+				'required' => false
+			])
+			->add('date_fin_dsi', DateTimeType::class, [
+				'widget' => 'single_text',
+				'required' => false
+			])
+			->add('Bouton', SubmitType::class)
 		;
 
 		// A utiliser pour les validations de chaque service

@@ -56,6 +56,21 @@ class UserRepository extends ServiceEntityRepository
 		// to get just one result:
 		// $product = $query->setMaxResults(1)->getOneOrNullResult();
 	}
+
+	/**
+	 * Retourne un tableau de Services pour un utilisateur donné
+	 */
+    public function getServicesByOneUser(User $user)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->join('AppBundle\Entity\Color', 'c')
+            ->where('c.product = :product')
+            ->setParameter('product', )
+            ->getQuery()
+            ->getResult();
+
+        return $query;
+    }
 	
 	// /**
     //  * @return User[] Returns an array of User objects

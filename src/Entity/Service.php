@@ -44,9 +44,15 @@ class Service
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Validateur::class, mappedBy="id_service")
+     */
+    private $validateurs;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->validateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,9 +78,9 @@ class Service
 	}
 	
 	public function getlibelle_court(): ?string
-	{
-		return $this->getLibelleCourt();
-	}
+               	{
+               		return $this->getLibelleCourt();
+               	}
 
     public function setLibelleCourt(?string $libelle_court): self
     {
@@ -122,4 +128,35 @@ class Service
 	}
 	
 	/* AUTRES FONCTIONS */
+
+    /**
+     * @return Collection|Validateur[]
+     */
+    public function getValidateurs(): Collection
+    {
+        return $this->validateurs;
+    }
+
+    public function addValidateur(Validateur $validateur): self
+    {
+        if (!$this->validateurs->contains($validateur)) {
+            $this->validateurs[] = $validateur;
+            $validateur->setIdService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidateur(Validateur $validateur): self
+    {
+        if ($this->validateurs->contains($validateur)) {
+            $this->validateurs->removeElement($validateur);
+            // set the owning side to null (unless already changed)
+            if ($validateur->getIdService() === $this) {
+                $validateur->setIdService(null);
+            }
+        }
+
+        return $this;
+    }
 }

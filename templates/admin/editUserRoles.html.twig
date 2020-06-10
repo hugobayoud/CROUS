@@ -12,9 +12,13 @@
 					Email :
 					{{ form_widget(formDSI.email) }}
 					DSI :
-					{{ form_widget(formDSI.dsi) }}
+						{{ form_widget(formDSI.dsi, {'id': 'check' }) }}
+					DATE de début :
+						{{ form_widget(formDSI.date_deb_dsi, {'id': 'date_deb' }) }}
+					DATE de fin :
+						{{ form_widget(formDSI.date_fin_dsi, {'id': 'date_fin' }) }}
 					{{ form_end(formDSI) }}
-				</div>
+				</div>	
 			</div>
 		</div>
 {% endblock %}
@@ -27,5 +31,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
 <script>
 	$('select').select2();
+
+</script>
+<script type="text/javascript">
+	$(function () {
+		$("#check").change(function () {
+			var st = this.checked;
+			if (st) {
+				$("#date_deb").prop("disabled", false);
+				$("#date_fin").prop("disabled", false);
+			}
+			else {
+				$("#date_deb").prop("disabled", true);
+				$("#date_fin").prop("disabled", true);
+			}
+		});
+	});
 </script>
 {% endblock %}

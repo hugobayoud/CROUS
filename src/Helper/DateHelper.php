@@ -13,4 +13,12 @@ class DateHelper
 
 		return new \DateTime("31-08-$annee 23:59:59");
 	}
+
+	public static function formatMyDate(\DateTime $date = NULL): ?string
+	{
+		if ($date === NULL) {
+			return NULL;
+		}
+		return $date->format("d/m/Y");
+	}
 }
