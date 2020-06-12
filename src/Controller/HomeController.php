@@ -15,6 +15,11 @@ class HomeController extends AbstractController
 	 */
 	public function index(): Response
 	{
+		// Si l'user est un admin ou un dsi alors il est automatiquement redirigé vers la page d'accueil d'un admin
+		if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || in_array('ROLE_DSI', $this->getUser()->getRoles())) {
+			return $this->redirectToRoute('admin.index');
+		}
+
 		return $this->render('pages/home.html.twig');
 	}
 }

@@ -26,13 +26,20 @@
 				{% if app.user %}
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-					<a class="nav-link" href="{{ path('admin.utilisateurs.roles') }}">Gestion des rôles</a>
+						<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
 					</li>
-					<li class="nav-item">
-					<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('service_index') }}">Creation services</a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  Gestion
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							
+							<a class="dropdown-item" href="{{ path('admin.utilisateurs') }}">Gestion des utilisateurs</a>
+							<a class="dropdown-item" href="{{ path('admin.utilisateurs.roles') }}">Gestion des rôles</a>
+						  	<div class="dropdown-divider"></div>
+						  	<a class="dropdown-item" href="{{ path('admin.service_index') }}">Gestion des services</a>
+						  	<a class="dropdown-item" href="#">Gestion des applications</a>
+						</div>
 					</li>
 				</ul>
 				{% endif %}

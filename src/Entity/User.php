@@ -297,7 +297,31 @@ class User implements UserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-    }
+	}
+	
+	public function addRole(string $role): self
+	{
+		if (!in_array($role, $this->roles)) {
+			$this->roles[] = $role;
+		}
+		
+		return $this;
+	}
+
+	public function removeRole(string $roleToAdd): self
+	{
+		if (in_array($roleToAdd, $this->roles)) {
+			$tab = [];
+			foreach($this->roles as $role) {
+				if($roleToAdd !== $role)
+				$tab[] = $role;
+			}
+
+			$this->setRoles($tab);
+		}
+		
+		return $this;
+	}
 
     public function setRoles(array $roles): self
     {
@@ -368,4 +392,9 @@ class User implements UserInterface
 	{
 		return DateHelper::formatMyDate($date);
 	}
+
+	public function __toString()
+    {
+        return $this->email;
+    }
 }

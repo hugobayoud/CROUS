@@ -46,5 +46,19 @@ class ValidateurRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+	*/
+	
+	public function findOneByIdUserAndService($id_user, $id_service): ?Validateur
+    {
+        return $this->createQueryBuilder('v')
+            ->andWhere('v.id_user = :id_user')
+            ->andWhere('v.id_service = :id_service')
+            ->setParameters([
+				'id_user' => $id_user,
+				'id_service' => $id_service
+				])
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

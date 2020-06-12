@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des rôles</h1> 
+	<h1>Gestion des Utilisateurs</h1> 
 	<h5>Si un utilisateur spécifique n'apparait pas, c'est surement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></h5>
 </div>
 
@@ -20,12 +20,9 @@
 <table class="table" style="margin-top: 50px;">
 	<thead>
 		<th>Identité</th>
-		<th>DSI</th>
-		<th>Passer DSI</th>
-		<th>Date de début DSI</th>
-		<th>Date de fin DSI</th>
-		<th>Gestion du valideur pour chaque service</th>
-		<th>Supprimer agent</th>
+		<th>Date de fin de validaté de contrat</th>
+		<th>Service(s) rataché(s)</th>
+		<th>Actions</th>
 	</thead>
 	<tbody>
 		{% for user in users %}
@@ -33,42 +30,12 @@
 				<tr>
 					<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
 					<td>
-						<input type="checkbox" name="DSI" id="dsi_check" {% if user.dsi == 1 %}checked{% endif %}
-						disabled>
-					</td>
-					<td>
-						{% if user.dsi == 1 %}
-							<a href="{{ path('admin.utilisateur.dsi.modifier', {'id': user.id}) }}">retirer</a>
-							{% else %}
-							<a href="{{ path('admin.utilisateur.dsi.modifier', {'id': user.id}) }}">ajouter</a>
-						{% endif %}
-					</td>
-					<td>
-						{% if user.dsi == 1 %}
-							{% if user.getDateDebDsi() == NULL %}
-								<em style="font-size: 0.7em; color: red;">date non remplie</em>
-							{% else %}
-								{{ user.formatDate(user.getDateDebDsi()) }}
-							{% endif %}
-						{% else %}
-							<em style="font-size: 0.7em;">agent non DSI</em>
-						{% endif %}
-					</td>
-					<td>
-						{% if user.dsi == 1 %} 
-							{% if user.getDateFinDsi() == NULL %}
-								<em style="font-size: 0.7em; color: red;">date non remplie</em>
-							{% else %}
-								{{ user.formatDate(user.getDateFinDsi()) }}
-							{% endif %}
-						{% else %}
-							<em style="font-size: 0.7em;">agent non DSI</em>
-						{% endif %}
+						{{ user.formatDate(user.getDateFinValid()) }}
 					</td>
 					<td>
 						<ul>
 							{% for service in user.services %}
-								<a href="{{ path('admin.utilisateur.service.modifier', {'id_service': service.id, 'id_user': user.id}) }}">{{ service.getCode() }}</a>
+								<li>{{ service.getCode() }}</li>
 							{% endfor %}
 						</ul>
 					</td>

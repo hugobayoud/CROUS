@@ -47,8 +47,8 @@ class Service
     /**
      * @ORM\OneToMany(targetEntity=Validateur::class, mappedBy="id_service")
      */
-    private $validateurs;
-
+	private $validateurs;
+	
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -158,5 +158,11 @@ class Service
         }
 
         return $this;
-    }
+	}
+	
+	public function __toString()
+    {
+        return $this->code;
+	}
+
 }

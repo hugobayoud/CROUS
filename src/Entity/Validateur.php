@@ -42,7 +42,9 @@ class Validateur
     /**
      * @ORM\Column(type="datetime")
      */
-    private $date_fin;
+	private $date_fin;
+	
+	private $valide;
 
     public function getId(): ?int
     {
@@ -78,7 +80,7 @@ class Validateur
         return $this->date_deb;
     }
 
-    public function setDateDeb(\DateTimeInterface $date_deb): self
+    public function setDateDeb(\DateTimeInterface $date_deb = NULL): self
     {
         $this->date_deb = $date_deb;
 
@@ -90,10 +92,20 @@ class Validateur
         return $this->date_fin;
     }
 
-    public function setDateFin(\DateTimeInterface $date_fin): self
+    public function setDateFin(\DateTimeInterface $date_fin = NULL): self
     {
         $this->date_fin = $date_fin;
 
         return $this;
-    }
+	}
+	
+	public function setValide(int $bool)
+	{
+		$this->valide = $bool;
+	}
+
+	public function getValide(): ?int
+	{
+		return $this->valide;
+	}
 }

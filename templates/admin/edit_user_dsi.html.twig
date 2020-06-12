@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+	<h1 class="text-center">Validation</h1>
+		<div style="margin-top: 30px;">
+			<div class="card">
+				<div class="card-title">DSI</div>
+				<div class="card-body">
+					{{ form_start(form) }}
+					Email :
+					{{ form_widget(form.email) }}
+					DSI :
+						{{ form_widget(form.dsi, {'id': 'check' }) }}
+					DATE de début :
+						{{ form_widget(form.date_deb_dsi, {'id': 'date_deb' }) }}
+					DATE de fin :
+						{{ form_widget(form.date_fin_dsi, {'id': 'date_fin' }) }}
+					{{ form_end(form) }}
+				</div>	
+			</div>
+		</div>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script>
+	$('select').select2();
+
+</script>
+<script type="text/javascript">
+	$(function () {
+		$("#check").change(function () {
+			var st = this.checked;
+			if (st) {
+				$("#date_deb").prop("disabled", false);
+				$("#date_fin").prop("disabled", false);
+			}
+			else {
+				$("#date_deb").prop("disabled", true);
+				$("#date_fin").prop("disabled", true);
+			}
+		});
+	});
+</script>
+{% endblock %}

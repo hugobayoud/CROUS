@@ -1,23 +1,21 @@
 {% extends "base.html.twig" %}
 
-{% form_theme formDSI 'bootstrap_4_layout.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
-	<h1 class="text-center">Validation</h1>
+	<h1 class="text-center">Validation de role pour <strong>{{ user.getPrenom() }} {{ user.getNom() }}</strong></h1>
 		<div style="margin-top: 30px;">
 			<div class="card">
-				<div class="card-title">DSI</div>
+				<div class="card-title">{{ service.getCode() }}</div>
 				<div class="card-body">
-					{{ form_start(formDSI) }}
-					Email :
-					{{ form_widget(formDSI.email) }}
-					DSI :
-						{{ form_widget(formDSI.dsi, {'id': 'check' }) }}
+					{{ form_start(form) }}
+					{{ service.getCode() }} / {{ service.getLibelleCourt() }} :
+						{{ form_row(form.valide, {'id': 'check' }) }}
 					DATE de début :
-						{{ form_widget(formDSI.date_deb_dsi, {'id': 'date_deb' }) }}
+						{{ form_row(form.date_deb, {'id': 'date_deb' }) }}
 					DATE de fin :
-						{{ form_widget(formDSI.date_fin_dsi, {'id': 'date_fin' }) }}
-					{{ form_end(formDSI) }}
+						{{ form_widget(form.date_fin, {'id': 'date_fin' }) }}
+					{{ form_end(form) }}
 				</div>	
 			</div>
 		</div>

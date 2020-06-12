@@ -100,4 +100,20 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 	*/
+
+	/**
+	 * Donne le nombre de compte qui ne sont pas encore validés par un admin
+	 * 
+	 * @return int|NULL
+	 */
+    public function countNewAccount(): ?int
+    {
+		$query = $this->createQueryBuilder('p')
+			->select('count(p.id)')
+			->where('p.activation_token IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $query;
+	}
 }
