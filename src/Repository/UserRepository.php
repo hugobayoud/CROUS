@@ -41,20 +41,21 @@ class UserRepository extends ServiceEntityRepository
 		/**
 	 * @return User[]
 	 */
-	public function findAllValidated(): array
+	public function findAllValidated(int $id = NULL): array
 	{
-		// automatically knows to select Users
-		// the "p" is an alias you'll use in the rest of the query
-		$qb = $this->createQueryBuilder('p')
-			->where('p.activation_token IS NULL')
-			->orderBy('p.date_deb_valid', 'ASC');
-	
-		$query = $qb->getQuery();
-	
-		return $query->execute();
-	
-		// to get just one result:
-		// $product = $query->setMaxResults(1)->getOneOrNullResult();
+		if (!is_null($id)) {
+			$qb = $this->createQueryBuilder('p')
+				->where('p.activation_token IS NULL')
+				->andwhere('p.id != :id')
+				->setParameter('id', $id)
+				->orderBy('p.date_deb_valid', 'ASC');
+		} else {
+			$qb = $this->createQueryBuilder('p')
+				->where('p.activation_token IS NULL')
+				->orderBy('p.date_deb_valid', 'ASC');
+		}
+
+		return $qb->getQuery()->execute();
 	}
 
 	/**
@@ -111,6 +112,22 @@ class UserRepository extends ServiceEntityRepository
 		$query = $this->createQueryBuilder('p')
 			->select('count(p.id)')
 			->where('p.activation_token IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $query;
+	}
+
+	/**
+	 * Donne le nombre de compte qui ne sont déjà validés (qui se retoruvent dans la page "gestion des utilisateurs")
+	 * 
+	 * @return int|NULL
+	 */
+    public function countAccount(): ?int
+    {
+		$query = $this->createQueryBuilder('p')
+			->select('count(p.id)')
+			->where('p.activation_token IS NULL')
             ->getQuery()
             ->getSingleScalarResult();
 

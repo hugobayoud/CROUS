@@ -18,7 +18,7 @@
 {% endfor %}
 
 <table class="table" style="margin-top: 50px;">
-	<thead>
+	<thead style="font-size: 1.5em;">
 		<th>Identité</th>
 		<th>Date de fin de validaté de contrat</th>
 		<th>Service(s) rataché(s)</th>
@@ -26,33 +26,75 @@
 	</thead>
 	<tbody>
 		{% for user in users %}
-			{% if user != app.user %}
-				<tr>
-					<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
-					<td>
-						{{ user.formatDate(user.getDateFinValid()) }}
-					</td>
-					<td>
-						<ul>
-							{% for service in user.services %}
-								<li>{{ service.getCode() }}</li>
-							{% endfor %}
-						</ul>
-					</td>
-					<td>
-						<form action="{{ path('admin.utilisateur.delete', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Confirmation : souhaitez-vous supprimer cet agent de la base de donnée ?')">
-							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-							<input type="hidden" name="_method" value="DELETE">
-							<button class="btn btn-danger">Supprimer</button>
-						</form>
-					</td>
-				</tr>
-			{% endif %}
+		{% form_theme forms[loop.index0] 'bootstrap_4_layout.html.twig' %}
+		<tr style="background: rgb(179, 179, 179);">
+			<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
+			<td>
+				{{ user.formatDate(user.getDateFinValid()) }}
+			</td>
+			<td>
+				<ul>
+					{% for service in user.services %}
+					<li>{{ service.getCode() }}</li>
+					{% endfor %}
+				</ul>
+			</td>
+			<td>
+				<form action="{{ path('admin.utilisateur.delete', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Confirmation : souhaitez-vous supprimer cet agent de la base de donnée ?')">
+					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+					<input type="hidden" name="_method" value="DELETE">
+					<button class="btn btn-danger">Supprimer</button>
+				</form>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4">
+				<a href=""><em>Détails</em></a>
+				<form action="" method="POST" id="userForm" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
+					{{ form_start(forms[loop.index0]) }}
+					<div class="row">
+						<div class="col-md-5">
+							{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}
+						</div>
+						<div class="col-md-5">
+							{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+							{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}
+						</div>
+						<div class="col-md-5">
+							{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}
+						</div>
+					</div>
+
+					{{ form_row(forms[loop.index0].services) }}
+
+					<input type="hidden" name="id_user" value="{{ user.getId() }}">
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary">Enregistrer</button>
+					</div>
+					{{ form_end(forms[loop.index0]) }}
+				</form>
+			</td>
+		</tr>
 		{% else %}
-			<tr>
-				<td colspan="4">Il n'y a pas d'utilisateur a valider</td>
-			</tr>
+		<tr>
+			<td colspan="4">Il n'y a pas d'utilisateur a valider</td>
+		</tr>
 		{% endfor %}
 	</tbody>
 </table>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script>
+	$('select').select2();
+</script>
 {% endblock %}

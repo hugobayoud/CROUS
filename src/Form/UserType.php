@@ -3,28 +3,42 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('email')
-            ->add('password')
-            ->add('dsi')
-            ->add('date_deb_valid')
-            ->add('date_fin_valid')
-            ->add('activation_token')
-            ->add('reset_token')
-            ->add('roles')
-            ->add('date_deb_dsi')
-            ->add('date_fin_dsi')
-            ->add('services')
+		$builder
+			->add('nom', TextType::class, [
+				'required' => true
+			])
+            ->add('prenom', TextType::class, [
+				'required' => true
+			])
+            ->add('date_deb_valid', DateType::class, [
+				'widget' => 'single_text',
+				'format' => 'yyyy-MM-dd',
+				'required' => true
+			])
+            ->add('date_fin_valid', DateType::class, [
+				'widget' => 'single_text',
+				'format' => 'yyyy-MM-dd',
+				'required' => true
+			])
+            ->add('services', EntityType::class, [
+				'class' => Service::class,
+				'choice_label' => 'libelle_court',
+				'multiple' => true
+			])
         ;
     }
 
