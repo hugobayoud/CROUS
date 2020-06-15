@@ -1,6 +1,5 @@
 {% extends "base.html.twig" %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
 	<h1>Gestion des Utilisateurs</h1> 
@@ -23,7 +22,7 @@
 		<th>Identité</th>
 		<th>Date de fin de validaté de contrat</th>
 		<th>Service(s) rataché(s)</th>
-		<th>Actions</th>
+		<th>Supprimer agent</th>
 	</thead>
 	<tbody>
 		{% for user in users %}
@@ -49,35 +48,39 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="4">
-				<a href="" id="{{ user.getId() }}" class="detail_link" onclick=myFunction(this.id)><em>Détails</em></a>
-				<form action="" method="POST" class="uf" id="userForm_{{ user.getId() }}" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;{% if not forms[loop.index0].vars.submitted %} display: none;{% endif %}">
-					{{ form_start(forms[loop.index0]) }}
-					<div class="row">
-						<div class="col-md-5">
-							{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}
+			<td colspan="4" style="margin-bottom: 30px;">
+				<div class="detail" style="color: blue; text-decoration: underline; cursor: pointer;"><em>Modifier agent</em></div>
+				<div></div>
+				<div class="userForm">
+					<form action="" method="POST" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
+						{# {% if not forms[loop.index0].vars.submitted %} style="display: none;"{% endif %} #}
+						{{ form_start(forms[loop.index0]) }}
+						<div class="row">
+							<div class="col-md-5">
+								{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}
+							</div>
+							<div class="col-md-5">
+								{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}
+							</div>
 						</div>
-						<div class="col-md-5">
-							{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}
+						<div class="row">
+							<div class="col-md-5">
+								{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}
+							</div>
+							<div class="col-md-5">
+								{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-5">
-							{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}
-						</div>
-						<div class="col-md-5">
-							{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}
-						</div>
-					</div>
-					
-					{{ form_rest(forms[loop.index0]) }}
+						
+						{{ form_rest(forms[loop.index0]) }}
 
-					<input type="hidden" name="id_user" value="{{ user.getId() }}">
-					<div class="form-group">
-						<button type="submit" class="btn btn-primary">Enregistrer</button>
-					</div>
-					{{ form_end(forms[loop.index0]) }}
-				</form>
+						<input type="hidden" name="id_user" value="{{ user.getId() }}">
+						<div class="form-group">
+							<button type="submit" class="btn btn-primary">Enregistrer</button>
+						</div>
+						{{ form_end(forms[loop.index0]) }}
+					</form>
+				</div>
 			</td>
 		</tr>
 		{% else %}

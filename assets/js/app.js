@@ -24,6 +24,11 @@ $('select').select2()
 let $link_class = $('.detail_link');
 let $form_class = $('.uf');
 
+
+$(".detail").on("click", function() {
+    $(this).nextUntil('.userForm').next().slideToggle("slow");
+});
+
 // let arr_link_ids = Array.prototype.map.call(link_ids, function(el) {
 //     return el.id;
 // });
