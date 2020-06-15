@@ -1,5 +1,6 @@
 {% extends "base.html.twig" %}
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
 	<h1>Gestion des Utilisateurs</h1> 
@@ -49,8 +50,8 @@
 		</tr>
 		<tr>
 			<td colspan="4">
-				<a href=""><em>Détails</em></a>
-				<form action="" method="POST" id="userForm" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
+				<a href="" id="{{ user.getId() }}" class="detail_link" onclick=myFunction(this.id)><em>Détails</em></a>
+				<form action="" method="POST" class="uf" id="userForm_{{ user.getId() }}" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;{% if not forms[loop.index0].vars.submitted %} display: none;{% endif %}">
 					{{ form_start(forms[loop.index0]) }}
 					<div class="row">
 						<div class="col-md-5">
@@ -68,8 +69,8 @@
 							{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}
 						</div>
 					</div>
-
-					{{ form_row(forms[loop.index0].services) }}
+					
+					{{ form_rest(forms[loop.index0]) }}
 
 					<input type="hidden" name="id_user" value="{{ user.getId() }}">
 					<div class="form-group">
@@ -87,14 +88,25 @@
 	</tbody>
 </table>
 {% endblock %}
+{% block javascripts %}
+<script>
+function myFunction(clicked_id) {
+	// e.preventDefault();
+	// var element = document.getElementById('userForm_' + clicked_id);
+	// $('#userForm_38').slideToggle();
+
+	// $(this).click(e => {
+	// 	e.preventDefault();
+	// 	$('#userForm_' + clicked_id).slideToggle();
+	// })
+
+	$('.detail_link').on("click", function() {
+		$(this).nextUntil('.uf').next().slideToggle("slow");
+	});
+}
+</script>
+{% endblock %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
-{% endblock %}
-
-{% block javascripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
-<script>
-	$('select').select2();
-</script>
 {% endblock %}

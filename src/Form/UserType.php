@@ -10,8 +10,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class UserType extends AbstractType
 {
@@ -34,7 +32,7 @@ class UserType extends AbstractType
 				'format' => 'yyyy-MM-dd',
 				'required' => true
 			])
-            ->add('services', EntityType::class, [
+			->add('services', EntityType::class, [
 				'class' => Service::class,
 				'choice_label' => 'libelle_court',
 				'multiple' => true
