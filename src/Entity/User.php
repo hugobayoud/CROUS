@@ -124,36 +124,36 @@ class User implements UserInterface
 
     public function getNom(): ?string
     {
-        return $this->nom;
+        return strtoupper($this->nom);
     }
 
     public function setNom(string $nom): self
     {
-        $this->nom = $nom;
+        $this->nom = strtoupper($nom);
 
         return $this;
     }
 
     public function getPrenom(): ?string
     {
-        return $this->prenom;
+        return ucwords(strtolower($this->prenom));
     }
 
     public function setPrenom(string $prenom): self
     {
-        $this->prenom = $prenom;
+        $this->prenom = ucwords(strtolower($prenom));
 
         return $this;
     }
 
     public function getEmail(): ?string
     {
-        return $this->email;
+        return strtolower($this->email);
     }
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = strtolower($email);
 
         return $this;
     }
@@ -236,14 +236,14 @@ class User implements UserInterface
 	}
 
 	public function getactivation_token(): ?string
-                  	{
-                  		return $this->getActivationToken();
-                  	}
+	{
+		return $this->getActivationToken();
+	}
 	
 	public function getActivationToken(): ?string
-                  	{
-                  		return $this->activation_token;
-                  	}
+	{
+		return $this->activation_token;
+	}
 
     public function setActivationToken(?string $activation_token): self
     {

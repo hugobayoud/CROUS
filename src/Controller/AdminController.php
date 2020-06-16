@@ -3,18 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Users;
 use App\Entity\Service;
+use App\Form\UsersType;
 use App\Entity\Validateur;
 use App\Form\EditUserDSIType;
 use App\Form\EditUserServiceType;
-use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Repository\ValidateurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/admin", name="admin.")
@@ -58,48 +59,31 @@ class AdminController extends AbstractController
 	 */
 	public function usersList(UserRepository $userRepo, Request $request, UserInterface $currentUser)
 	{
-		// On récupère tous les utilisateurs validés excepté l'user en cours (conneecté) Il ne faut pas qu'il puisse se modifer lui même
-		$users = $userRepo->findAllValidated($currentUser->getId());
+		$users = new Users();
+		$allUsers = $userRepo->findAllValidated($currentUser->getId());
 
-		// On récupère le nombre d'utilisateurs validés qui vont être affichés
-		$count = count($users);
-
-		// Pour chaque utilisateur, on crée un form avec ses infos
-		for ($i = 0; $i < $count; $i++) {
-			$forms[] = $this->createForm(UserType::class, $users[$i]);
+		foreach ($allUsers as $user) {
+			$users->getUsers()->add($user);
 		}
 
-		//dd($forms[0]->getData()->getId(), (int)$request->request->get('user')['id']);
-		if ($request->getContent() !== "") {
-			$i = 0;
-			foreach($forms as $form) {
-				// On cherche le formulaire de la page qui a été complété
-				if ($form->getData()->getId() === (int)$_POST['id_user']) {
-					$form->handleRequest($request);
-	
-					if($form->isSubmitted() && $form->isValid()) {
-						$em = $this->getDoctrine()->getManager();
-						$em->persist($users[$i]);
-						$em->flush();
-	
-						$this->addFlash('message', 'Modifications enregistrées avec succès');
-						return $this->redirectToRoute("admin.utilisateurs");
-					}
-				}
+		$form = $this->createForm(UsersType::class, $users);
+		$form->handleRequest($request);
 
-				$i++;
+        if ($form->isSubmitted() && $form->isValid()) {
+			$em = $this->getDoctrine()->getManager();
+			foreach ($users->getUsers() as $user) {
+				$em->persist($user);
+				$em->flush();
 			}
-		}
 
-		// On crée les vues pour chaque form
-		foreach($forms as $form) {
-			$formViews[] = $form->createView();
-		}
+			$this->addFlash('message', "Modifications enregistrées avec succès");
+			return $this->redirectToRoute('admin.utilisateurs');
+        }
 
-		return $this->render("admin/users.html.twig", [
-			'users' => $users,
-			'forms' => $formViews
-		]);
+        return $this->render('admin/users.html.twig', [
+			'form' => $form->createView(),
+			'users' => $allUsers
+        ]);
 	}
 
 	/**

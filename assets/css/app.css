@@ -1,0 +1,61 @@
+/* Import(s) nécessaire(s) */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css");
+
+/* Pour gestion des détails lorsque l'on clique sur une ligne d'un tableau (gestion) */
+.panel {
+	display: none;
+}
+
+/* Style de bouton principal */
+.bouton-crous {
+	background: red;
+	color: white;
+	font-weight: 700;
+	padding: 15 30px;
+	margin-top: 15px;
+	border: 1px solid rgb(136, 0, 0);
+}
+
+/* Mettre le contenu des td du table au centre (verticalement) */
+.table {
+	border: 2px solid grey;
+}
+.table .vert-middle {
+	vertical-align: middle;
+}
+
+/* Boîte de formulaire pour détail d'une ligne du tableau (gestion) */
+.detail-box {
+	border: 0.1px dashed grey; 
+	min-height: 300px; margin: 30px 0; 
+	background: rgba(207, 207, 207, 0.247);
+	padding: 10px;
+}
+
+/* Aligner chaque ligne du formulaire (gestion) au milieu de la page (horizontalement) */
+.form-row-center {
+	width: 60%;
+	margin: 0 auto;
+}
+
+/* Effets de couleur lors d'un survol sur le crayon et de la trash dans le tableau (gestion) */
+.pencil:hover, .trash:hover {
+	opacity: 0.6;
+	cursor: pointer;
+}
+.pencil::before {
+	background-image: url('/ressource/pencil.png');
+}
+
+.trash::before {
+    background-image: url('/ressource/trash.png');
+}
+
+.pencil::before, .trash::before {
+	margin: 5px 10px;
+	content:'';
+    background-size: 100% 100%;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}

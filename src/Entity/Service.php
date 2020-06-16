@@ -62,12 +62,12 @@ class Service
 
     public function getCode(): ?string
     {
-        return $this->code;
+        return strtoupper($this->code);
     }
 
     public function setCode(string $code): self
     {
-        $this->code = $code;
+        $this->code = strtoupper($code);
 
         return $this;
     }

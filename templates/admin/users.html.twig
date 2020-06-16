@@ -1,11 +1,11 @@
 {% extends "base.html.twig" %}
 
-{% set a = -1 %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des Utilisateurs</h1> 
-	<h5>Si un utilisateur spécifique n'apparait pas, c'est surement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></h5>
+	<h1>Gestion des utilisateurs</h1> 
+	<h5>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></h5>
 </div>
 
 {% for message in app.flashes('message') %}
@@ -19,99 +19,48 @@
 </div>
 {% endfor %}
 
-<table class="table" style="margin-top: 50px;">
-	<thead style="font-size: 1.5em;">
-		<th>Identité</th>
-		<th>Date de fin de validaté de contrat</th>
-		<th>Service(s) rataché(s)</th>
-		<th>Supprimer agent</th>
+<table class="table table-striped">
+	<thead style="font-size: 1.2em;" class="table-danger">
+		<th >Prénom Nom</th>
+		<th>Email</th>
+		<th>Fin de validité de contrat</th>
+		<th></th>
 	</thead>
 	<tbody>
 		{% for user in users %}
-		<tr style="background: rgb(179, 179, 179);">
-			<td>
-				<div onclick=myFunction({{ loop.index0 }}) style="cursor: pointer;">
-					<strong>{{ user.prenom|e }} {{ user.nom }}</strong> : <em>{{ user.email }}</em>
-				</div>
-			</td>
-			<td>
-				{{ user.formatDate(user.getDateFinValid()) }}
-			</td>
-			<td>
-				<ul>
-					{% for service in user.services %}
-					<li>{{ service.getCode() }}</li>
-					{% endfor %}
-				</ul>
-			</td>
-			<td>
-				<form action="{{ path('admin.utilisateur.delete', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Confirmation : souhaitez-vous supprimer cet agent de la base de donnée ?')">
-					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-					<input type="hidden" name="_method" value="DELETE">
-					<button class="btn btn-danger">Supprimer</button>
-				</form>
-			</td>
-		</tr>
-		{% else %}
 		<tr>
-			<td colspan="4">Il semblerait qu'il n'y ait aucun utilisateur a afficher</td>
+			<td class="vert-middle"><strong>{{ user.prenom }} {{ user.nom }}</strong></td>
+			<td class="vert-middle">{{ user.email }}</td>
+			<td class="text-center vert-middle">{{ user.formatDate(user.getDateFinValid()) }}</td>
+			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 
-<div id="detail_div" style="border: 0.2em dashed red; height: 200px;">
-	{% autoescape 'js' %}
+<hr>
 
-	{% endautoescape %}
+{{ form_start(form) }}
+<div class="detail-box">
+	{% for userForm in form.users %}
+	<div class="panel" id="user_detail_{{ loop.index0 }}">
+		<div class="row form-row-center">
+			<div class="col-md-6">{{ form_row(userForm.prenom) }}</div>
+			<div class="col-md-6">{{ form_row(userForm.nom) }}</div>
+		</div>
+		<div class="row form-row-center">
+			<div class="col-md-6">{{ form_row(userForm.date_deb_valid) }}</div>
+			<div class="col-md-6">{{ form_row(userForm.date_fin_valid) }}</div>
+		</div>
+		<div class="row form-row-center">
+			<div class="col-md-12">{{ form_row(userForm.services) }}</div>
+		</div>
+		<div class="form-row-center">
+			<button type="submit" class="btn bouton-crous float-right">Enregistrer</button>
+		</div>
+	</div>
+	{% endfor %}
 </div>
+{{ form_end(form) }}
 
-		<!-- <div class="detail" style="color: blue; text-decoration: underline; cursor: pointer;"><em>Modifier agent</em></div>
-		<div></div>
-		<div class="userForm">
-		{# {% form_theme forms[loop.index0] 'bootstrap_4_layout.html.twig' %} #}
-			<form action="" method="POST" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
-				{# {% if not forms[loop.index0].vars.submitted %} style="display: none;"{% endif %} #}
-				{#{{ form_start(forms[loop.index0]) }}#}
-				<div class="row">
-					<div class="col-md-5">
-						{#{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}#}
-					</div>
-					<div class="col-md-5">
-						{#{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}#}
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-5">
-						{#{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}#}
-					</div>
-					<div class="col-md-5">
-						{#{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}#}
-					</div>
-				</div>
-				
-				{#{{ form_rest(forms[loop.index0]) }}#}
-
-				<input type="hidden" name="id_user" value="{# {{ user.getId() }} #}">
-				<div class="form-group">
-					<button type="submit" class="btn btn-primary">Enregistrer</button>
-				</div>
-				{# {{ form_end(forms[loop.index0]) }} #}
-			</form>
-		</div> -->
-{% endblock %}
-
-{% block javascripts %}
-<script>
-	function myFunction(loopIndex) {
-		var start = '{{ form_start(forms[3]) }}';
-		let row = '{{ form_row(forms[3]) }}';
-		let end = '{{ form_end(forms[3]) }}';
-		document.getElementById('detail_div').innerHTML = "<form action=\"\" method=\"POST\" style=\"margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;\">" + start + row + end +	 "</form>";
-	}
-</script>
-{% endblock %}
-
-{% block stylesheets %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css">
 {% endblock %}
