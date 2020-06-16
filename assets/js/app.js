@@ -29,6 +29,7 @@ $(".detail").on("click", function() {
     $(this).nextUntil('.userForm').next().slideToggle("slow");
 });
 
+
 // let arr_link_ids = Array.prototype.map.call(link_ids, function(el) {
 //     return el.id;
 // });

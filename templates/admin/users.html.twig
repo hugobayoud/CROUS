@@ -1,5 +1,7 @@
 {% extends "base.html.twig" %}
 
+{% set a = -1 %}
+
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
 	<h1>Gestion des Utilisateurs</h1> 
@@ -26,9 +28,12 @@
 	</thead>
 	<tbody>
 		{% for user in users %}
-		{% form_theme forms[loop.index0] 'bootstrap_4_layout.html.twig' %}
 		<tr style="background: rgb(179, 179, 179);">
-			<td><strong>{{ user.prenom }} {{ user.nom }}</strong> : <em>{{ user.email }}</em></td>
+			<td>
+				<div onclick=myFunction({{ loop.index0 }}) style="cursor: pointer;">
+					<strong>{{ user.prenom|e }} {{ user.nom }}</strong> : <em>{{ user.email }}</em>
+				</div>
+			</td>
 			<td>
 				{{ user.formatDate(user.getDateFinValid()) }}
 			</td>
@@ -47,66 +52,63 @@
 				</form>
 			</td>
 		</tr>
-		<tr>
-			<td colspan="4" style="margin-bottom: 30px;">
-				<div class="detail" style="color: blue; text-decoration: underline; cursor: pointer;"><em>Modifier agent</em></div>
-				<div></div>
-				<div class="userForm">
-					<form action="" method="POST" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
-						{# {% if not forms[loop.index0].vars.submitted %} style="display: none;"{% endif %} #}
-						{{ form_start(forms[loop.index0]) }}
-						<div class="row">
-							<div class="col-md-5">
-								{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}
-							</div>
-							<div class="col-md-5">
-								{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-5">
-								{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}
-							</div>
-							<div class="col-md-5">
-								{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}
-							</div>
-						</div>
-						
-						{{ form_rest(forms[loop.index0]) }}
-
-						<input type="hidden" name="id_user" value="{{ user.getId() }}">
-						<div class="form-group">
-							<button type="submit" class="btn btn-primary">Enregistrer</button>
-						</div>
-						{{ form_end(forms[loop.index0]) }}
-					</form>
-				</div>
-			</td>
-		</tr>
 		{% else %}
 		<tr>
-			<td colspan="4">Il n'y a pas d'utilisateur a valider</td>
+			<td colspan="4">Il semblerait qu'il n'y ait aucun utilisateur a afficher</td>
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
+
+<div id="detail_div" style="border: 0.2em dashed red; height: 200px;">
+	{% autoescape 'js' %}
+
+	{% endautoescape %}
+</div>
+
+		<!-- <div class="detail" style="color: blue; text-decoration: underline; cursor: pointer;"><em>Modifier agent</em></div>
+		<div></div>
+		<div class="userForm">
+		{# {% form_theme forms[loop.index0] 'bootstrap_4_layout.html.twig' %} #}
+			<form action="" method="POST" style="margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;">
+				{# {% if not forms[loop.index0].vars.submitted %} style="display: none;"{% endif %} #}
+				{#{{ form_start(forms[loop.index0]) }}#}
+				<div class="row">
+					<div class="col-md-5">
+						{#{{ form_row(forms[loop.index0].prenom, {'label': 'Prénom', 'attr': {'placeholder': 'prénom'}}) }}#}
+					</div>
+					<div class="col-md-5">
+						{#{{ form_row(forms[loop.index0].nom, {'label': 'Nom', 'attr': {'placeholder': 'nom'}}) }}#}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-5">
+						{#{{ form_row(forms[loop.index0].date_deb_valid, {'label': 'Date début de contrat'}) }}#}
+					</div>
+					<div class="col-md-5">
+						{#{{ form_row(forms[loop.index0].date_fin_valid, {'label': 'Date fin de contrat'}) }}#}
+					</div>
+				</div>
+				
+				{#{{ form_rest(forms[loop.index0]) }}#}
+
+				<input type="hidden" name="id_user" value="{# {{ user.getId() }} #}">
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">Enregistrer</button>
+				</div>
+				{# {{ form_end(forms[loop.index0]) }} #}
+			</form>
+		</div> -->
 {% endblock %}
+
 {% block javascripts %}
 <script>
-function myFunction(clicked_id) {
-	// e.preventDefault();
-	// var element = document.getElementById('userForm_' + clicked_id);
-	// $('#userForm_38').slideToggle();
-
-	// $(this).click(e => {
-	// 	e.preventDefault();
-	// 	$('#userForm_' + clicked_id).slideToggle();
-	// })
-
-	$('.detail_link').on("click", function() {
-		$(this).nextUntil('.uf').next().slideToggle("slow");
-	});
-}
+	function myFunction(loopIndex) {
+		var start = '{{ form_start(forms[3]) }}';
+		let row = '{{ form_row(forms[3]) }}';
+		let end = '{{ form_end(forms[3]) }}';
+		document.getElementById('detail_div').innerHTML = "<form action=\"\" method=\"POST\" style=\"margin-top: 30px; background: rgb(231, 231, 231); padding: 20px;\">" + start + row + end +	 "</form>";
+	}
 </script>
 {% endblock %}
 
