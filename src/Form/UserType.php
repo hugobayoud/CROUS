@@ -38,6 +38,11 @@ class UserType extends AbstractType
 				'choice_label' => 'libelle_court',
 				'multiple' => true
 			])
+
+			// ->add('dsi', CheckboxType::class, [
+			// 	'label_attr' => ['class' => 'switch-custom'],
+			// 	'required' => false
+			// ])
         ;
     }
 

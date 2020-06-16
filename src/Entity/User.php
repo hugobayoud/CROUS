@@ -60,11 +60,6 @@ class User implements UserInterface
 	 * 	)
 	 */
 	public $confirm_password;
-	
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private $dsi;
 
     /**
      * @ORM\Column(type="datetime")
@@ -95,16 +90,6 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $date_deb_dsi;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-	private $date_fin_dsi;
 
     public function __construct()
     {
@@ -160,18 +145,6 @@ class User implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    public function getDsi(): ?bool
-    {
-        return $this->dsi;
-    }
-
-    public function setDsi(bool $dsi): self
-    {
-        $this->dsi = $dsi;
 
         return $this;
     }
@@ -318,30 +291,6 @@ class User implements UserInterface
 
         return $this;
     }
-
-    public function getDateDebDsi(): ?\DateTimeInterface
-    {
-        return $this->date_deb_dsi;
-    }
-
-    public function setDateDebDsi(?\DateTimeInterface $date_deb_dsi): self
-    {
-        $this->date_deb_dsi = $date_deb_dsi;
-
-        return $this;
-    }
-
-    public function getDateFinDsi(): ?\DateTimeInterface
-    {
-        return $this->date_fin_dsi;
-    }
-
-    public function setDateFinDsi(?\DateTimeInterface $date_fin_dsi): self
-    {
-        $this->date_fin_dsi = $date_fin_dsi;
-
-        return $this;
-	}
 	
 	/* AUTRES FONCTIONS */
 

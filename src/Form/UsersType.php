@@ -15,7 +15,7 @@ class UsersType extends AbstractType
             'entry_type' => UserType::class,
 			'entry_options' => ['label' => false],
 			'allow_delete' => true,
-        ]);
+		]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
