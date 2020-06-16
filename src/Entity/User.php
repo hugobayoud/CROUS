@@ -105,16 +105,10 @@ class User implements UserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
 	private $date_fin_dsi;
-	
-	/**
-     * @ORM\OneToMany(targetEntity=Validateur::class, mappedBy="id_user")
-     */
-    private $validateurs;
 
     public function __construct()
     {
 		$this->services = new ArrayCollection();
-		$this->validateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -251,38 +245,6 @@ class User implements UserInterface
 
         return $this;
 	}
-	
-	/**
-     * @return Collection|Validateur[]
-     */
-    public function getValidateurs(): Collection
-    {
-        return $this->validateurs;
-    }
-
-    public function addValidateur(Validateur $validateur): self
-    {
-        if (!$this->validateurs->contains($validateur)) {
-            $this->validateurs[] = $validateur;
-            $validateur->setIdUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeValidateur(Validateur $validateur): self
-    {
-        if ($this->validateurs->contains($validateur)) {
-            $this->validateurs->removeElement($validateur);
-            // set the owning side to null (unless already changed)
-            if ($validateur->getIdUser() === $this) {
-                $validateur->setIdUser(null);
-            }
-        }
-
-        return $this;
-    }
-
 
 
 	/* AUTRES FONCTIONS !*/

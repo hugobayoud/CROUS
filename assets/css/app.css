@@ -1,4 +1,7 @@
 /* Import(s) nécessaire(s) */
+/* TWITTER BOOTSTRAP */
+@import url("https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css");
+/* SELECT2 */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css");
 
 /* Pour gestion des détails lorsque l'on clique sur une ligne d'un tableau (gestion) */

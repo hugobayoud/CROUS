@@ -87,111 +87,23 @@ class AdminController extends AbstractController
 	}
 
 	/**
-	 * Liste tous les utilisateurs validés pour modification de leurs roles (DSI et Valideur de chaque service)
+	 * Liste tous les utilisateurs validés pour modification de leurs rôles de valideur pour chaque service
 	 * 
-	 * @Route("/utilisateurs/roles", name="utilisateurs.roles")
+	 * @Route("/utilisateurs/valideurs", name="utilisateurs.valideurs")
 	 */
-	public function usersListRoles(UserRepository $users)
+	public function usersListValidators(UserRepository $userRepo, Request $request, UserInterface $currentUser)
 	{
-		return $this->render("admin/users_roles.html.twig", [
-			'users' => $users->findAllValidated()
-		]);
+		return $this->render("admin/users_validators.html.twig");
 	}
 
 	/**
-	 * Modifier le rôle DSI d'un user
+	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS
 	 * 
-	 * @Route("/utilisateur/{id}/dsi/modifier", name="utilisateur.dsi.modifier")
+	 * @Route("/utilisateurs/dsi", name="utilisateurs.dsi")
 	 */
-	public function editUserDSI(User $user, Request $request)
+	public function usersListDSI(UserRepository $userRepo, Request $request, UserInterface $currentUser)
 	{
-		$formDSI = $this->createForm(EditUserDSIType::class, $user);
-		$formDSI->handleRequest($request);
-
-		if ($formDSI->isSubmitted() && $formDSI->isValid()) {
-			if ($formDSI->get('dsi')->getData() === TRUE) {
-				$user->addRole("USER_DSI");
-			} else {
-				$user->removeRole("USER_DSI");
-			}
-			
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($user);
-			$em->flush();
-
-			$this->addFlash('message', "Modifications enregistrées avec succès");
-
-			return $this->redirectToRoute('admin.utilisateurs');
-		}
-
-		return $this->render('admin/edit_user_dsi.html.twig', [
-			'form' => $formDSI->createView(),
-			'user' => $user
-		]);
-	}
-
-	/**
-	 * Modifier un rôle possédé par un user
-	 * 
-	 * @Route("/utilisateur/{id_user}/service/{id_service}/modifier", name="utilisateur.service.modifier")
-	 */
-	public function editUserService($id_user, $id_service, Request $request, ValidateurRepository $validateurRepo)
-	{
-		$validateur = $validateurRepo->findOneByIdUserAndService($id_user, $id_service);
-
-		// Si il y a une ligne dans la table VALIDATEUR pour ce user, ce service alors on met les données dans le form
-		if ($validateur !== NULL) {
-			$form = $this->createForm(EditUserServiceType::class, $validateur);
-			$form->get('valide')->setData(true);
-			
-		// Sinon on créé un form vierge
-		} else {
-			$form = $this->createForm(EditUserServiceType::class);
-		}
-
-		$form->handleRequest($request);
-		$em = $this->getDoctrine()->getManager();
-
-		// On récupère le user et le service correspondants pour les envoyer à la vue
-		$user = $em->find(User::class, $id_user);
-		$service = $em->find(Service::class, $id_service);
-
-		if ($form->isSubmitted() && $form->isValid()) {
-
-			// On recupère le validateur s'il existe deja dans la table VALIDATEUR
-			$validateur = $validateurRepo->findOneByIdUserAndService($id_user, $id_service);
-			
-			// Si il y a une ligne pour ce service pour ce user dans la table on le supprime.
-			if ($validateur !== NULL) {
-				$em->remove($validateur);
-			}
-
-			// Si l'input 'valide' du form est TRUE alors on doit enregsitrer de nouvelles infos.
-			if ($form->get('valide')->getData() === TRUE) {
-				$validateur = new Validateur();
-				$validateur
-						->setIdUser($user)
-						->setIdService($service)
-						->setDateDeb($form->get('date_deb')->getData())
-						->setDateFin($form->get('date_fin')->getData());
-				
-				$em->persist($validateur);
-			}
-			
-			$em->flush();
-
-			$this->addFlash('message', "Modifications enregistrées avec succès");
-
-			return $this->redirectToRoute('admin.utilisateurs');
-		}
-
-
-		return $this->render('admin/edit_user_service.html.twig', [
-			'form' => $form->createView(),
-			'user' => $user,
-			'service' => $service
-		]);
-
+		return $this->render('admin/users_dsi.html.twig');
 	}
 
 	/**

@@ -1,64 +1,64 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-		<title>{% block title %}Dev | CROUS Access{% endblock %}</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-		{{ encore_entry_link_tags('app') }}
-		{% block stylesheets %}{% endblock %}
-    </head>
-    <body>
-		<nav class="navbar navbar-expand-md navbar-dark static-top" style="background-color: #fe0000;">
-			<a class="navbar-brand" href="{{ path('home') }}"><strong>CROUS</strong><br>Accueil</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-			  <span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}Dev | CROUS Access{% endblock %}</title>
+	{{ encore_entry_link_tags('app') }}
+	{% block stylesheets %}{% endblock %}
+</head>
+<body>
+	<nav class="navbar navbar-expand-md navbar-dark static-top" style="background-color: #fe0000;">
+		<a class="navbar-brand" href="{{ path('home') }}"><strong>CROUS</strong><br>Accueil</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+			{% if app.user %}
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Gestion
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						
+						<a class="dropdown-item" href="{{ path('admin.utilisateurs') }}">Gestion des utilisateurs</a>
+						<a class="dropdown-item" href="{{ path('admin.utilisateurs.dsi') }}">Gestion des DSI</a>
+						<a class="dropdown-item" href="{{ path('admin.utilisateurs.valideurs') }}">Gestion des Valideurs</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{{ path('admin.service_index') }}">Gestion des services</a>
+						<a class="dropdown-item" href="#">Gestion des applications</a>
+					</div>
+				</li>
+			</ul>
+			{% endif %}
+			<ul class="navbar-nav mr-auto">
+				{% if not app.user %}
+				<li class="nav-item">
+					<a href="{{ path('security.login') }}" class="nav-link">Se connecter</a>
+				</li>
+				{% else %}
+				<li class="nav-item">
+					<a href="{{ path('security.logout') }}" class="nav-link">Se déconnecter</a>
+				</li>
+				{% endif %}
+				</ul>
 				{% if app.user %}
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						  Gestion
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							
-							<a class="dropdown-item" href="{{ path('admin.utilisateurs') }}">Gestion des utilisateurs</a>
-							<a class="dropdown-item" href="{{ path('admin.utilisateurs.roles') }}">Gestion des rôles</a>
-						  	<div class="dropdown-divider"></div>
-						  	<a class="dropdown-item" href="{{ path('admin.service_index') }}">Gestion des services</a>
-						  	<a class="dropdown-item" href="#">Gestion des applications</a>
-						</div>
-					</li>
+					<li class="nav-item" style="font-size: 0.8em;">(connecté(e) avec : <em>{{ app.user.email }}</em>)</li>
 				</ul>
 				{% endif %}
-			  	<ul class="navbar-nav mr-auto">
-				  {% if not app.user %}
-				  	<li class="nav-item">
-						<a href="{{ path('security.login') }}" class="nav-link">Se connecter</a>
-					</li>
-					{% else %}
-					<li class="nav-item">
-						<a href="{{ path('security.logout') }}" class="nav-link">Se déconnecter</a>
-				  	</li>
-				  {% endif %}
-				  </ul>
-				  {% if app.user %}
-				  	<ul class="navbar-nav mr-auto">
-						<li class="nav-item" style="font-size: 0.8em;">(connecté(e) avec : <em>{{ app.user.email }}</em>)</li>
-					</ul>
-				  {% endif %}
-			</div>
-		</nav>
-		<div class="container">
-			{% block body %}{% endblock %}
 		</div>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-		{{ encore_entry_script_tags('app') }}
-		{% block javascripts %}{% endblock %}
+	</nav>
+	<div class="container">
+		{% block body %}{% endblock %}
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+	{{ encore_entry_script_tags('app') }}
+	{% block javascripts %}{% endblock %}
 </body>
 </html>
