@@ -6,11 +6,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Users
 {
     protected $description;
-    protected $users;
+	protected $users;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+		$this->users = new ArrayCollection();
     }
 
     public function getDescription()
@@ -31,5 +31,5 @@ class Users
 	public function removeUser(User $user)
     {
         $this->users->removeElement($user);
-    }
+	}
 }

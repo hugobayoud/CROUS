@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Dsis;
 use App\Entity\User;
 use App\Entity\Users;
+use App\Form\DsisType;
 use App\Entity\Service;
 use App\Form\UsersType;
 use App\Entity\Validateur;
 use App\Form\EditUserDSIType;
 use App\Form\EditUserServiceType;
+use App\Repository\DsiRepository;
 use App\Repository\UserRepository;
 use App\Repository\ValidateurRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,16 +62,21 @@ class AdminController extends AbstractController
 	 */
 	public function usersList(UserRepository $userRepo, Request $request, UserInterface $currentUser)
 	{
+		// On crée un ArrayCollection de tous les users
 		$users = new Users();
+		// On récupère tous les users validés dans BDD (à l'exception de l'user connecté, il ne peut pas se modifier lui-même)
 		$allUsers = $userRepo->findAllValidated($currentUser->getId());
 
+		// On ajoute les users au tableau
 		foreach ($allUsers as $user) {
 			$users->getUsers()->add($user);
 		}
 
+		// On crée un form de ce tableau
 		$form = $this->createForm(UsersType::class, $users);
 		$form->handleRequest($request);
 
+		// On persiste en BDD
         if ($form->isSubmitted() && $form->isValid()) {
 			$em = $this->getDoctrine()->getManager();
 			foreach ($users->getUsers() as $user) {
@@ -76,6 +84,7 @@ class AdminController extends AbstractController
 				$em->flush();
 			}
 
+			// On notifie que tout s'est bien passé
 			$this->addFlash('message', "Modifications enregistrées avec succès");
 			return $this->redirectToRoute('admin.utilisateurs');
         }
@@ -101,9 +110,63 @@ class AdminController extends AbstractController
 	 * 
 	 * @Route("/utilisateurs/dsi", name="utilisateurs.dsi")
 	 */
-	public function usersListDSI(UserRepository $userRepo, Request $request, UserInterface $currentUser)
+	public function usersListDSI(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request, UserInterface $currentUser)
 	{
-		return $this->render('admin/users_dsi.html.twig');
+		$dsis = new Dsis();
+		$originalDsis = new Dsis();
+		$user = $userRepo->findOneBy(['id' => 41]);
+		$allDsisForOneUser = $dsiRepo->findBy(['user' => 41]);
+
+		foreach ($allDsisForOneUser as $dsi) {
+			$dsis->getDsis()->add($dsi);
+		}
+
+		// Sauvegarder le tableau de DSI d'un user avant qu'il y ait modification
+		foreach ($dsis->getDsis() as $aDsi) {
+			$originalDsis->addDsi($aDsi);
+		}
+
+		// On crée un form de ce tableau
+		$form = $this->createForm(DsisType::class, $dsis);
+		$form->handleRequest($request);
+
+		// On persiste en BDD
+        if ($form->isSubmitted() && $form->isValid()) {
+			$em = $this->getDoctrine()->getManager();
+
+			// Les dates qui sont dans $dsis et dans $originalDsis n'ont pas subit de modification, on y touche pas,
+			// Les dates qui ne sont pas dans $dsis mais qui sont dans $originalDsis sont des dates supprimées, elles doivent être enlevées en base,
+			// Les dates qui sont dans $dsis mais pas dans $originalDsis sont les nouvelles dates à enregistrer en base.
+
+			// SUPPRESION EN BASE
+			foreach ($originalDsis->getDsis() as $dsi) {
+				//Si le form enregistré a enlevé une date, alors elle est enlevé de la BDD
+				if (false === $dsis->getDsis()->contains($dsi)) {
+					// On supprime de la BDD
+					$em->remove($dsi);
+					$em->flush();
+				}
+			}
+
+			// AJOUT EN BASE
+			foreach ($dsis->getDsis() as $dsi) {
+				if (false === $originalDsis->getDsis()->contains($dsi)) {
+					// On associe cette période au bon agent
+					$dsi->setUser($user);
+					$em->persist($dsi);
+					$em->flush();
+				}
+			}
+
+			// On notifie que tout s'est bien passé
+			$this->addFlash('message', "Modifications enregistrées avec succès");
+			return $this->redirectToRoute('admin.utilisateurs.dsi');
+		}
+		
+		return $this->render('admin/users_dsi.html.twig', [
+			'user' => $user,
+			'form' => $form->createView()
+		]);
 	}
 
 	/**

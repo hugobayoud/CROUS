@@ -17,7 +17,17 @@ class DsiRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Dsi::class);
-    }
+	}
+	
+	public function findAllMini()
+	{
+		$conn = $this->getEntityManager()->getConnection();
+		$sql = 'SELECT dsi.user_id, dsi.date_deb, dsi.date_fin FROM Dsi';
+		$stmt = $conn->prepare($sql);
+		$stmt->execute();
+		
+		return $stmt->fetchAll();
+	}
 
     // /**
     //  * @return Dsi[] Returns an array of Dsi objects
