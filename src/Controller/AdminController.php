@@ -15,6 +15,7 @@ use App\Repository\DsiRepository;
 use App\Repository\UserRepository;
 use App\Repository\ValidateurRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -112,62 +113,85 @@ class AdminController extends AbstractController
 	 */
 	public function usersListDSI(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request, UserInterface $currentUser)
 	{
-		$dsis = new Dsis();
-		$originalDsis = new Dsis();
-		$user = $userRepo->findOneBy(['id' => 41]);
-		$allDsisForOneUser = $dsiRepo->findBy(['user' => 41]);
+		// Tableau de User
+		$users = $userRepo->findAllValidated($currentUser->getId());
 
-		foreach ($allDsisForOneUser as $dsi) {
-			$dsis->getDsis()->add($dsi);
-		}
+		// Tableau de tableau de DSIs pour chaque user
+		$allDsis = [];
+		$allOriginalDsis = [];
+		$forms = [];
 
-		// Sauvegarder le tableau de DSI d'un user avant qu'il y ait modification
-		foreach ($dsis->getDsis() as $aDsi) {
-			$originalDsis->addDsi($aDsi);
-		}
-
-		// On crée un form de ce tableau
-		$form = $this->createForm(DsisType::class, $dsis);
-		$form->handleRequest($request);
-
-		// On persiste en BDD
-        if ($form->isSubmitted() && $form->isValid()) {
-			$em = $this->getDoctrine()->getManager();
-
-			// Les dates qui sont dans $dsis et dans $originalDsis n'ont pas subit de modification, on y touche pas,
-			// Les dates qui ne sont pas dans $dsis mais qui sont dans $originalDsis sont des dates supprimées, elles doivent être enlevées en base,
-			// Les dates qui sont dans $dsis mais pas dans $originalDsis sont les nouvelles dates à enregistrer en base.
-
-			// SUPPRESION EN BASE
-			foreach ($originalDsis->getDsis() as $dsi) {
-				//Si le form enregistré a enlevé une date, alors elle est enlevé de la BDD
-				if (false === $dsis->getDsis()->contains($dsi)) {
-					// On supprime de la BDD
-					$em->remove($dsi);
-					$em->flush();
-				}
+		foreach ($users as $user) {
+			// On récupère les Dsis de chaque user un par un
+			$allDsisForOneUser = $dsiRepo->findBy(['user' => $user->getId()]);
+			
+			$dsis = new Dsis();
+			$originalDsis = new Dsis();
+			foreach ($allDsisForOneUser as $dsi) {
+				// Dsis d'un user qui sera utile pour les formulaires
+				$dsis->getDsis()->add($dsi);
+				// Dsis d'un user stockés afin de comparer les Dsis d'un user avant et après modificiation des formulaires par l'admin
+				$originalDsis->getDsis()->add($dsi);
 			}
 
-			// AJOUT EN BASE
-			foreach ($dsis->getDsis() as $dsi) {
-				if (false === $originalDsis->getDsis()->contains($dsi)) {
-					// On associe cette période au bon agent
-					$dsi->setUser($user);
-					$em->persist($dsi);
-					$em->flush();
-				}
-			}
+			$allDsis[] = $dsis;
+			$allOriginalDsis[] = $originalDsis;
 
-			// On notifie que tout s'est bien passé
-			$this->addFlash('message', "Modifications enregistrées avec succès");
-			return $this->redirectToRoute('admin.utilisateurs.dsi');
+			// On crée un form du tableau de DSIs d'un user pour chaque user
+			$forms[] = $this->createForm(DsisType::class, $dsis);
 		}
-		
+
+		// Si le formulaire est envoyé, on récupère l'id correspondant à l'agent et les modifications à faire en BDD
+		if (isset($_POST["custId"])) {
+			$index = $_POST["custId"];
+			// On handleRequest() sur le bon formulaire
+			$form = $forms[$index]->handleRequest($request);
+
+			// Si le form est soumis et valide
+			if ($form->isSubmitted() && $form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+								
+				// Les dates qui sont dans $dsis et dans $originalDsis n'ont pas subit de modification, on y touche pas,
+				// Les dates qui ne sont pas dans $dsis mais qui sont dans $originalDsis sont des dates supprimées, elles doivent être enlevées en BDD,
+				// Les dates qui sont dans $dsis mais pas dans $originalDsis sont les nouvelles dates à enregistrer en BDD.
+	
+				// SUPPRESION EN BASE
+				foreach ($allOriginalDsis[$index]->getDsis() as $dsi) {
+					//Si le form a enlevé une date, alors elle est enlevée de la BDD
+					if (false === $allDsis[$index]->getDsis()->contains($dsi)) {
+						// On supprime de la BDD
+						$em->remove($dsi);
+						$em->flush();
+					}
+				}
+	
+				// AJOUT EN BASE
+				foreach ($allDsis[$index]->getDsis() as $dsi) {
+					if (false === $allOriginalDsis[$index]->getDsis()->contains($dsi)) {
+						// On associe cette période au bon agent
+						$dsi->setUser($users[$index]);
+						$em->persist($dsi);
+						$em->flush();
+					}
+				}
+	
+				// On notifie que tout s'est bien passé
+				$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
+				return $this->redirectToRoute('admin.utilisateurs.dsi');
+			}
+		}
+
+		$tmpForms = [];
+		foreach ($forms as $form) {
+			$tmpForms[] = $form->createView();
+		}
+
 		return $this->render('admin/users_dsi.html.twig', [
-			'user' => $user,
-			'form' => $form->createView()
+			'users' => $users,
+			'forms' => $tmpForms, 
 		]);
 	}
+
 
 	/**
 	 * @Route("/utilisateur/{id}/delete", name="utilisateur.delete", methods="DELETE")

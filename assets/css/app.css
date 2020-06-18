@@ -27,6 +27,10 @@
 	vertical-align: middle;
 }
 
+.vert-middle {
+	vertical-align: middle;
+}
+
 /* Boîte de formulaire pour détail d'une ligne du tableau (gestion) */
 .detail-box {
 	border: 0.1px dashed grey; 
@@ -37,12 +41,13 @@
 
 /* Aligner chaque ligne du formulaire (gestion) au milieu de la page (horizontalement) */
 .form-row-center {
-	width: 60%;
+	width: 70%;
 	margin: 0 auto;
 }
 
 /* Effets de couleur lors d'un survol sur le crayon et de la trash dans le tableau (gestion) */
-.pencil:hover, .trash:hover {
+/* ET Pseudo element pour les boutons d'ajout et suppression dans "Gestion des Dsi" et "Gestion des Valideurs" */
+.pencil:hover, .trash:hover, .add-button:hover, .remove-button:hover {
 	opacity: 0.6;
 	cursor: pointer;
 }
@@ -54,6 +59,14 @@
     background-image: url('/ressource/trash.png');
 }
 
+.add-button::before {
+	background-image: url('/ressource/add.png');
+}
+
+.remove-button::after {
+	background-image: url('/ressource/remove.png');
+}
+
 .pencil::before, .trash::before {
 	margin: 5px 10px;
 	content:'';
@@ -61,4 +74,38 @@
     width: 24px;
     height: 24px;
     display: inline-block;
+}
+
+.add-button::before, .remove-button::after {
+	margin: 0 5px;
+	content:'';
+    background-size: 100% 100%;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.add-button::before, .remove-button::after {
+	width: 30px;
+    height: 30px;
+}
+
+
+.add-button, .remove-button {
+	font-size: 0.8em;
+	text-decoration: underline;
+	background-color: inherit;
+	padding: 0;
+	margin: 0 auto;
+	display: table-cell;
+	vertical-align: middle;
+	border: none;
+}
+
+.add-button {
+	color: green;
+}
+
+.remove-button {
+	color: red;
 }
