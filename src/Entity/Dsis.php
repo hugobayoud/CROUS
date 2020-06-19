@@ -2,14 +2,19 @@
 namespace App\Entity;
 
 use App\Entity\Dsi;
+use App\Validator\Constraints as AcmeAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 
+
+/**
+* @AcmeAssert\OverlapPeriods
+*/
 class Dsis
 {
 	protected $description;
 
-    protected $dsis;
-
+	protected $dsis;
+	
     public function __construct()
     {
         $this->dsis = new ArrayCollection();
@@ -38,5 +43,5 @@ class Dsis
     public function removeDsi(Dsi $dsi)
     {
         $this->dsis->removeElement($dsi);
-    }
+	}
 }
