@@ -24,4 +24,9 @@ class HomeController extends AbstractController
 
 		return $this->render('pages/home.html.twig');
 	}
+
+	public function demannde(): Response
+	{
+		return $this->render('pages/demande.html.twig');
+	}
 }

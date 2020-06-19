@@ -43,10 +43,16 @@ class Service
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="services")
      */
     private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="service", orphanRemoval=true)
+     */
+    private $demandes;
 	
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,9 +78,9 @@ class Service
 	}
 	
 	public function getlibelle_court(): ?string
-               	{
-               		return $this->getLibelleCourt();
-               	}
+                              	{
+                              		return $this->getLibelleCourt();
+                              	}
 
     public function setLibelleCourt(?string $libelle_court): self
     {
@@ -123,8 +129,39 @@ class Service
 	
 	/* AUTRES FONCTIONS */
 	public function __toString()
+                   {
+                       return $this->code;
+               	}
+
+    /**
+     * @return Collection|Demande[]
+     */
+    public function getDemandes(): Collection
     {
-        return $this->code;
-	}
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): self
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes[] = $demande;
+            $demande->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): self
+    {
+        if ($this->demandes->contains($demande)) {
+            $this->demandes->removeElement($demande);
+            // set the owning side to null (unless already changed)
+            if ($demande->getService() === $this) {
+                $demande->setService(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

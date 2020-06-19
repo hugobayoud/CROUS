@@ -103,10 +103,16 @@ class User implements UserInterface
      */
     private $dsis;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $demandes;
+
     public function __construct()
     {
 		$this->services = new ArrayCollection();
   $this->dsis = new ArrayCollection();
+  $this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -175,9 +181,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-                                                	{
-                                                		return $this->date_fin_valid;
-                                                	}
+                                                               	{
+                                                               		return $this->date_fin_valid;
+                                                               	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -216,14 +222,14 @@ class User implements UserInterface
 	}
 
 	public function getactivation_token(): ?string
-               	{
-               		return $this->getActivationToken();
-               	}
+                              	{
+                              		return $this->getActivationToken();
+                              	}
 	
 	public function getActivationToken(): ?string
-               	{
-               		return $this->activation_token;
-               	}
+                              	{
+                              		return $this->activation_token;
+                              	}
 
     public function setActivationToken(?string $activation_token): self
     {
@@ -248,28 +254,28 @@ class User implements UserInterface
 	}
 	
 	public function addRole(string $role): self
-               	{
-               		if (!in_array($role, $this->roles)) {
-               			$this->roles[] = $role;
-               		}
-               		
-               		return $this;
-               	}
+                              	{
+                              		if (!in_array($role, $this->roles)) {
+                              			$this->roles[] = $role;
+                              		}
+                              		
+                              		return $this;
+                              	}
 
 	public function removeRole(string $roleToAdd): self
-               	{
-               		if (in_array($roleToAdd, $this->roles)) {
-               			$tab = [];
-               			foreach($this->roles as $role) {
-               				if($roleToAdd !== $role)
-               				$tab[] = $role;
-               			}
-               
-               			$this->setRoles($tab);
-               		}
-               		
-               		return $this;
-               	}
+                              	{
+                              		if (in_array($roleToAdd, $this->roles)) {
+                              			$tab = [];
+                              			foreach($this->roles as $role) {
+                              				if($roleToAdd !== $role)
+                              				$tab[] = $role;
+                              			}
+                              
+                              			$this->setRoles($tab);
+                              		}
+                              		
+                              		return $this;
+                              	}
 
     public function setRoles(array $roles): self
     {
@@ -313,14 +319,14 @@ class User implements UserInterface
 	 * @return string|NULL
 	 */
 	public function formatDate(\DateTime $date = NULL): ?string
-               	{
-               		return DateHelper::formatMyDate($date);
-               	}
+                              	{
+                              		return DateHelper::formatMyDate($date);
+                              	}
 
 	public function __toString()
-                   {
-                       return $this->email;
-                   }
+                                  {
+                                      return $this->email;
+                                  }
 
     /**
      * @return Collection|Dsi[]
@@ -347,6 +353,37 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($dsi->getUser() === $this) {
                 $dsi->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Demande[]
+     */
+    public function getDemandes(): Collection
+    {
+        return $this->demandes;
+    }
+
+    public function addDemande(Demande $demande): self
+    {
+        if (!$this->demandes->contains($demande)) {
+            $this->demandes[] = $demande;
+            $demande->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDemande(Demande $demande): self
+    {
+        if ($this->demandes->contains($demande)) {
+            $this->demandes->removeElement($demande);
+            // set the owning side to null (unless already changed)
+            if ($demande->getUser() === $this) {
+                $demande->setUser(null);
             }
         }
 
