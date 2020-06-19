@@ -39,11 +39,13 @@
 </table>
 
 <hr>
+<p>Sélectionner un agent pour modifier son profil</p>
 
 {{ form_start(form) }}
 <div class="detail-box">
 	{% for userForm in form.users %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
+		<p><em>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</em></p>
 		<div class="row form-row-center">
 			<div class="col-md-6">{{ form_row(userForm.prenom) }}</div>
 			<div class="col-md-6">{{ form_row(userForm.nom) }}</div>
@@ -55,7 +57,7 @@
 		<div class="row form-row-center">
 			<div class="col-md-12">{{ form_row(userForm.services) }}</div>
 		</div>
-		<div class="form-row-center">
+		<div class="form-row-center" style="min-height: 65px;">
 			<button type="submit" class="btn bouton-crous float-right">Enregistrer</button>
 		</div>
 	</div>

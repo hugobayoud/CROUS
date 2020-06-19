@@ -1,73 +1,7 @@
-<!DOCTYPE HTML>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% extends "sign-in-base.html.twig" %}
 	
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
-
-	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
-	<!--<link rel="stylesheet" href="signin.css">-->
-
-	<style>
-		html,
-		body {
-		height: 100%;
-		}
-
-		body {
-		-ms-flex-align: center;
-		align-items: center;
-		padding-top: 40px;
-		padding-bottom: 40px;
-		background-color: #f5f5f5;
-		}
-
-		.form-signin {
-		width: 100%;
-		max-width: 330px;
-		padding: 15px;
-		margin: auto;
-		}
-		.form-signin .checkbox {
-		font-weight: 400;
-		}
-		.form-signin .form-control {
-		position: relative;
-		box-sizing: border-box;
-		height: auto;
-		padding: 10px;
-		font-size: 16px;
-		}
-		.form-signin .form-control:focus {
-		z-index: 2;
-		}
-		.form-signin input[type="email"] {
-		margin-bottom: -1px;
-		border-bottom-right-radius: 0;
-		border-bottom-left-radius: 0;
-		}
-		.form-signin input[type="password"] {
-		margin-bottom: 10px;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
-		}
-		.btn-perso {
-			background: red;
-			color: white;
-		}
-		.tiny-font {
-			font-size: 0.7em;
-		}
-
-	</style>
-
-  </head>
-  <body>
-	<div class="container text-center">
+{% block body %}
+	<div class="text-center">
 		<img class="mb-4" src="ressource\logo_Crous.png" alt="" width="120" height="120">
 		<h1 class="h3 mb-3 font-weight-normal"><strong>CROUS Clermont-Auvergne</strong></h1>
 		<h5 class="h3 mb-3 font-weight-normal">Connexion</h5>
@@ -98,20 +32,31 @@
 			value="{{ csrf_token('authenticate') }}"
 	 		>
 			
-			<a href="{{ path('security.forgotten_password') }}">
+			<a id="forgotten-pass" href="{{ path('security.forgotten_password') }}" style="font-size: 0.8em;">
 				mot de passe oublié ?
 			</a>
 			
-			<button class="btn btn-lg btn-perso btn-block" type="submit">
-				Se connecter
-			</button>
+			<div class="row">
+				<div class="col-md-12">
+					<button class="btn bouton-crous" type="submit" style="width: 100%;">Se connecter</button>
+				</div>
+			</div>
 		</form>
 		<div class="form-signin">
 			Pas encore de compte ? <a href="{{ path('security.registration') }}">créer un compte </a>
 		</div>
 	</div>
  	<p style="text-align: center;">
-		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.6.0</r>
+		<r class="tiny-font">CROUS : Gestion et revue des droits. @hugobayoud - Version 1.6.1</r>
 	</p>
-  </body>
-</html>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	$('a#forgotten-pass').click(function() {
+		var text = $('input#inputEmail').val();
+		console.log(text);
+		sessionStorage.setItem("email", text);
+	});
+</script>
+{% endblock %}

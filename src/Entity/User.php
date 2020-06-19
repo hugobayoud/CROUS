@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Service;
 use App\Helper\DateHelper;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -29,18 +28,21 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+	 * @ORM\Column(type="string", length=255)
+	 * @Assert\NotBlank(message="Un nom est obligatoire")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+	 * @Assert\NotBlank(message="Un prénom est obligatoire")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-	 * @Assert\Email()
+	 * @Assert\Email(message="Veuillez entrer une adresse mail valide")
+	 * @Assert\NotBlank(message="Veuillez entrer une adresse mail")
      */
     private $email;
 
@@ -50,6 +52,7 @@ class User implements UserInterface
 	 * 		min="8", 
 	 * 		minMessage="Votre mot de passe doit faire au moins 8 caractères",
 	 * 	)
+	 * @Assert\NotNull(message="Veuillez donner un mot de passe")
      */
     private $password;
 
@@ -73,6 +76,10 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=Service::class, inversedBy="users")
+	 * @Assert\Count(
+	 * 		min="1",
+	 * 		minMessage="Veuillez sélectionner au moins un service"
+	 * 	)
      */
     private $services;
 
@@ -112,7 +119,7 @@ class User implements UserInterface
         return strtoupper($this->nom);
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom = null): self
     {
         $this->nom = strtoupper($nom);
 
@@ -124,7 +131,7 @@ class User implements UserInterface
         return ucwords(strtolower($this->prenom));
     }
 
-    public function setPrenom(string $prenom): self
+    public function setPrenom(string $prenom = null): self
     {
         $this->prenom = ucwords(strtolower($prenom));
 
@@ -136,7 +143,7 @@ class User implements UserInterface
         return strtolower($this->email);
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email = null): self
     {
         $this->email = strtolower($email);
 
@@ -188,7 +195,7 @@ class User implements UserInterface
         return $this->services;
     }
 
-    public function addService(Service $service): self
+    public function addService(Service $service = NULL): self
     {
         if (!$this->services->contains($service)) {
             $this->services[] = $service;

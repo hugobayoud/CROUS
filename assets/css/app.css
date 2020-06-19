@@ -33,8 +33,9 @@
 
 /* Boîte de formulaire pour détail d'une ligne du tableau (gestion) */
 .detail-box {
-	border: 0.1px dashed grey; 
-	min-height: 300px; margin: 30px 0; 
+	border: 0.1px dashed grey;
+	min-height: 300px; 
+	margin: 30px 0;
 	background: rgba(207, 207, 207, 0.247);
 	padding: 10px;
 }
@@ -45,8 +46,7 @@
 	margin: 0 auto;
 }
 
-/* Effets de couleur lors d'un survol sur le crayon et de la trash dans le tableau (gestion) */
-/* ET Pseudo element pour les boutons d'ajout et suppression dans "Gestion des Dsi" et "Gestion des Valideurs" */
+/* GESTION DES PSEUDO ELEMENTS pour Gestion des Utilisateurs et Gestion des DSI */
 .pencil:hover, .trash:hover, .add-button:hover, .remove-button:hover {
 	opacity: 0.6;
 	cursor: pointer;
@@ -67,7 +67,7 @@
 	background-image: url('/ressource/remove.png');
 }
 
-.pencil::before, .trash::before {
+.pencil::before, .trash::before, .add-button::before, .remove-button::after {
 	margin: 5px 10px;
 	content:'';
     background-size: 100% 100%;
@@ -78,18 +78,9 @@
 
 .add-button::before, .remove-button::after {
 	margin: 0 5px;
-	content:'';
-    background-size: 100% 100%;
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-}
-
-.add-button::before, .remove-button::after {
 	width: 30px;
     height: 30px;
 }
-
 
 .add-button, .remove-button {
 	font-size: 0.8em;

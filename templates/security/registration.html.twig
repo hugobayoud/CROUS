@@ -4,6 +4,11 @@
 
 {% block body %}
 	<h1 class="text-center">Créer votre compte pour faire une demande d'accès aux outils informatiques</h1>
+	{% if errors is defined %}
+		{% for error in errors %}
+		<li>{{ error.message }}</li>
+		{% endfor %}
+	{% endif %}
 		<div style="margin-top: 30px;">
 		{{ form_start(form) }}
 			<div class="row">
@@ -27,14 +32,14 @@
 
 			<div class="row">
 				<div class="col-md-12">
-						<input type="checkbox" name="charte_info" id="charte">
+						<input type="checkbox" name="charte_info" id="charte" required>
 						<label for="charte">J'atteste avoir pris connaissance de la charte informatique et je m'engage à la respecter</label>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-md-12">
-					<input type="checkbox" name="signature" id="signature">
+					<input type="checkbox" name="signature" id="signature" required>
 					<label for="signature">J'atteste que les informations données sont correctes. Validation vaut pour signature</label>
 				</div>
 			</div>

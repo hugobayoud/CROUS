@@ -54,8 +54,10 @@
 				{% endfor %}
 			</div>
 			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
-			<div class="float-right form-row-center">
-				{{ form_row(form.save, {'label': 'Enregistrer ces dates'}) }}
+			<div class="row">
+				<div class="col-md-12" style="text-align: center;">
+					{{ form_row(form.save, {'label': 'Enregistrer ces dates', 'attr': {'class': 'bouton-crous'}}) }}
+				</div>
 			</div>
 		{{ form_end(form) }}
 

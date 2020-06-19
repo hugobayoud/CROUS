@@ -72,10 +72,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email introuvable, identifiants incorrects.');
+            throw new CustomUserMessageAuthenticationException('Email introuvable');
         } else if (NULL !== $user->getActivationToken()) {
 			// account not verified yet with a custom error
             throw new CustomUserMessageAuthenticationException('Compte pas encore validé, veuillez contacter un agent de la DSI');
+		} else if (!$this->checkCredentials($credentials, $user)) {
+			// fail authentication with a custom error
+			throw new CustomUserMessageAuthenticationException('Mot de passe incorrect');
 		}
 
         return $user;

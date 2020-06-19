@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Service;
 use App\Entity\User;
-use App\Form\RegistrationType;
-use App\Form\ResetPassType;
+use App\Entity\Service;
 use App\Helper\DateHelper;
+use App\Form\ResetPassType;
+use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
@@ -26,20 +26,19 @@ class SecurityController extends AbstractController
 	public function registration(UserPasswordEncoderInterface $encoder, Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer)
 	{
 		$user = new User();
-		//Par défaut, dateDebValid à la date de l'incription et dsi sur false, calcul de dateFinValid
+		//Par défaut : dateDebValid à la date de l'inscription ET calcul de dateFinValid selon règle énoncée par M.MULLER
 		$user
 			->setDateDebValid(new \DateTime(null, new \DateTimeZone('Europe/Paris')))
-			->setDateFinValid(DateHelper::calculDateFin($user->getDateDebValid()))
-			->setDsi(0);
+			->setDateFinValid(DateHelper::calculDateFin($user->getDateDebValid()));
 
 		
 		$form = $this->createForm(RegistrationType::class, $user);
 		$form->handleRequest($request);
 
+
 		if ($form->isSubmitted() && $form->isValid()) {
 			// On génère le token d'activation. 
-			// Si en BDD, le champ activation_token de l'user n'est paas NULL, 
-			// alors le compte n'est pas encore vérifié par un DSI
+			// En BDD, si activation_token != NULL alors compte pas encore validé
 			$user->setActivationToken(md5(uniqid()));
 
 			// On hash le mot de passe
@@ -50,7 +49,7 @@ class SecurityController extends AbstractController
 			$em->persist($user);
 			$em->flush();
 
-			// On envoi un mail a un agent de la dsi pour validation
+			// On envoie un mail à un agent de la dsi pour validation
 			$messageUser = (new \Swift_Message("Activation de votre compte demandes d'ouverture d'acces aux outils informatiques"))
 				->setFrom('adresse.dsi@crous.fr')
 				->setTo($user->getEmail())
@@ -80,9 +79,10 @@ class SecurityController extends AbstractController
 					),
 					'text/html'
 				);
-			// On envoie le message
+			// On envoie le mail
 			$mailer->send($messageDSI);
 
+			// On notifie l'utilisateur qui vient de créer son compte qu'il doit être validé
 			$this->addFlash('message', 'Demande de création de compte bien envoyée. Vous pourrez vous connecter quand un agent de la DSI/Administrateur aura confirmé votre compte.');
 
 			return $this->redirectToRoute("security.login");
