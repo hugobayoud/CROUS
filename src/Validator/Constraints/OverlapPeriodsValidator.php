@@ -73,8 +73,6 @@ class OverlapPeriodsValidator extends ConstraintValidator
 					->addViolation();
 			   }
 		   }
-		} else {
-			dd("au moins 2...");
 		}
     }
 }

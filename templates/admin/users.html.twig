@@ -21,18 +21,20 @@
 
 <table class="table table-striped">
 	<thead style="font-size: 1.2em;" class="table-danger">
-		<th >Prénom Nom</th>
+		<th></th>
+		<th >Nom</th>
+		<th >Prénom</th>
 		<th>Email</th>
 		<th>Fin de validité de contrat</th>
-		<th></th>
 	</thead>
 	<tbody>
 		{% for user in users %}
 		<tr>
-			<td class="vert-middle"><strong>{{ user.prenom }} {{ user.nom }}</strong></td>
+			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
+			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
+			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
 			<td class="vert-middle">{{ user.email }}</td>
 			<td class="text-center vert-middle">{{ user.formatDate(user.getDateFinValid()) }}</td>
-			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
 		</tr>
 		{% endfor %}
 	</tbody>

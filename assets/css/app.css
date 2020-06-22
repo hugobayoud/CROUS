@@ -14,9 +14,10 @@
 	background: red;
 	color: white;
 	font-weight: 700;
-	padding: 15 30px;
+	padding: 5px 10px;
 	margin-top: 15px;
-	border: 1px solid rgb(136, 0, 0);
+	border: 1.5px solid rgb(121, 0, 0);
+	border-radius: 3px;
 }
 
 /* Mettre le contenu des td du table au centre (verticalement) */
@@ -29,6 +30,18 @@
 
 .vert-middle {
 	vertical-align: middle;
+}
+
+/* Visuel lorsque l'on sélectionne une ligne d'un tableau */
+.selected-row {
+	background-color: lightgrey;
+}
+
+tr:hover {
+	background-color: rgba(153, 153, 153, 0.15);
+}
+tr{
+	transition: .1s;
 }
 
 /* Boîte de formulaire pour détail d'une ligne du tableau (gestion) */
@@ -46,8 +59,15 @@
 	margin: 0 auto;
 }
 
-/* GESTION DES PSEUDO ELEMENTS pour Gestion des Utilisateurs et Gestion des DSI */
-.pencil:hover, .trash:hover, .add-button:hover, .remove-button:hover {
+.row-flex {
+	margin-bottom: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+/* GESTION DES PSEUDO ELEMENTS pour Gestion des Utilisateurs */
+.pencil:hover, .trash:hover {
 	opacity: 0.6;
 	cursor: pointer;
 }
@@ -59,44 +79,165 @@
     background-image: url('/ressource/trash.png');
 }
 
-.add-button::before {
-	background-image: url('/ressource/add.png');
-}
-
-.remove-button::after {
-	background-image: url('/ressource/remove.png');
-}
-
-.pencil::before, .trash::before, .add-button::before, .remove-button::after {
+.pencil::before, .trash::before {
 	margin: 5px 10px;
 	content:'';
     background-size: 100% 100%;
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     display: inline-block;
 }
 
-.add-button::before, .remove-button::after {
-	margin: 0 5px;
-	width: 30px;
-    height: 30px;
-}
-
-.add-button, .remove-button {
-	font-size: 0.8em;
-	text-decoration: underline;
-	background-color: inherit;
-	padding: 0;
-	margin: 0 auto;
-	display: table-cell;
-	vertical-align: middle;
-	border: none;
+/* GESTION DES PSEUDO ELEMENTS pour Gestion des DSI */
+.add-div {
+	display: flex;
+	justify-content: flex-end;
+	width: 44%;
+	margin: 10px auto 0 auto;
 }
 
 .add-button {
-	color: green;
+    display: flex;
+    justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	color: white;
+	border: 2px solid rgb(0, 63, 24);
+	background: rgb(1, 165, 1);
+	font-weight: 700;
+	font-size: 1.1em;
+	transition: 0.3s;
 }
 
 .remove-button {
+    display: flex;
+    justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	color: rgb(255, 0, 0);
+	font-weight: 700;
+	transition: 0.3s;
+}
+
+.add-button:hover, .remove-button:hover {
+	cursor: pointer;
+}
+
+.add-button:hover {
+	background-color: green;
+}
+
+.remove-button:hover {
+	opacity: 0.5;
+}
+
+.remove-button {
+	border: none;
+	background-color: inherit;
+}
+
+.remove-button::before {
+	background-image: url('/ressource/remove.png');
+}
+
+.add-button::before {
+	background-image: url('/ressource/+.png');
+}
+
+.add-button::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 25px;
+    height: 25px;
+	display: inline-block;
+}
+
+.remove-button::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 15px;
+    height: 15px;
+	display: inline-block;
+}
+
+/* pour Bouton "Enregistrer" */
+.save-button {
+	background: red;
+	color: white;
+	font-size: 1.2em;
+	font-weight: 700;
+	padding: 5px 15px;
+	border: 1.5px solid rgb(121, 0, 0);
+	border-radius: 3px;
+	transition: 0.3s;
+}
+
+.save-button:hover {
+	background: rgba(255, 0, 0, 0.6);
+	color: brown;
+}
+
+.save-div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 70%;
+	margin: 0 auto;
+}
+
+/* Style sur le nouveau formulaire pour ajouter une période dans Gestion des DSI */
+.add-new-form {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	background-color: lightgrey;
+	width: 70%;
+	margin: 0 auto;
+}
+
+.add-new-form>div:first-child {
+	flex: none;
+	width: 100%;
+	justify-content: start;
+	margin-bottom: 0;
+	padding: 5px 0;
+}
+
+.add-new-form>div:last-child {
+	position: relative;
+	left: -33.333%;
+}
+
+/* Visuel de la notification OUI ou NON dsi dans le tableau Gestion des DSI */
+.yes-dsi, .no-dsi {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 0 auto;
+}
+.yes-dsi {
+	color: green;
+}
+
+.no-dsi {
 	color: red;
+}
+
+.yes-dsi::before {
+	background-image: url('/ressource/check.png');
+}
+
+.no-dsi::before {
+	background-image: url('/ressource/ban.png');
+}
+
+.yes-dsi::before, .no-dsi::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 25px;
+    height: 25px;
+	display: inline-block;
 }

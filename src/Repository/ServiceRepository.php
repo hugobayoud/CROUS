@@ -46,5 +46,20 @@ class ServiceRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+	*/
+	
+	public function findAllByUserId(int $userId)
+	{
+		$conn = $this->getEntityManager()->getConnection();
+		$sql = "SELECT *
+				FROM Service s
+				JOIN user_service us ON us.service_id = s.id
+				WHERE us.user_id = $userId";
+		$stmt = $conn->prepare($sql);
+		$stmt->execute();
+		
+		return $stmt->fetchAll();
+	}
+
+
 }

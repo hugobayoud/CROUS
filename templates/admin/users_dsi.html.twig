@@ -1,10 +1,44 @@
+{% import _self as formMacros %}
 {% extends "base.html.twig" %}
+
+{% macro printDsiForm(dsiForm) %}
+<div class="row form-row-center row-flex">
+	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
+</div>
+{% endmacro %}
+
 
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des utilisateurs</h1> 
-	<h5>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></h5>
+	<h1>Gestion des fonctions DSI</h1> 
+	<p>
+		<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
+	</p>
 </div>
+
+<table id="table" class="table">
+	<thead style="font-size: 1.2em;" class="table-danger">
+		<th></th>
+		<th >Nom</th>
+		<th >Prénom</th>
+		<th>Email</th>
+		<th style="text-align: center;">Actuellement DSI</th>
+	</thead>
+	<tbody>
+		{% for user in users %}
+		<tr>
+			{% if user.verifyCurrentDsi() %}{% endif %}
+			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
+			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
+			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
+			<td class="vert-middle">{{ user.email }}</td>
+			<td style="text-align: center;" class="vert-middle {% if user.verifyCurrentDsi() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
+			{# <td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td> #}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 
 {% for message in app.flashes('message') %}
 <div class="alert alert-success" role="alert">
@@ -17,48 +51,27 @@
 </div>
 {% endfor %}
 
-<table class="table table-striped">
-	<thead style="font-size: 1.2em;" class="table-danger">
-		<th >Prénom Nom</th>
-		<th>Email</th>
-		<th></th>
-	</thead>
-	<tbody>
-		{% for user in users %}
-		<tr>
-			<td class="vert-middle"><strong>{{ user.prenom }} {{ user.nom }}</strong></td>
-			<td class="vert-middle">{{ user.email }}</td>
-			{# <td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td> #}
-			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
-
-<hr>
-<p>Sélectionner un agent pour modifier ses dates de DSI</p>
 <div class="detail-box">
 
 	{% for form in forms %}
 	{% form_theme form 'bootstrap_4_layout.html.twig' %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 		
-		<p><em>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</em></p>
+		<p>
+			Gestion des périodes d'accès à la fonction DSI<br>
+			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+		</p>
 		{{ form_start(form) }}
-			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ form_widget(form.dsis.vars.prototype)|e('html_attr') }}">
-				{% for dsi in form.dsis %}
-					<div class="row form-row-center">
-						<div class="col-md-4">{{ form_row(dsi.date_deb, {'label' : 'Date de début'}) }}</div>
-						<div class="col-md-4">{{ form_row(dsi.date_fin, {'label' : 'Date de fin'}) }}</div>
-					</div>
+			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ formMacros.printDsiForm(form.dsis.vars.prototype)|e('html_attr') }}">
+				{% for dsiForm in form.dsis %}
+					{{ formMacros.printDsiForm(dsiForm) }}
 				{% endfor %}
 			</div>
-			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
-			<div class="row">
-				<div class="col-md-12" style="text-align: center;">
-					{{ form_row(form.save, {'label': 'Enregistrer ces dates', 'attr': {'class': 'bouton-crous'}}) }}
-				</div>
+			<hr>
+			<div class="save-div">
+				{{ form_widget(form.save, {'label': 'Enregistrer', 'attr': {'class': 'save-button'}}) }}
 			</div>
+			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
 		{{ form_end(form) }}
 
 	</div>
@@ -67,3 +80,4 @@
 </div>
 
 {% endblock %}
+

@@ -33,7 +33,7 @@ class UserRepository extends ServiceEntityRepository
 		return $query->execute();
 	}
 
-		/**
+	/**
 	 * @return User[]
 	 */
 	public function findAllValidated(int $id = NULL): array
@@ -48,6 +48,27 @@ class UserRepository extends ServiceEntityRepository
 			$qb = $this->createQueryBuilder('p')
 				->where('p.activation_token IS NULL')
 				->orderBy('p.date_deb_valid', 'ASC');
+		}
+
+		return $qb->getQuery()->execute();
+	}
+
+	/**
+	 * @return User[]
+	 */
+	public function findAllValidatedByNameASC(int $id = NULL): array
+	{
+		if (!is_null($id)) {
+			$qb = $this->createQueryBuilder('p')
+				->where('p.activation_token IS NULL')
+				->andwhere('p.id != :id')
+				->setParameter('id', $id)
+				->add('orderBy','p.nom ASC, p.prenom ASC')
+				;
+		} else {
+			$qb = $this->createQueryBuilder('p')
+				->where('p.activation_token IS NULL')
+				->orderBy('p.nom', 'ASC');
 		}
 
 		return $qb->getQuery()->execute();

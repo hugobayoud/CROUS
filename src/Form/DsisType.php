@@ -15,15 +15,12 @@ class DsisType extends AbstractType
 		$builder
 			->add('dsis', CollectionType::class, [
 				'entry_type' => DsiType::class,
-				'entry_options' => ['label' => false],
 				'allow_add' => true,
 				'allow_delete' => true,
 				'by_reference' => false,
 				'label' => false,
 			])
-			->add('save', SubmitType::class, [
-				'attr' => ['class' => 'bouton-crous'],
-			])
+			->add('save', SubmitType::class)
 		;
     }
 

@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Entity\Dsi;
 use App\Entity\Service;
 use App\Helper\DateHelper;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use phpDocumentor\Reflection\Types\Boolean;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -111,8 +114,8 @@ class User implements UserInterface
     public function __construct()
     {
 		$this->services = new ArrayCollection();
-  $this->dsis = new ArrayCollection();
-  $this->demandes = new ArrayCollection();
+		$this->dsis = new ArrayCollection();
+		$this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -319,14 +322,14 @@ class User implements UserInterface
 	 * @return string|NULL
 	 */
 	public function formatDate(\DateTime $date = NULL): ?string
-                              	{
-                              		return DateHelper::formatMyDate($date);
-                              	}
+	{
+		return DateHelper::formatMyDate($date);
+	}
 
 	public function __toString()
-                                  {
-                                      return $this->email;
-                                  }
+	{
+		return $this->email;
+	}
 
     /**
      * @return Collection|Dsi[]
@@ -388,5 +391,22 @@ class User implements UserInterface
         }
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Retourne si l'agent est actuellement DSI ou non
+	 * 
+	 * @return bool : dsi ou non
+	 */
+	public function verifyCurrentDsi(): bool 
+	{
+		$currentDate = (new DateTime('now'))->getTimeStamp();
+		foreach ($this->dsis as $dsi) {
+			if ($currentDate > $dsi->getDateDeb()->getTimeStamp() && $currentDate < $dsi->getDateFin()->getTimeStamp()) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
 }

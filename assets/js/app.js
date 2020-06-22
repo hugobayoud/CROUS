@@ -13,14 +13,73 @@ let $ = require('jquery')
 require('select2');
 $('select').select2()
 
-// CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIQUE
-$(document).ready(function(){	
+// CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIQUE et GERE L'AFFICHAGE DE LA LIGNE SELECTIONNEE
+$(document).ready(function(){
+	//var table = document.getElementById("table");
+
+	var show = localStorage.getItem('show');
+	var cible = localStorage.getItem('target');
+	if (show === 'true'){
+		$(cible).show();
+		localStorage.removeItem('show');
+		localStorage.removeItem('target');
+		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
+
+		//var index = target.substring(target.length -1, target.length);
+		//table.rows[index+1].classList.add("selected-row");
+	}
+
+	var index = localStorage.getItem('index');
+	if (index > -1) {
+		changeColor(index);
+	}
+	
+
 	$(".flip").on("click", function(e) {  
 		var target = $(this).attr("href");
+		var indice = target.substring(target.length -1, target.length);
+
 		$(target).toggle();
 		$(".panel").not(target).hide();
 		e.preventDefault();
+
+		$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+		changeColor(parseInt(indice));
+		
+		localStorage.setItem('show', 'true'); //store state in localStorage
+		localStorage.setItem('target', target); //store state in localStorage
 	});
+
+
+	function changeColor(indice) {
+		var table = document.getElementById("table");
+
+		for(var i = 0; i < table.rows.length - 1; i++) {
+			if (i == indice) {
+				// on ajoute la class "selected" dans la ligne du tableau
+				table.rows[i+1].classList.add("selected-row");
+				localStorage.setItem('index', indice); //store state in localStorage
+			} else {
+				// on enlève la classe "selected" a tous les autres
+				table.rows[i+1].classList.remove("selected-row");
+			}
+		}
+	}
+
+	//--------------------------------------------------------------------------------
+	// function showTable() {
+	// 	$('#tableDiv').show();
+	// 	localStorage.setItem('show', 'true'); //store state in localStorage
+	// }
+	
+	// $(document).ready(function(){
+	// 	var show = localStorage.getItem('show');
+	// 	if(show === 'true'){
+	// 		$('#tableDiv').show();
+	// 	}
+	// });
+	//--------------------------------------------------------------------------------
+
 });
 
 // AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE (Utile dans la gestion des périodes pour la page "Gestion des DSI")
@@ -31,8 +90,8 @@ var $addTagButtons = [];
 var $newLinks = [];
 
 for (let $i = 0; $i < $countMe; $i++) {
-	$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter une période</button>'));
-	$newLinks.push($('<div class="vert-middle"></div>').append($addTagButtons[$i])); 
+	$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter</button>'));
+	$newLinks.push($('<div class="add-div"></div>').append($addTagButtons[$i])); 
 }
 
 jQuery(document).ready(function() {
@@ -75,7 +134,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 	$collectionHolder.data('index', index + 1);
 
 	// Display the form in the page in an li, before the "Add a tag" link li
-	var $newFormLi = $('<div class="text-center form-row-center" style="background: lightgrey; padding: 10px;"><div class="col-md-4"></div><div class="col-md-4"></div></div>').append(newForm);
+	var $newFormLi = $('<div class="add-new-form"></div>').append(newForm);
 	$newLinkLi.before($newFormLi);
 
 	// add a delete link to the new form
@@ -83,7 +142,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-	var $removeFormButton = $('<div class="col-md-4" style="padding-top: 25px;"><button type="button" class="remove-button">Supprimer cette période</button></div>');
+	var $removeFormButton = $('<div class="col-md-4"><button type="button" class="remove-button">Retirer</button></div>');
 	$tagFormLi.append($removeFormButton);
 
 	$removeFormButton.on('click', function(e) {

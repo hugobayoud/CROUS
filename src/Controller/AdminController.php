@@ -66,7 +66,7 @@ class AdminController extends AbstractController
 		// On crée un ArrayCollection de tous les users
 		$users = new Users();
 		// On récupère tous les users validés dans BDD (à l'exception de l'user connecté, il ne peut pas se modifier lui-même)
-		$allUsers = $userRepo->findAllValidated($currentUser->getId());
+		$allUsers = $userRepo->findAllValidatedByNameASC($currentUser->getId());
 
 		// On ajoute les users au tableau
 		foreach ($allUsers as $user) {
@@ -114,7 +114,7 @@ class AdminController extends AbstractController
 	public function usersListDSI(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request, UserInterface $currentUser)
 	{
 		// Tableau de User
-		$users = $userRepo->findAllValidated($currentUser->getId());
+		$users = $userRepo->findAllValidatedByNameASC($currentUser->getId());
 
 		// Tableau de tableau de DSIs pour chaque user
 		$allDsis = [];

@@ -4,11 +4,11 @@ namespace App\Entity;
 use App\Entity\Dsi;
 use App\Validator\Constraints as AcmeAssert;
 use Doctrine\Common\Collections\ArrayCollection;
+use phpDocumentor\Reflection\Types\Boolean;
 
-
-/**
-* @AcmeAssert\OverlapPeriods
-*/
+// /**
+// * @AcmeAssert\OverlapPeriods
+// */
 class Dsis
 {
 	protected $description;
@@ -44,4 +44,6 @@ class Dsis
     {
         $this->dsis->removeElement($dsi);
 	}
+
+
 }
