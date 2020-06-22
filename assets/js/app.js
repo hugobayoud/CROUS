@@ -33,6 +33,7 @@ $(document).ready(function(){
 	if (index > -1) {
 		changeColor(index);
 	}
+	localStorage.removeItem('index');
 	
 
 	$(".flip").on("click", function(e) {  

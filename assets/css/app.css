@@ -4,6 +4,89 @@
 /* SELECT2 */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css");
 
+
+/* NAV-BAR */
+.navbar-crous {
+	background-color: lightgrey;
+	position: sticky;
+	top : 0;
+	height: 80px;
+	width: auto;
+	box-shadow: 0 4px 2px -2px rgba(0,0,0,.2);
+}
+
+.navbar-crous-brand {
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+
+.navbar-crous-gestion {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+}
+
+.navbar-crous-items {
+	position: absolute;
+	left: 120px;
+	width: calc(100% - 120px);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.navbar-crous-items > div > div {
+	font-size: 1.1em;
+	padding: 5px 15px;
+	margin: 0;
+}
+
+.navbar-crous-link {
+	color: black;
+	font-weight: 700;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.navbar-crous-link:hover {
+	color: rgb(126, 0, 0);
+	text-decoration: underline;
+}
+
+/* Icone pour "se connecter", "se déconnecter" */
+.who-connected {
+	color: red;
+}
+
+.logout-div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.login-perso::before {
+	background-image: url('/ressource/login.png');
+}
+
+.logout-div::after {
+	background-image: url('/ressource/logout.png');
+}
+
+.login-perso::before, .logout-div::after {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 36px;
+    height: 35px;
+	display: inline-block;
+}
+
+.status-connected {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 /* Pour gestion des détails lorsque l'on clique sur une ligne d'un tableau (gestion) */
 .panel {
 	display: none;

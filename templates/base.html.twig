@@ -9,23 +9,21 @@
 	{% block stylesheets %}{% endblock %}
 </head>
 <body>
-	<nav class="navbar navbar-expand-md navbar-dark static-top" style="background-color: #fe0000;">
-		<a class="navbar-brand" href="{{ path('home') }}"><strong>CROUS</strong><br>Accueil</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+	<nav class="navbar navbar-expand-md navbar-crous">
+		<a class="navbar-crous-brand" href="{{ path('home') }}">
+			<img src="/ressource/logo_Crous.png" alt="logo du Crous Clermont Auvergne">
+		</a>
+		<div class="navbar-crous-items">
 			{% if app.user %}
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<div class="navbar-crous-gestion">
+				<div>
+					<a class="navbar-crous-link" href="{{ path('admin.utilisateurs.validation') }}">Validation des nouveaux comptes</a>
+				</div>
+				<div class="dropdown">
+					<a class="navbar-crous-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						Gestion
 					</a>
 					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						
 						<a class="dropdown-item" href="{{ path('admin.utilisateurs') }}">Gestion des utilisateurs</a>
 						<a class="dropdown-item" href="{{ path('admin.utilisateurs.dsi') }}">Gestion des DSI</a>
 						<a class="dropdown-item" href="{{ path('admin.utilisateurs.valideurs') }}">Gestion des Valideurs</a>
@@ -33,27 +31,24 @@
 						<a class="dropdown-item" href="{{ path('admin.service_index') }}">Gestion des services</a>
 						<a class="dropdown-item" href="#">Gestion des applications</a>
 					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
+			<div class="status-connected">
+				<div class="who-connected">
+					(connecté(e) avec : <em>{{ app.user.email }}</em>)
+				</div>
+				<div class="logout-div">
+					<a href="{{ path('security.logout') }}" class="navbar-crous-link logout-perso">Se déconnecter</a>
+				</div>
+			</div>
+			{% else %}
+			<div class="status-disconnected">
+				<a href="{{ path('security.login') }}" class="navbar-crous-link login-perso">Se connecter</a>
+			</div>
 			{% endif %}
-			<ul class="navbar-nav mr-auto">
-				{% if not app.user %}
-				<li class="nav-item">
-					<a href="{{ path('security.login') }}" class="nav-link">Se connecter</a>
-				</li>
-				{% else %}
-				<li class="nav-item">
-					<a href="{{ path('security.logout') }}" class="nav-link">Se déconnecter</a>
-				</li>
-				{% endif %}
-				</ul>
-				{% if app.user %}
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item" style="font-size: 0.8em;">(connecté(e) avec : <em>{{ app.user.email }}</em>)</li>
-				</ul>
-				{% endif %}
 		</div>
 	</nav>
+	
 	<div class="container">
 		{% block body %}{% endblock %}
 	</div>
