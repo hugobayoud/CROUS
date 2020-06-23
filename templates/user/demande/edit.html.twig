@@ -13,7 +13,7 @@
 		<div class="boxes">
 			{% for application in applications %}
 			<div>
-				<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}">
+				<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}" {% if applications_agent[application.id] is defined %} checked{% endif %}>
 				<label for="{{ application.code }}">{{ application.libelle }}</label>
 			</div>
 			{% endfor %}
@@ -21,8 +21,11 @@
 
 		<hr>
 
+		{% if etat == 1 %}<em>Cette demande a été acceptée par un valideur de ce service, vous ne pouvez donc plus la modifier.</em>{% endif %}
+
 		<div class="save-form-demand">
-			<button type="submit" class="bouton-crous">Faire la demande</button>
+			<button type="submit" class="bouton-crous"{% if etat > 0 %} disabled{% endif %}>
+			Faire la demande</button>
 		</div>
 	</form>
 </div>

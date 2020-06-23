@@ -2,11 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\DemandeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\DemandeRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=DemandeRepository::class)
+ * @UniqueEntity(
+ * 		fields={"user_id", "service_id"},
+ * 		message="Il existe deja une demande pour cet agent pour ce service en BDD"
+ * 	)
  */
 class Demande
 {
@@ -112,7 +117,14 @@ class Demande
         $this->new_applications = $new_applications;
 
         return $this;
-    }
+	}
+	
+	public function addnewApplication(?array $new_application): self
+	{
+		$this->new_applications[key($new_application)] = $new_application[key($new_application)];
+
+		return $this;
+	}
 
     public function getCreatedAt(): ?\DateTimeInterface
     {

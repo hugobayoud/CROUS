@@ -18,6 +18,7 @@
 .navbar-crous {
 	background-color: lightgrey;
 	position: sticky;
+	z-index: 6;
 	top : 0;
 	height: 80px;
 	width: auto;
@@ -120,6 +121,12 @@
 	margin-top: 15px;
 	border: 1.5px solid rgb(121, 0, 0);
 	border-radius: 3px;
+}
+
+.bouton-crous:disabled {
+	border: 1.5px solid rgb(133, 133, 133);
+	color: rgb(66, 66, 66);
+	background: rgb(201, 201, 255);
 }
 
 /* Mettre le contenu des td du table au centre (verticalement) */
@@ -442,11 +449,9 @@ tr{
 	transition: 0.3s;
 }
 
-.add-item-div::before {
-	background-image: url('/ressource/+.png');
-}
 
 .add-item-div::before {
+	background-image: url('/ressource/+.png');
 	margin: 5px 10px 5px 5px;
 	content:'';
 	background-size: 100% 100%;
@@ -458,9 +463,6 @@ tr{
 
 .add-item-div:hover {
 	cursor: pointer;
-}
-
-.add-item-div:hover {
 	background-color: green;
 }
 
@@ -493,6 +495,75 @@ tr{
 	cursor: pointer;
 	margin: 0;
 }
+
+/* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/user/demandes) */
+.cards-crous {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cards-crous > * {
+	width: 18rem;
+	margin: 10px;
+}
+
+.modify-demand-div, .create-demand-div {
+	top: 120px;
+	left: 70%;
+    display: flex;
+    justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	font-size: 0.9em;
+	color: black;
+	padding-right: 5px;
+	transition: 0.3s;
+}
+
+.modify-demand-div {
+	border: 2px solid rgb(102, 109, 0);
+	background: rgb(236, 240, 0);
+}
+.create-demand-div {
+	border: 2px solid rgb(0, 51, 20);
+	background: rgb(15, 185, 0);
+}
+
+.modify-demand-div::before, .create-demand-div::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 24px;
+    height: 24px;
+	display: inline-block;
+}
+
+.create-demand-div::before {
+	background-image: url('/ressource/form.png');
+}
+
+.modify-demand-div::before {
+	background-image: url('/ressource/pencil-black.png');
+}
+
+.modify-demand-div:hover {
+	cursor: pointer;
+	background-color: rgb(219, 179, 0);
+
+}
+
+.create-demand-div:hover {
+	cursor: pointer;
+	background-color: rgb(19, 233, 0);
+}
+
+.impossible-demand-div {
+	border: 1px solid black;
+	background-color: lightgrey;
+	align-content: center;
+	vertical-align: middle;
+}
+	
 
 /* Enregistrer le formulaire de demande */
 .save-form-demand {
