@@ -1,14 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="text-center">
-    <h1>Bonjour</h1>
-
+<div class="text-center" style="margin-top: 30px;">
+	<h1>Bonjour</h1>
+	<p>
+		<em>Vous êtes connectés en tant qu'administrateur. Si il y a de nouvelles demandes de validation de comptes ou de demandes, vous en êtes informés ci-dessous</em>
+	</p>
+</div>
+<div class="info-box">
 	{% if nbNewAccount == 0 %}
 		<em>Aucun nouveau compte à valider ou demandes à traiter.</em>
 	{% else %}
@@ -19,7 +18,6 @@
 			</li>
 		</ul>	
 	{% endif %}
-
-
 </div>
+
 {% endblock %}

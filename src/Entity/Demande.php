@@ -37,7 +37,12 @@ class Demande
     /**
      * @ORM\Column(type="json", nullable=true)
      */
-    private $applications = [];
+	private $applications = [];
+	
+	/**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $new_applications = [];
 
     /**
      * @ORM\Column(type="datetime")
@@ -93,6 +98,18 @@ class Demande
     public function setApplications(?array $applications): self
     {
         $this->applications = $applications;
+
+        return $this;
+	}
+	
+	public function getNewApplications(): ?array
+    {
+        return $this->new_applications;
+    }
+
+    public function setNewApplications(?array $new_applications): self
+    {
+        $this->new_applications = $new_applications;
 
         return $this;
     }

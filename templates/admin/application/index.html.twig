@@ -56,10 +56,8 @@
         </tbody>
     </table>
 
-	<div class="add-item-div">
-		<a href="{{ path('admin.application.new') }}" class="">
+	<div class="add-item-div" onclick="location.href='{{ path('admin.service.new') }}';" style="cursor: pointer;">
 			Créer une nouvelle application
-		</a>
 	</div>
 
 {% endblock %}

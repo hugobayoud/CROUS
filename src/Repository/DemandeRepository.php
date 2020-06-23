@@ -46,5 +46,21 @@ class DemandeRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+	*/
+	
+	/**
+	* @return Demande|false 
+	*/
+	public function findAssociated(int $user_id, int $service_id)
+	{
+		$conn = $this->getEntityManager()->getConnection();
+		$sql = "SELECT * 
+				FROM Demande
+				WHERE user_id = $user_id AND service_id = $service_id";
+		$stmt = $conn->prepare($sql);
+		$stmt->execute();
+		
+		return $stmt->fetch();
+
+	}
 }

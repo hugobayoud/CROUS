@@ -1,52 +1,18 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-	<div class="text-center">
-		<h1>Veuillez choisir le service pour lequel pour souhaitez faire une demande</h1>
-		<table class="table table-striped" style="width: 30%;">
-			<thead style="font-size: 1.2em;" class="table-danger">
-				<th>Service</th>
-				<th>Effectuer demande</th>
-			</thead>
-			<tbody>
-				{% if services is empty %}
-				<em>
-					Vous semblez ne faire partie d'aucun service. Merci de contacter un agent de la DSI si cela est anormal.
-				</em>
-				{% else %}
-					{% for service in services %}
-					<tr>
-						<td class="vert-middle">{{ service.libelle_court }}</td>
-						<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
-					</tr>
-					{% endfor %}
-				{% endif %}
-			</tbody>
-		</table>
-	</div>
-
-	<hr>
-<p>Sélectionner un agent pour modifier son profil</p>
-
-{{ form_start(form) }}
-<div class="detail-box">
-	{% for serviceForm in form.services %}
-	<div class="panel" id="user_detail_{{ loop.index0 }}">
-		<p><em>{{ services[loop.index0].libelle_court }} {{ services[loop.index0].libelle_long }}</em></p>
-		<div class="row form-row-center">
-			{% block _dsis_dsis___name__ %}
-			<div class="col-md-6">{{ form_row(serviceForm.date_deb_valid) }}</div>
-			{% endblock %}
-			<div class="col-md-6">{{ form_row(serviceForm.date_fin_valid) }}</div>
-		</div>
-		<div class="row form-row-center">
-			<div class="col-md-12">{{ form_row(serviceForm.services) }}</div>
-		</div>
-		<div class="form-row-center" style="min-height: 65px;">
-			<button type="submit" class="btn bouton-crous float-right">Enregistrer</button>
-		</div>
-	</div>
-	{% endfor %}
+<div class="text-center" style="margin-top: 30px;">
+	<h1>Faire une demande</h1>
+	<p>
+		<em>Veuillez choisir le service pour lequel pour souhaitez faire une demande</em>
+	</p>
 </div>
-{{ form_end(form) }}
+	
+<div class="liste-crous">
+	<ul>
+		{% for service in services %}
+		<li><a href="{{ path('user.demande.edit', {'id': service.id}) }}">{{ service.libelle_court }}</a></li>
+		{% endfor %}
+	</ul>
+</div>
 {% endblock %}

@@ -5,6 +5,15 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css");
 
 
+/* PAGE HOME */
+.info-box {
+	margin-top: 30px;
+	padding: 10px;
+	border: 1px solid black;
+	background-color: rgba(226, 224, 224, 0.452);
+	min-height: 200px;
+}
+
 /* NAV-BAR */
 .navbar-crous {
 	background-color: lightgrey;
@@ -428,13 +437,9 @@ tr{
 	background: rgb(1, 165, 1);
 	font-weight: 700;
 	font-size: 1.1em;
-	transition: 0.3s;
-}
-
-.add-item-div > a {
-	text-decoration: none;
 	color: white;
 	padding-right: 5px;
+	transition: 0.3s;
 }
 
 .add-item-div::before {
@@ -463,4 +468,35 @@ tr{
 .table-applications {
 	width: 50%;
 	margin: 0 auto;
+}
+
+/* DEMANDE POUR UN USER */
+.applications-box {
+	margin-top: 30px;
+	padding: 10px;
+	border: 1px dotted black;
+	background-color: rgba(226, 224, 224, 0.452);
+	min-height: 200px;
+}
+
+.boxes {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.boxes > div {
+	flex: 0 0 33.3333%;
+}
+
+.boxes > div > label {
+	padding: 15px 15px 15px 0;
+	cursor: pointer;
+	margin: 0;
+}
+
+/* Enregistrer le formulaire de demande */
+.save-form-demand {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

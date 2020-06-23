@@ -27,7 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     /**
-     * @Route("/", name="index")
+     * @Route("/", name="home")
      */
     public function index(UserRepository $userRepo)
     {
@@ -36,7 +36,7 @@ class AdminController extends AbstractController
 		// On récupère le nombre de demandes validées par un valideur qu'il faut traiter
 		// Fait intervenir la table DEMANDE
 
-        return $this->render('admin/index.html.twig', [
+        return $this->render('admin//home/index.html.twig', [
 			'controller_name' => 'AdminController',
 			'nbNewAccount' => $userRepo->countNewAccount()
         ]);
