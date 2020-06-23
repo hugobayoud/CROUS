@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ApplicationRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,11 +25,21 @@ class Application
 
     /**
      * @ORM\Column(type="string", length=10)
+	 * @Assert\Length(
+	 * 		min=1,
+	 * 		minMessage="Le code d'un application doit faire entre 1 et 10 caractères",
+	 * 		max=10,
+	 * 		maxMessage="Le code d'une application doit faire entre 1 et 10 caractères"
+	 * 	)
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+	 * @Assert\Length(
+	 * 		max=50,
+	 * 		maxMessage="Le libellé d'une application doit ne doit pas dépasser 50 caractères"
+	 * 	)
      */
     private $libelle;
 

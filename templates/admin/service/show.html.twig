@@ -1,34 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service{% endblock %}
-
 {% block body %}
-    <h1>Service</h1>
+    <h1 style="margin-top: 30px;">Service</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ service.id }}</td>
-            </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ service.code }}</td>
-            </tr>
-            <tr>
-                <th>Libelle_court</th>
+			<tr>
+				<th>Code</th>
+				<td>{{ service.code }}</td>
+			</tr>
+			<tr>
+				<th>Libellé court</th>
                 <td>{{ service.libelleCourt }}</td>
-            </tr>
-            <tr>
-                <th>Libelle_long</th>
+			</tr>
+			<tr>
+				<th>Libellé long</th>
                 <td>{{ service.libelleLong }}</td>
-            </tr>
+			</tr>
+			<tr>
+				<th>Nombre d'agents rattachés à ce service</th>
+				<td>{{ service.getNumberOfAgentsLinked() }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de demandes dans ce service</th>
+				<td>{{ service.getNumberOfDemandsLinked() }}</td>
+			</tr>
+
         </tbody>
     </table>
 
-    <a href="{{ path('admin.service_index') }}">back to list</a>
-
-    <a href="{{ path('admin.service_edit', {'id': service.id}) }}">edit</a>
-
-    {{ include('admin/service/_delete_form.html.twig') }}
+	<footer class="table-footer">
+		<div class="previous-link">
+			<a href="{{ path('admin.services') }}">Page précédente</a>
+		</div>
+		<a class="edit-link" href="{{ path('admin.service.edit', {'id': service.id}) }}"></a>
+	</footer>
 {% endblock %}

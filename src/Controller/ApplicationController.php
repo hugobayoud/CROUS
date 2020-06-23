@@ -11,22 +11,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/application")
+ * @Route("/admin/application", name="admin.")
  */
 class ApplicationController extends AbstractController
 {
     /**
-     * @Route("/", name="application_index", methods={"GET"})
+     * @Route("/", name="applications", methods={"GET"})
      */
     public function index(ApplicationRepository $applicationRepository): Response
     {
-        return $this->render('application/index.html.twig', [
+        return $this->render('admin/application/index.html.twig', [
             'applications' => $applicationRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="application_new", methods={"GET","POST"})
+     * @Route("/new", name="application.new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -39,27 +39,28 @@ class ApplicationController extends AbstractController
             $entityManager->persist($application);
             $entityManager->flush();
 
-            return $this->redirectToRoute('application_index');
+			$this->addFlash('message', 'L\'application (' . $application->getCode() . ') a bien été créée.');
+            return $this->redirectToRoute('admin.applications');
         }
 
-        return $this->render('application/new.html.twig', [
+        return $this->render('admin/application/new.html.twig', [
             'application' => $application,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="application_show", methods={"GET"})
+     * @Route("/{id}", name="application.show", methods={"GET"})
      */
     public function show(Application $application): Response
     {
-        return $this->render('application/show.html.twig', [
+        return $this->render('admin/application/show.html.twig', [
             'application' => $application,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="application_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="application.edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Application $application): Response
     {
@@ -69,17 +70,18 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('application_index');
+			$this->addFlash('message', 'Modifications enregistrées avec succés (' . $application->getCode() . ')');
+            return $this->redirectToRoute('admin.applications');
         }
 
-        return $this->render('application/edit.html.twig', [
+        return $this->render('admin/application/edit.html.twig', [
             'application' => $application,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="application_delete", methods={"DELETE"})
+     * @Route("/{id}", name="application.delete", methods={"DELETE"})
      */
     public function delete(Request $request, Application $application): Response
     {
@@ -89,6 +91,7 @@ class ApplicationController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('application_index');
+		$this->addFlash('message', 'Application (' . $application->getCode() . ') supprimée');
+        return $this->redirectToRoute('admin.applications');
     }
 }

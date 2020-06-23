@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Service{% endblock %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
-    <h1>Edit Service</h1>
+	<h1 style="margin-top: 30px;">Éditer un service</h1>
+	
+	{% include "admin/service/_form.html.twig" %}
 
-    {{ include('admin/service/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('admin.service_index') }}">back to list</a>
-
-    {{ include('admin/service/_delete_form.html.twig') }}
+	<div class="previous-link">
+   		<a href="{{ path('admin.services') }}">Page précédente</a>
+	</div>
 {% endblock %}

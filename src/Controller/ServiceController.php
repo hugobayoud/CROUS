@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ServiceController extends AbstractController
 {
     /**
-     * @Route("/", name="service_index", methods={"GET"})
+     * @Route("/", name="services", methods={"GET"})
      */
     public function index(ServiceRepository $serviceRepository): Response
     {
@@ -26,7 +26,7 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/nouveau", name="service_new", methods={"GET","POST"})
+     * @Route("/nouveau", name="service.new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -39,7 +39,8 @@ class ServiceController extends AbstractController
             $entityManager->persist($service);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin.service_index');
+			$this->addFlash('message', 'Le service (' . $service->getCode() . ') a bien été créé.');
+            return $this->redirectToRoute('admin.services');
         }
 
         return $this->render('admin/service/new.html.twig', [
@@ -49,7 +50,7 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="service_show", methods={"GET"})
+     * @Route("/{id}", name="service.show", methods={"GET"})
      */
     public function show(Service $service): Response
     {
@@ -59,7 +60,7 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/modifier", name="service_edit", methods={"GET","POST"})
+     * @Route("/{id}/modifier", name="service.edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Service $service): Response
     {
@@ -69,9 +70,10 @@ class ServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('admin.service_index');
+            return $this->redirectToRoute('admin.services');
         }
 
+		$this->addFlash('message', 'Modifications enregistrées avec succés (' . $service->getCode() . ')');
         return $this->render('admin/service/edit.html.twig', [
             'service' => $service,
             'form' => $form->createView(),
@@ -79,7 +81,7 @@ class ServiceController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete", name="service_delete", methods={"DELETE"})
+     * @Route("/{id}/delete", name="service.delete", methods={"DELETE"})
      */
     public function delete(Request $request, Service $service): Response
     {
@@ -87,8 +89,9 @@ class ServiceController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($service);
             $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('admin.service_index');
+		}
+		
+		$this->addFlash('message', 'Service (' . $service->getCode() . ') supprimé');
+        return $this->redirectToRoute('admin.services');
     }
 }

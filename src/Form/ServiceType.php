@@ -6,6 +6,7 @@ use App\Entity\Service;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ServiceType extends AbstractType
 {
@@ -14,7 +15,8 @@ class ServiceType extends AbstractType
         $builder
             ->add('code')
             ->add('libelle_court')
-            ->add('libelle_long')
+			->add('libelle_long')
+			->add('save', SubmitType::class)
         ;
     }
 

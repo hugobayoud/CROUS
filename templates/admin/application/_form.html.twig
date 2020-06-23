@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+<div class="row">
+	<div class="col-md-4">{{ form_row(form.code, {'label': 'Code', 'attr': {'placeholder': 'code unique de l\'application'}}) }}</div>
+</div>
+<div class="row">
+	<div class="col-md-5">{{ form_row(form.libelle, {'label': 'Libellé', 'attr': {'placeholder': 'Libellé de l\'application (50 caractères)'}}) }}</div>
+</div>
+
+<hr>
+
+<div class="save-div">
+	{{ form_widget(form.save, {'label': 'Enregistrer', 'attr': {'class': 'save-button'}}) }}
+</div>
+{{ form_end(form) }}

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -26,16 +27,30 @@ class Service
 
     /**
      * @ORM\Column(type="string", length=10)
+	 * @Assert\Length(
+	 * 		min=1,
+	 * 		minMessage="Le code d'un service doit faire entre 1 et 10 caractères",
+	 * 		max=10,
+	 * 		maxMessage="Le code d'un service doit faire entre 1 et 10 caractères"
+	 * 	)
      */
     private $code;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+	 * @Assert\Length(
+	 * 		max=20,
+	 * 		maxMessage="Le libellé (court) d'un service doit ne doit pas dépasser 20 caractères"
+	 * 	)
      */
     private $libelle_court;
 
     /**
      * @ORM\Column(type="string", length=80, nullable=true)
+	 * @Assert\Length(
+	 * 		max=80,
+	 * 		maxMessage="Le libellé (long) d'un service doit ne doit pas dépasser 80 caractères"
+	 * 	)
      */
     private $libelle_long;
 
@@ -78,9 +93,9 @@ class Service
 	}
 	
 	public function getlibelle_court(): ?string
-                              	{
-                              		return $this->getLibelleCourt();
-                              	}
+	{
+		return $this->getLibelleCourt();
+	}
 
     public function setLibelleCourt(?string $libelle_court): self
     {
@@ -129,9 +144,9 @@ class Service
 	
 	/* AUTRES FONCTIONS */
 	public function __toString()
-                   {
-                       return $this->code;
-               	}
+	{
+		return $this->code;
+	}
 
     /**
      * @return Collection|Demande[]
@@ -162,6 +177,23 @@ class Service
         }
 
         return $this;
-    }
+	}
 
+	/**
+	 * Retourne le nombre d'agent liés à ce service
+	 * @return int : nombre d'agent 
+	*/
+	public function getNumberOfAgentsLinked()
+	{
+		return count($this->users);
+	}
+
+	/**
+	 * Retourne le nombre de demandes actuelles pour ce service
+	 * @return int : nombre de demandes 
+	*/
+	public function getNumberOfDemandsLinked()
+	{
+		return count($this->demandes);
+	}
 }

@@ -2,32 +2,49 @@
 
 {% block title %}Service index{% endblock %}
 
+
 {% block body %}
 	<div class="text-center" style="margin-top: 30px;">
 		<h1>Gestion des services</h1> 
-		<h5>Modifier, créer, supprimer un service du CROUS. <br>
-		Attention : Le "CODE" de chaque service doit être unique</h5>
+		<p>
+			<em>Modifier, créer, supprimer un service du CROUS.</em>
+		</p>
 	</div>
 
-    <table class="table"  style="margin-top: 30px;">
-        <thead>
-            <tr style="font-size: 2em; font-weight:700; ">
+	{% for message in app.flashes('message') %}
+	<div class="alert alert-success table-services" style="margin-bottom: 10px;" role="alert">
+		{{ message }}
+	</div>
+	{% endfor %}
+	{% for message in app.flashes('warning') %}
+	<div class="alert alert-danger table-services"  style="margin-bottom: 10px;" role="alert">
+		{{ message }}
+	</div>
+	{% endfor %}
+
+    <table class="table table-services">
+        <thead class="thead-crous">
+            <tr>
                 <th>Code</th>
-                <th>Libelle_court</th>
-                <th>Libelle_long</th>
-                <th>actions</th>
+                <th>Libellé</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-        {% for service in services %}
+		{% for service in services %}
+		{% set numberOfAgents = service.getNumberOfAgentsLinked() %}
             <tr>
                 <td><strong>{{ service.code }}</strong></td>
                 <td>{{ service.libelleCourt }}</td>
-                <td><em>{{ service.libelleLong }}</em></td>
-                <td>
-					<div>
-						<a href="{{ path('admin.service_show', {'id': service.id}) }}">Voir</a>
-						<a href="{{ path('admin.service_edit', {'id': service.id}) }}">Editer</a>
+                <td class="actions">
+					<div class="modify-links">
+						<a class="show-link" href="{{ path('admin.service.show', {'id': service.id}) }}"></a>
+						<a class="edit-link" href="{{ path('admin.service.edit', {'id': service.id}) }}"></a>
+						<form method="post" action="{{ path('admin.service.delete', {'id': service.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer ce service ?{% if numberOfAgents == 0 %}Il n\'y a pas d\'agents reliés à ce service{% else %} Il y a encore {{ numberOfAgents }} agent{% if numberOfAgents > 1 %}s{% endif %} dans ce service.{% endif %}');">
+							<input type="hidden" name="_method" value="DELETE">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
+							<button class="delete-link"></button>
+						</form>
 					</div>
                 </td>
             </tr>
@@ -39,12 +56,10 @@
         </tbody>
     </table>
 
-	<div class="row">
-		<div class="col-md-3 list-group">
-			<a href="{{ path('admin.service_new') }}" class="list-group-item list-group-item-action list-group-item-success">
-				Créer un nouveau service
-			</a>
-		</div>
+	<div class="add-item-div">
+		<a href="{{ path('admin.service.new') }}" class="">
+			Créer un nouveau service
+		</a>
 	</div>
 
 {% endblock %}

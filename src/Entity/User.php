@@ -184,9 +184,9 @@ class User implements UserInterface
 	}
 
 	public function getDateFinValid(): ?\DateTimeInterface
-                                                               	{
-                                                               		return $this->date_fin_valid;
-                                                               	}
+	{
+		return $this->date_fin_valid;
+	}
 
     public function setDateFinValid(\DateTimeInterface $date_fin_valid): self
     {
@@ -225,14 +225,14 @@ class User implements UserInterface
 	}
 
 	public function getactivation_token(): ?string
-                              	{
-                              		return $this->getActivationToken();
-                              	}
-	
+	{
+		return $this->getActivationToken();
+	}
+
 	public function getActivationToken(): ?string
-                              	{
-                              		return $this->activation_token;
-                              	}
+	{
+		return $this->activation_token;
+	}
 
     public function setActivationToken(?string $activation_token): self
     {
@@ -257,28 +257,28 @@ class User implements UserInterface
 	}
 	
 	public function addRole(string $role): self
-                              	{
-                              		if (!in_array($role, $this->roles)) {
-                              			$this->roles[] = $role;
-                              		}
-                              		
-                              		return $this;
-                              	}
+	{
+		if (!in_array($role, $this->roles)) {
+			$this->roles[] = $role;
+		}
+		
+		return $this;
+	}
 
 	public function removeRole(string $roleToAdd): self
-                              	{
-                              		if (in_array($roleToAdd, $this->roles)) {
-                              			$tab = [];
-                              			foreach($this->roles as $role) {
-                              				if($roleToAdd !== $role)
-                              				$tab[] = $role;
-                              			}
-                              
-                              			$this->setRoles($tab);
-                              		}
-                              		
-                              		return $this;
-                              	}
+	{
+		if (in_array($roleToAdd, $this->roles)) {
+			$tab = [];
+			foreach($this->roles as $role) {
+				if($roleToAdd !== $role)
+				$tab[] = $role;
+			}
+	
+			$this->setRoles($tab);
+		}
+		
+		return $this;
+	}
 
     public function setRoles(array $roles): self
     {

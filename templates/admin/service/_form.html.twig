@@ -1,4 +1,15 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Sauvegarder') }}</button>
+<div class="row">
+	<div class="col-md-4">{{ form_row(form.code, {'label': 'Code', 'attr': {'placeholder': 'code unique du service'}}) }}</div>
+</div>
+<div class="row">
+	<div class="col-md-5">{{ form_row(form.libelle_court, {'label': 'Libellé court', 'attr': {'placeholder': 'Libellé court du service (20 caractères)'}}) }}</div>
+	<div class="col-md-7">{{ form_row(form.libelle_long, {'label': 'Libellé long', 'attr': {'placeholder': 'Libellé long du service (80 caractères)'}}) }}</div>
+</div>
+
+<hr>
+
+<div class="save-div">
+	{{ form_widget(form.save, {'label': 'Enregistrer', 'attr': {'class': 'save-button'}}) }}
+</div>
 {{ form_end(form) }}

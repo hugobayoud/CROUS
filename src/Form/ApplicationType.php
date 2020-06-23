@@ -6,6 +6,7 @@ use App\Entity\Application;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ApplicationType extends AbstractType
 {
@@ -13,7 +14,8 @@ class ApplicationType extends AbstractType
     {
         $builder
             ->add('code')
-            ->add('libelle')
+			->add('libelle')
+			->add('save', SubmitType::class)
         ;
     }
 

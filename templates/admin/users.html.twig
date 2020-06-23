@@ -21,15 +21,15 @@
 </div>
 {% endfor %}
 
-<table class="table table-striped">
-	<thead style="font-size: 1.2em;" class="table-danger">
+<table id="table" class="table">
+	<thead class="thead-crous">
 		<th></th>
 		<th >Nom</th>
 		<th >Prénom</th>
 		<th>Email</th>
 		<th>Fin de validité de contrat</th>
 	</thead>
-	<tbody>
+	<tbody class="tbody-crous">
 		{% for user in users %}
 		<tr>
 			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
@@ -42,14 +42,15 @@
 	</tbody>
 </table>
 
-<hr>
-<p>Sélectionner un agent pour modifier son profil</p>
-
 {{ form_start(form) }}
 <div class="detail-box">
 	{% for userForm in form.users %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
-		<p><em>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</em></p>
+
+		<p>
+			Gestion des informations concernant un agent<br>
+			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+		</p>
 		<div class="row form-row-center">
 			<div class="col-md-6">{{ form_row(userForm.prenom) }}</div>
 			<div class="col-md-6">{{ form_row(userForm.nom) }}</div>

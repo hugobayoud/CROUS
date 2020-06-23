@@ -87,6 +87,16 @@
 	align-items: center;
 }
 
+.status-disconnected {
+	flex: none;
+	position: absolute;
+	left: 120px;
+	width: calc(100% - 120px);
+	display: flex;
+	justify-content: end;
+	align-items: center;
+}
+
 /* Pour gestion des détails lorsque l'on clique sur une ligne d'un tableau (gestion) */
 .panel {
 	display: none;
@@ -107,6 +117,13 @@
 .table {
 	border: 2px solid grey;
 }
+.thead-crous {
+	font-size: 1.4em;
+	color: black;
+	background-color: rgb(255, 61, 61);
+	align-items: center;
+}
+
 .table .vert-middle {
 	vertical-align: middle;
 }
@@ -201,6 +218,7 @@ tr{
 	font-weight: 700;
 	transition: 0.3s;
 }
+
 
 .add-button:hover, .remove-button:hover {
 	cursor: pointer;
@@ -323,4 +341,126 @@ tr{
     width: 25px;
     height: 25px;
 	display: inline-block;
+}
+
+/* GESTION DES SERVICES */
+/* Icônes */
+.table-services {
+	width: 50%;
+	margin: 0 auto;
+}
+
+.actions {
+	width: 20%;
+}
+
+.modify-links {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.show-link::before {
+	background-image: url('/ressource/show.png');
+}
+
+.edit-link::before {
+	background-image: url('/ressource/pencil.png');
+}
+
+.delete-link::before {
+	background-image: url('/ressource/trash.png');
+}
+
+.show-link::before, .edit-link::before, .delete-link::before, .previous-link::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 25px;
+    height: 25px;
+	display: inline-block;
+}
+
+.previous-link::before {
+	background-image: url('/ressource/chevron-left.png');
+	width: 15px;
+    height: 15px;
+}
+
+.delete-link {
+	border: none;
+	text-decoration: none;
+	background: none;
+}
+
+.show-link, .edit-link, .delete-link {
+	transition: 0.3s;
+}
+
+.show-link:hover, .edit-link:hover, .delete-link:hover {
+	opacity: 0.6;
+}
+
+.previous-link {
+	float: left;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/*Footer dans "Editer un service"*/
+.table-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/*Bouton ajout d'un service*/
+.add-item-div {
+	position: fixed;
+	top: 120px;
+	left: 70%;
+    display: flex;
+    justify-content: center;
+	align-items: center;
+	border-radius: 5px;
+	border: 2px solid rgb(0, 63, 24);
+	background: rgb(1, 165, 1);
+	font-weight: 700;
+	font-size: 1.1em;
+	transition: 0.3s;
+}
+
+.add-item-div > a {
+	text-decoration: none;
+	color: white;
+	padding-right: 5px;
+}
+
+.add-item-div::before {
+	background-image: url('/ressource/+.png');
+}
+
+.add-item-div::before {
+	margin: 5px 10px 5px 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 40px;
+    height: 40px;
+	display: inline-block;
+}
+
+
+.add-item-div:hover {
+	cursor: pointer;
+}
+
+.add-item-div:hover {
+	background-color: green;
+}
+
+/* GESTION DES APPLICATIONS */
+.table-applications {
+	width: 50%;
+	margin: 0 auto;
 }
