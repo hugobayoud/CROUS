@@ -1,20 +1,20 @@
 <?php
 namespace App\Entity;
 
-use App\Entity\Dsi;
+use App\Entity\Valideur;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Dsis
+class Valideurs
 {
 	protected $description;
 
-	protected $dsis;
+	protected $valideurs;
 	
     public function __construct()
     {
-        $this->dsis = new ArrayCollection();
+        $this->valideurs = new ArrayCollection();
     }
 
     public function getDescription()
@@ -27,19 +27,19 @@ class Dsis
         $this->description = $description;
     }
 
-    public function getDsis()
+    public function getValideurs()
     {
-		return $this->dsis;
+		return $this->valideurs;
 	}
 	
-	public function addDsi(Dsi $dsi)
+	public function addValideur(Valideur $valideur)
     {
-        $this->dsis->add($dsi);
+        $this->valideurs->add($valideur);
     }
 
-    public function removeDsi(Dsi $dsi)
+    public function removeValideur(Valideur $valideur)
     {
-        $this->dsis->removeElement($dsi);
+        $this->valideurs->removeElement($valideur);
 	}
 
 	/**
@@ -48,26 +48,26 @@ class Dsis
     public function validate(ExecutionContextInterface $context, $payload)
     {
 		$errorMessages = [];
-		$length = count($this->dsis);
+		$length = count($this->valideurs);
 
 		for ($i = 0; $i < $length; $i++) {
-			$dsi1 = $this->dsis[$i];
+			$valideur1 = $this->valideurs[$i];
 
 			for ($j = $i+1; $j < $length; $j++) {
-				$dsi2 = $this->dsis[$j];
-				if ($dsi1->getDateDeb() <= $dsi2->getDateFin() && $dsi2->getDateDeb() <= $dsi1->getDateFin()) {
+				$valideur2 = $this->valideurs[$j];
+				if ($valideur1->getDateDeb() <= $valideur2->getDateFin() && $valideur2->getDateDeb() <= $valideur1->getDateFin()) {
 					$errorMessages[] = 'Les périodes n°' . ($i + 1) . ' et n°' . ($j + 1) . ' se chevauchent. Veuillez les modifier.';
 				}
 			}
 
-			if ($dsi1->getDateDeb() > $dsi1->getDateFin()) {
-				$errorMessages[] = 'La date de début (' . $dsi1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $dsi1->getDateFin()->format('d/m/Y') . ')';
+			if ($valideur1->getDateDeb() > $valideur1->getDateFin()) {
+				$errorMessages[] = 'La date de début (' . $valideur1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $valideur1->getDateFin()->format('d/m/Y') . ')';
 			}
 		}
 
 		foreach ($errorMessages as $message) {
 			$context->buildViolation($message)
-			->atPath('dsis')
+			->atPath('valideurs')
 			->addViolation();
 		}
     }

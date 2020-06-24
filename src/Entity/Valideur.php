@@ -64,7 +64,7 @@ class Valideur
 
     public function setService(?Service $service): self
     {
-        $this->serviceer = $service;
+        $this->service = $service;
 
         return $this;
     }

@@ -74,6 +74,24 @@ class UserRepository extends ServiceEntityRepository
 		return $qb->getQuery()->execute();
 	}
 
+	
+	/**
+	 * Récupérer tous les users d'un service donné
+	 * @return User[]
+	 */
+	public function findAllByServiceId(int $serviceId): array
+	{
+		$conn = $this->getEntityManager()->getConnection();
+		$sql = "SELECT *
+				FROM User u
+				JOIN user_service us ON us.user_id = u.id
+				WHERE us.service_id = $serviceId";
+		$stmt = $conn->prepare($sql);
+		$stmt->execute();
+		
+		return $stmt->fetchAll();
+	}
+
 	/**
 	 * Donne le nombre de compte qui ne sont pas encore validés par un admin
 	 * 
@@ -106,19 +124,4 @@ class UserRepository extends ServiceEntityRepository
         return $query;
 	}
 
-	/**
-	 * Récupérer tous les users d'un service donné
-	 */
-	public function findAllByServiceId(int $serviceId)
-	{
-		$conn = $this->getEntityManager()->getConnection();
-		$sql = "SELECT *
-				FROM User u
-				JOIN user_service us ON us.user_id = u.id
-				WHERE us.service_id = $serviceId";
-		$stmt = $conn->prepare($sql);
-		$stmt->execute();
-		
-		return $stmt->fetchAll();
-	}
 }

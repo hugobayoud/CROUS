@@ -49,7 +49,7 @@
 	</tbody>
 </table>
 
-{# {% for message in app.flashes('message') %}
+{% for message in app.flashes('message') %}
 <div class="alert alert-success" role="alert">
 	{{ message }}
 </div>
@@ -74,8 +74,8 @@
 			<div class="form-error">
 					{{ form_errors(form)}}
 			</div>
-			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ formMacros.printDsiForm(form.dsis.vars.prototype)|e('html_attr') }}">
-				{% for dsiForm in form.dsis %}
+			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ formMacros.printDsiForm(form.valideurs.vars.prototype)|e('html_attr') }}">
+				{% for dsiForm in form.valideurs %}
 					{{ formMacros.printDsiForm(dsiForm) }}
 				{% endfor %}
 			</div>
@@ -89,5 +89,5 @@
 	</div>
 	{% endfor %}
 
-</div> #}
+</div>
 {% endblock %}
