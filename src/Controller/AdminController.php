@@ -97,16 +97,6 @@ class AdminController extends AbstractController
 	}
 
 	/**
-	 * Liste tous les utilisateurs validés pour modification de leurs rôles de valideur pour chaque service
-	 * 
-	 * @Route("/utilisateurs/valideurs", name="utilisateurs.valideurs")
-	 */
-	public function usersListValidators(UserRepository $userRepo, Request $request, UserInterface $currentUser)
-	{
-		return $this->render("admin/users_validators.html.twig");
-	}
-
-	/**
 	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS
 	 * 
 	 * @Route("/utilisateurs/dsi", name="utilisateurs.dsi")
@@ -123,7 +113,8 @@ class AdminController extends AbstractController
 
 		foreach ($users as $user) {
 			// On récupère les Dsis de chaque user un par un
-			$allDsisForOneUser = $dsiRepo->findBy(['user' => $user->getId()]);
+			// $allDsisForOneUser = $dsiRepo->findBy(['user' => $user->getId()]);
+			$allDsisForOneUser = $dsiRepo->findByOrderByDateDeb(['user' => $user->getId()]);
 			
 			$dsis = new Dsis();
 			$originalDsis = new Dsis();

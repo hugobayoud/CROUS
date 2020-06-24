@@ -8,13 +8,16 @@
 </div>
 {% endmacro %}
 
-
 {% block body %}
 <div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des fonctions DSI</h1> 
+	<h1>Gestion des valideurs pour le service {{ service.libelle_court }}</h1> 
 	<p>
-		<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
+		<em>Modifier les droits de valideur pour un agent de ce service en cliquant sur celui-ci</em>
 	</p>
+</div>
+
+<div class="previous-link">
+	<a href="{{ path('valideurs.home') }}">Page précédente</a>
 </div>
 
 <table id="table" class="table">
@@ -23,24 +26,30 @@
 		<th >Nom</th>
 		<th >Prénom</th>
 		<th>Email</th>
-		<th style="text-align: center;">Actuellement DSI</th>
+		<th style="text-align: center;">Actuellement valideur</th>
 	</thead>
 	<tbody>
-		{% for user in users %}
+		{% if users is empty %}
 		<tr>
-			{% if user.verifyCurrentDsi() %}{% endif %}
-			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
-			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
-			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
-			<td class="vert-middle">{{ user.email }}</td>
-			<td style="text-align: center;" class="vert-middle {% if user.verifyCurrentDsi() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
-			{# <td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td> #}
+			<td colspan="5">Il n'existe pas d'agent pour ce service</td>
 		</tr>
+		{% else %}
+		{% for user in users %}
+			<tr>
+				<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
+				<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
+				<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
+				<td class="vert-middle">{{ user.email }}</td>
+				<td style="text-align: center;" class="vert-middle">{#{% if user.verifyCurrentValideur(service.id) %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}#}</td>
+				{# <td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td> #}
+			</tr>
 		{% endfor %}
+		{% endif %}
+		
 	</tbody>
 </table>
 
-{% for message in app.flashes('message') %}
+{# {% for message in app.flashes('message') %}
 <div class="alert alert-success" role="alert">
 	{{ message }}
 </div>
@@ -58,7 +67,7 @@
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 		
 		<p>
-			Gestion des périodes d'accès à la fonction DSI<br>
+			Gestion des périodes d'accès à la fonction valideur de ce service<br>
 			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
 		</p>
 		{{ form_start(form) }}
@@ -80,7 +89,5 @@
 	</div>
 	{% endfor %}
 
-</div>
-
+</div> #}
 {% endblock %}
-

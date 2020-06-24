@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<div class="text-center" style="margin-top: 30px;">
+	<h1>Gestion des valideurs</h1> 
+	<p>
+		<em>Choisir un service pour lequel pour avez les droits de valideur. Si vous n'avez pas les droits, vous pouvez toujours consulter ce service et connaître qui possède actuellement les droits de valideur</em>
+	</p>
+</div>
+
+<div class="cards-crous">
+	{% for service in services %}
+	<div class="card">
+		<div class="card-body" style="background-color: rgba(240, 240, 240, 0.45);">
+			<h5 class="card-title text-center">{{ service.libelle_court }}</h5>
+			<p class="card-text">
+				{{ service.libelle_long }}
+			</p>
+			<div class="modify-demand-div" onclick="location.href='{{ path('valideurs.service', {'id': service.id}) }}';">
+				Gérer les valideurs
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}

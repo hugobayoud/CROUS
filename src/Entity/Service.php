@@ -62,11 +62,17 @@ class Service
     /**
      * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="service", orphanRemoval=true)
      */
-    private $demandes;
+	private $demandes;
+	
+	/**
+     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $valideurs;
 	
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+		$this->users = new ArrayCollection();
+		$this->valideurs = new ArrayCollection();
         $this->demandes = new ArrayCollection();
     }
 
@@ -104,7 +110,7 @@ class Service
         return $this;
     }
 
-    public function getLibelleLong(): ?string
+    public function getLibelle_long(): ?string
     {
         return $this->libelle_long;
     }
@@ -196,4 +202,36 @@ class Service
 	{
 		return count($this->demandes);
 	}
+
+	/**
+     * @return Collection|Valideur[]
+     */
+    public function getValideurs(): Collection
+    {
+        return $this->valideurs;
+    }
+
+    public function addValideur(Valideur $valideur): self
+    {
+        if (!$this->valideurs->contains($valideur)) {
+            $this->valideurs[] = $valideur;
+            $valideur->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValideur(Valideur $valideur): self
+    {
+        if ($this->valideurs->contains($valideur)) {
+            $this->valideurs->removeElement($valideur);
+            // set the owning side to null (unless already changed)
+            if ($valideur->getService() === $this) {
+                $valideur->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -29,6 +29,26 @@ class DsiRepository extends ServiceEntityRepository
 		return $stmt->fetchAll();
 	}
 
+	public function findByOrderByDateDeb(array $criteria)
+	{
+		$result = $this->findBy($criteria);
+
+		if (count($result) > 1) {
+			usort($result, function($a, $b) {
+				$ad = $a->getDateDeb();
+				$bd = $b->getDateDeb();
+			
+			 	if ($ad == $bd) {
+			 	  return 0;
+			 	}
+			
+			 	return $ad < $bd ? -1 : 1;
+			});
+		}
+
+		return $result;
+	}
+
     // /**
     //  * @return Dsi[] Returns an array of Dsi objects
     //  */

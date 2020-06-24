@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Dsi;
+use App\Entity\Valideur;
 use App\Entity\Service;
 use App\Helper\DateHelper;
 use DateTime;
@@ -104,7 +105,12 @@ class User implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity=Dsi::class, mappedBy="user", orphanRemoval=true)
      */
-    private $dsis;
+	private $dsis;
+	
+    /**
+     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $valideurs;
 
     /**
      * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="user", orphanRemoval=true)
@@ -115,6 +121,7 @@ class User implements UserInterface
     {
 		$this->services = new ArrayCollection();
 		$this->dsis = new ArrayCollection();
+		$this->valideurs = new ArrayCollection();
 		$this->demandes = new ArrayCollection();
     }
 
@@ -360,6 +367,37 @@ class User implements UserInterface
         }
 
         return $this;
+	}
+	
+	/**
+     * @return Collection|Valideur[]
+     */
+    public function getValideurs(): Collection
+    {
+        return $this->valideurs;
+    }
+
+    public function addValideur(Valideur $valideur): self
+    {
+        if (!$this->valideurs->contains($valideur)) {
+            $this->valideurs[] = $valideur;
+            $valideur->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValideur(Valideur $valideur): self
+    {
+        if ($this->valideurs->contains($valideur)) {
+            $this->valideurs->removeElement($valideur);
+            // set the owning side to null (unless already changed)
+            if ($valideur->getUser() === $this) {
+                $valideur->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -403,6 +441,23 @@ class User implements UserInterface
 		$currentDate = (new DateTime('now'))->getTimeStamp();
 		foreach ($this->dsis as $dsi) {
 			if ($currentDate > $dsi->getDateDeb()->getTimeStamp() && $currentDate < $dsi->getDateFin()->getTimeStamp()) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+		/**
+	 * Retourne si l'agent est actuellement Valideur ou non
+	 * 
+	 * @return bool : valideur ou non
+	 */
+	public function verifyCurrentValideur(int $serviceId): bool 
+	{
+		$currentDate = (new DateTime('now'))->getTimeStamp();
+		foreach ($this->valideurs as $valideur) {
+			if ($currentDate > $valideur->getDateDeb()->getTimeStamp() && $currentDate < $valideur->getDateFin()->getTimeStamp()) {
 				return TRUE;
 			}
 		}
