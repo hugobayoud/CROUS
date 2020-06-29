@@ -41,7 +41,12 @@ class Application
 	 * 		maxMessage="Le libellé d'une application doit ne doit pas dépasser 50 caractères"
 	 * 	)
      */
-    private $libelle;
+	private $libelle;
+	
+	/**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    private $type;
 
     public function getId(): ?int
     {
@@ -77,4 +82,24 @@ class Application
 	{
 		return $this->code;
 	}
+
+    /**
+     * Get the value of type
+     */ 
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set the value of type
+     *
+     * @return  self
+     */ 
+    public function setType($type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
 }
