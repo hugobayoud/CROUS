@@ -7,21 +7,56 @@
 
 /* PAGE HOME */
 .info-box {
-	margin-top: 30px;
-	padding: 10px;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-gap: 15px;
+	margin-top: 15px;
+	padding: 15px;
+	border: 1px dotted black;
+	background-color: rgba(253, 188, 188, 0.329);
+	min-height: 100px;
+}
+
+.info-box > * div {
 	border: 1px solid black;
-	background-color: rgba(226, 224, 224, 0.452);
-	min-height: 200px;
+	background-color: rgba(253, 188, 188, 0.6);
+	padding: 10px;
+	text-align: center;
+}
+
+.info-box > * div a {
+	text-decoration: none;
+	font-weight: 600;
+	color: black;
+	transition: 0.3s;
+}
+
+.info-box > * div a:hover {
+	color: red;
 }
 
 /* NAV-BAR */
 .navbar-crous {
-	background-color: lightgrey;
 	position: sticky;
-	z-index: 6;
-	top : 0;
-	height: 80px;
+	top: 0;
 	width: auto;
+	height: 80px;
+	z-index: 3;
+	background-color: rgb(192, 192, 192);
+}
+
+.subnavbar-crous {
+	position: sticky;
+	top: 80px;
+	width: auto;
+	min-height: 70px;
+	padding: 10px;
+	z-index: 2;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+
+	background-color: rgb(238, 238, 238);
 	box-shadow: 0 4px 2px -2px rgba(0,0,0,.2);
 }
 
@@ -54,14 +89,13 @@
 
 .navbar-crous-link {
 	color: black;
-	font-weight: 700;
-	text-decoration: none;
+	font-weight: 600;
 	transition: 0.3s;
 }
 
 .navbar-crous-link:hover {
-	color: rgb(126, 0, 0);
-	text-decoration: underline;
+	color: red;
+	text-decoration: none;
 }
 
 /* Icone pour "se connecter", "se déconnecter" */
@@ -171,8 +205,8 @@ tr{
 
 /* Aligner chaque ligne du formulaire (gestion) au milieu de la page (horizontalement) */
 .form-row-center {
-	width: 70%;
-	margin: 0 auto;
+	width: 90%;
+	margin: 5px auto;
 }
 
 .row-flex {
@@ -180,6 +214,18 @@ tr{
 	display: flex;
 	align-items: center;
 	justify-content: space-around;
+}
+
+.label-flex {
+	justify-content: start;
+}
+
+.wide-select span, .wide-select input {
+	min-width: 100%;
+}
+
+.wide-select ul > li > span {
+	display: inline !important;
 }
 
 /* GESTION DES PSEUDO ELEMENTS pour Gestion des Utilisateurs */
@@ -434,7 +480,7 @@ tr{
 /*Bouton ajout d'un service*/
 .add-item-div {
 	position: fixed;
-	top: 120px;
+	top: 250px;
 	left: 70%;
     display: flex;
     justify-content: center;
@@ -498,8 +544,9 @@ tr{
 
 /* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/user/demandes) */
 .cards-crous {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 10px;
 }
 
 .cards-crous > * {
@@ -508,8 +555,8 @@ tr{
 }
 
 .modify-demand-div, .create-demand-div {
-	top: 120px;
-	left: 70%;
+	position: relative;
+	bottom: 10px;
     display: flex;
     justify-content: center;
 	align-items: center;
@@ -570,4 +617,25 @@ tr{
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+/* BOITE DE RECHERCHE */
+.search-box {
+	top: 200px;
+	background-color: rgba(208, 199, 255, 0.637);
+	padding: 15px;
+	margin: 10px auto;
+	width: 50%;
+}
+
+.search-box > p {
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+.search-box > form {
+	display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
 }

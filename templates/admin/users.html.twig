@@ -1,14 +1,15 @@
 {% extends "base.html.twig" %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Gestion des utilisateurs</h1> 
+		<p>
+			<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
+		</p>
+	</nav>
+{% endblock %}
 
 {% block body %}
-<div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des utilisateurs</h1> 
-	<p>
-		<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
-	</p>
-</div>
 
 {% for message in app.flashes('message') %}
 <div class="alert alert-success" role="alert">
@@ -48,25 +49,52 @@
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 
 		<p>
-			Gestion des informations concernant un agent<br>
-			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+			Gestion des informations concernant l'agent <strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
 		</p>
 		<div class="row form-row-center">
-			<div class="col-md-6">{{ form_row(userForm.prenom) }}</div>
-			<div class="col-md-6">{{ form_row(userForm.nom) }}</div>
+			<div class="col-md-2 label-flex">
+				<label for="users_users_{{ loop.index0 }}_nom">Nom</label>
+			</div>
+			<div id="users_users_{{ loop.index0 }}_nom" class="col-md-4 row-flex">
+				{{ form_widget(userForm.nom) }}
+			</div>
+			<div class="col-md-2 label-flex">
+				<label for="users_users_{{ loop.index0 }}_prenom">Prénom</label>
+			</div>
+			<div id="users_users_{{ loop.index0 }}_prenom" class="col-md-4 row-flex">
+				
+				{{ form_widget(userForm.prenom) }}
+			</div>
 		</div>
 		<div class="row form-row-center">
-			<div class="col-md-6">{{ form_row(userForm.date_deb_valid) }}</div>
-			<div class="col-md-6">{{ form_row(userForm.date_fin_valid) }}</div>
+			<div class="col-md-2 label-flex">
+				<label for="users_users_{{ loop.index0 }}_date_deb_valid">Début de contrat</label>
+			</div>
+			<div class="col-md-4 row-flex">
+				{{ form_widget(userForm.date_deb_valid) }}
+			</div>
+			<div class="col-md-2 label-flex">
+				<label for="users_users_{{ loop.index0 }}_date_fin_valid" >Fin de contrat</label>
+			</div>
+			<div class="col-md-4 row-flex">
+				{{ form_widget(userForm.date_fin_valid) }}
+			</div>
 		</div>
 		<div class="row form-row-center">
-			<div class="col-md-12">{{ form_row(userForm.services) }}</div>
+			<div class="col-md-2 label-flex">
+				<p style="margin-right: 5px;">Services</p>
+			</div>
+			<div class="col-md-10 row-flex wide-select">
+				{{ form_widget(userForm.services) }}
+			</div>
 		</div>
-		<div class="form-row-center" style="min-height: 65px;">
-			<button type="submit" class="btn bouton-crous float-right">Enregistrer</button>
+		<div>
+			{{ form_widget(userForm.enregistrer) }}
 		</div>
+
 	</div>
 	{% endfor %}
+
 </div>
 {{ form_end(form) }}
 

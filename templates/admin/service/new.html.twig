@@ -1,10 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Créer un nouveau service</h1>
+	</nav>
+{% endblock %}
 
 {% block body %}
-	<h1 style="margin-top: 30px;">Créer un nouveau service</h1>
-	
 	{% include "admin/service/_form.html.twig" %}
 
 	<div class="previous-link">

@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Entity\Dsi;
-use App\Entity\Valideur;
-use App\Entity\Service;
-use App\Helper\DateHelper;
 use DateTime;
+use App\Entity\Dsi;
+use App\Entity\Service;
+use App\Entity\Valideur;
+use App\Helper\DateHelper;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\Collection;
 use phpDocumentor\Reflection\Types\Boolean;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -104,16 +105,19 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Dsi::class, mappedBy="user", orphanRemoval=true)
+	 * @ORM\OrderBy({"date_deb" = "ASC"})
      */
 	private $dsis;
 	
     /**
      * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true)
+	 * @ORM\OrderBy({"date_deb" = "ASC"})
      */
     private $valideurs;
 
     /**
      * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="user", orphanRemoval=true)
+	 * @ORM\OrderBy({"created_at" = "ASC"})
      */
     private $demandes;
 
@@ -132,12 +136,12 @@ class User implements UserInterface
 
     public function getNom(): ?string
     {
-        return strtoupper($this->nom);
+        return mb_strtoupper($this->nom);
     }
 
     public function setNom(string $nom = null): self
     {
-        $this->nom = strtoupper($nom);
+        $this->nom = mb_strtoupper($nom);
 
         return $this;
     }
@@ -343,6 +347,13 @@ class User implements UserInterface
      */
     public function getDsis(): Collection
     {
+		// Trier les dsis par date de la plus récente à la plus ancienne
+		// if (count($this->dsis) > 1) {
+		// 	$iteror = $this->dsis->getIterator();
+		// 	usort($iteror, function($a, $b) {
+		// 		return $a->getDateDeb() < $b->getDateDeb() ? -1 : 1;
+		// 	});	
+		// }
         return $this->dsis;
     }
 
@@ -438,14 +449,14 @@ class User implements UserInterface
 	 */
 	public function verifyCurrentDsi(): bool 
 	{
-		$currentDate = (new DateTime('now'))->getTimeStamp();
+		$currentDate = new DateTime('now');
 		foreach ($this->dsis as $dsi) {
-			if ($currentDate > $dsi->getDateDeb()->getTimeStamp() && $currentDate < $dsi->getDateFin()->getTimeStamp()) {
-				return TRUE;
+			if ($currentDate >= $dsi->getDateDeb() && $currentDate <= $dsi->getDateFin()) {
+				return true;
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
 
 		/**
@@ -453,15 +464,32 @@ class User implements UserInterface
 	 * 
 	 * @return bool : valideur ou non
 	 */
-	public function verifyCurrentValideur(int $serviceId): bool 
+	public function verifyCurrentValidator(int $serviceId): bool 
 	{
-		$currentDate = (new DateTime('now'))->getTimeStamp();
+		$currentDate = new DateTime('now');
 		foreach ($this->valideurs as $valideur) {
-			if ($currentDate > $valideur->getDateDeb()->getTimeStamp() && $currentDate < $valideur->getDateFin()->getTimeStamp()) {
-				return TRUE;
+			if ($valideur->getService()->getId() === $serviceId) {
+				if ($currentDate >= $valideur->getDateDeb() && $currentDate <= $valideur->getDateFin()) {
+					return true;
+				}
 			}
 		}
 
-		return FALSE;
+		return false;
 	}
+
+	/**
+	 * Dit si l'user en cours est valideur ou non pour un service donné
+	 * @return bool
+	 * 		false : l'user n'est ni valideur, ni dsi en cours, ni admin
+	 * 		true : l'user est soit valideur, soit admin, soit dsi encours donc il peut faire des modifications
+	 */
+	public function verifyValidatorGranted(int $serviceId): bool
+	{
+		if (in_array('ROLE_ADMIN', $this->getRoles()) || $this->verifyCurrentDsi() || $this->verifyCurrentValidator($serviceId)) {
+			return true;
+		}
+		
+		return false;
+	}	
 }

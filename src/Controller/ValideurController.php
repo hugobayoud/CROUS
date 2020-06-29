@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Data\SearchData;
 use App\Entity\Service;
 use App\Entity\Valideurs;
+use App\Form\SearchForm;
 use App\Form\ValideursType;
 use App\Repository\UserRepository;
 use App\Repository\ServiceRepository;
@@ -27,22 +29,26 @@ class ValideurController extends AbstractController
 	 * 		- C'est un agent mais il a le pouvoir valideur en cours dans ce service alors il peut promouvoir qui il souhaite valideur
 	 * 		- C'est un agent et il n'a pas de pouvoir valideur mais il peut regarder qui est valideur sans rien pouvoir modifier
     */
-	public function servicesList(ServiceRepository $serviceRepo)
+	public function servicesList(ServiceRepository $serviceRepo, Request $request)
 	{
+		$data = new SearchData();
+		$form = $this->createForm(SearchForm::class, $data);
+		$form->handleRequest($request);
+
 		if ($this->getUser() !== NULL) {
 			if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || $this->getUser()->verifyCurrentDsi()) {
 				// Si l'user est un admin ou un dsi en cours alors il a accès à tous les services, qu'il soit valideur ou non
-				$services = $serviceRepo->findAll();
-				//...
+				//$services = $serviceRepo->findAll();
+				$services = $serviceRepo->findSearch($data);
 			} else {
 				// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)
-				$services = $serviceRepo->findAllByUserId($this->getUser()->getId());
-				//...
+				$services = $this->getUser()->getServices();
 			}
 		}
 
 		return $this->render("validators/home/index.html.twig", [
 			'services' => $services,
+			'form' => $form->createView()
 		]);
 	}
 
@@ -51,119 +57,84 @@ class ValideurController extends AbstractController
     */
 	public function validatorsServiceList(ValideurRepository $valideurRepo, Request $request, Service $service)
 	{
-		// $users = $userRepo->findAllByServiceId($service->getId());
-		// return $this->render("validators/service.html.twig", [
-		// 	'users' => $users,
-		// 	'service' => $service,
-		// ]);
+		if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || $this->getUser()->verifyCurrentDsi() || $this->getUser()->verifyCurrentValidator($service->getId())) {
+			// On récupère les agents de ce service (dont leur compte ont été validé)
+			$users = $service->getValidatedUsers();
+			$forms = [];
 
-		//----------------------------------------------------------------------------------------------
-
-
-
-		// Tableau de User
-		//$users = $userRepo->findAllByServiceId($service->getId());
-		$users = $service->getUsers();
-
-		// Tableau de tableau de DSIs pour chaque user
-		$allDsis = [];
-		$allOriginalDsis = [];
-		$forms = [];
-
-		foreach ($users as $user) {
-			// On récupère les Dsis de chaque user un par un
-			// $allDsisForOneUser = $dsiRepo->findBy(['user' => $user->getId()]);
-			$allDsisForOneUser = $valideurRepo->findByOrderByDateDeb(['user' => $user->getId()]);
-			
-			$dsis = new Valideurs();
-			$originalDsis = new Valideurs();
-			foreach ($allDsisForOneUser as $dsi) {
-				// Dsis d'un user qui sera utile pour les formulaires
-				$dsis->getValideurs()->add($dsi);
-				// Dsis d'un user stockés afin de comparer les Dsis d'un user avant et après modificiation des formulaires par l'admin
-				$originalDsis->getValideurs()->add($dsi);
-			}
-
-			$allDsis[] = $dsis;
-			$allOriginalDsis[] = $originalDsis;
-
-			// On crée un form du tableau de DSIs d'un user pour chaque user
-			$forms[] = $this->createForm(ValideursType::class, $dsis);
-		}
-
-		// Si le formulaire est envoyé, on récupère l'id correspondant à l'agent et les modifications à faire en BDD
-		if (isset($_POST["custId"])) {
-			$index = $_POST["custId"];
-			// On handleRequest() sur le bon formulaire
-			$form = $forms[$index]->handleRequest($request);
-
-			// Si le form est soumis et valide
-			if ($form->isSubmitted() && $form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-								
-				// Les dates qui sont dans $dsis et dans $originalDsis n'ont pas subit de modification, on y touche pas,
-				// Les dates qui ne sont pas dans $dsis mais qui sont dans $originalDsis sont des dates supprimées, elles doivent être enlevées en BDD,
-				// Les dates qui sont dans $dsis mais pas dans $originalDsis sont les nouvelles dates à enregistrer en BDD.
-	
-				// SUPPRESION EN BASE
-				foreach ($allOriginalDsis[$index]->getValideurs() as $dsi) {
-					//Si le form a enlevé une date, alors elle est enlevée de la BDD
-					if (false === $allDsis[$index]->getValideurs()->contains($dsi)) {
-						// On supprime de la BDD
-						$em->remove($dsi);
-						$em->flush();
+			foreach ($users as $user) {
+				$valideurs = new Valideurs();
+				foreach ($user->getValideurs() as $valideur) {
+					// Si cette période correspond bien au service actuel
+					if ($valideur->getService()->getId() === $service->getId()) {
+						$valideurs->getValideurs()->add($valideur);
 					}
 				}
-	
-				// AJOUT EN BASE
-				foreach ($allDsis[$index]->getValideurs() as $dsi) {
-					if (false === $allOriginalDsis[$index]->getValideurs()->contains($dsi)) {
-						// On associe cette période au bon agent
-						$dsi->setUser($users[$index]);
-						$dsi->setService($service);
-						$em->persist($dsi);
+				// On crée un form du tableau de DSIs d'un user pour chaque user
+				$forms[] = $this->createForm(ValideursType::class, $valideurs);
+			}
+
+			// Si le formulaire est envoyé, on récupère l'id correspondant à l'agent et les modifications à faire en BDD
+			if (isset($_POST["custId"])) {
+				$index = $_POST["custId"];
+				$form = $forms[$index]->handleRequest($request);
+
+				// Si le form est soumis et valide
+				if ($form->isSubmitted() && $form->isValid()) {
+					$em = $this->getDoctrine()->getManager();
+
+					// SUPPRESION EN BASE DES ANCIENNES PERIODES
+					foreach ($users[$index]->getValideurs() as $valideur) {
+						if ($valideur->getService()->getId() === $service->getId()) {
+							$em->remove($valideur);
+							$em->flush();
+						}
+					}
+		
+					// AJOUT EN BASE
+					foreach ($form->getData()->getValideurs() as $valideur) {
+						$valideur->setUser($users[$index]);
+						$valideur->setService($service);
+						$valideur->getDateFin()->setTime(23, 59, 59);
+						$em->persist($valideur);
 						$em->flush();
 					}
+		
+					// On notifie que tout s'est bien passé
+					$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
+					return $this->redirectToRoute('valideurs.service', [
+						'id' => $service->getId()
+					]);
 				}
-	
-				// On notifie que tout s'est bien passé
-				$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
-				return $this->redirectToRoute('valideurs.service', [
-					'id' => $service->getId()
-				]);
 			}
-		}
 
-		$tmpForms = [];
-		foreach ($forms as $form) {
-			$tmpForms[] = $form->createView();
-		}
+			$renderedForms = [];
+			foreach ($forms as $form) {
+				$renderedForms[] = $form->createView();
+			}
 
-		return $this->render('validators/service.html.twig', [
-			'service' => $service,
-			'users' => $users,
-			'forms' => $tmpForms, 
-		]);
+			return $this->render('validators/service.html.twig', [
+				'service' => $service,
+				'users' => $users,
+				'forms' => $renderedForms, 
+			]);
+		} else {
+			$this->addFlash('warning', "acces refusé");
+			return $this->redirectToRoute('valideurs.home');
+		}
 	}
 
+	/**
+     * @Route("/show/{id}", name="service.show")
+    */
+	public function validatorsServiceShow(ValideurRepository $valideurRepo, Request $request, Service $service)
+	{
+		// On récupère les agents de ce service (dont leur compte ont été validé)
+		$users = $service->getValidatedUsers();
+
+		return $this->render('validators/service_show.html.twig', [
+			'service' => $service,
+			'users' => $users,
+		]);
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

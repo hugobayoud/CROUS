@@ -2,7 +2,6 @@
 namespace App\Form;
 
 use App\Entity\Users;
-use App\Form\DsiType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,10 +13,10 @@ class UsersType extends AbstractType
     {
 		$builder
 			->add('users', CollectionType::class, [
-            'entry_type' => UserType::class,
-			'entry_options' => ['label' => false],
-			'allow_delete' => true,
-		])
+				'entry_type' => UserType::class,
+				'entry_options' => ['label' => false],
+				'allow_delete' => true,
+			])
 		;
     }
 

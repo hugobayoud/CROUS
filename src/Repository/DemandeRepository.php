@@ -18,5 +18,21 @@ class DemandeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Demande::class);
-    }
+	}
+	
+	/**
+	 * retourne le nombre de demandes avec un état bien précis (0,1 ou 2)
+	 * 
+	 * @return int|NULL
+	 */
+    public function countDemandState(int $state): ?int
+    {
+		$query = $this->createQueryBuilder('p')
+			->select('count(p.id)')
+			->where('p.etat = :state')
+			->setParameter('state', $state)
+		;
+
+        return $query->getQuery()->getSingleScalarResult();
+	}
 }

@@ -15,8 +15,6 @@ $('select').select2()
 
 // CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIQUE et GERE L'AFFICHAGE DE LA LIGNE SELECTIONNEE
 $(document).ready(function(){
-	//var table = document.getElementById("table");
-
 	var show = localStorage.getItem('show');
 	var cible = localStorage.getItem('target');
 	if (show === 'true'){
@@ -25,8 +23,6 @@ $(document).ready(function(){
 		localStorage.removeItem('target');
 		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
 
-		//var index = target.substring(target.length -1, target.length);
-		//table.rows[index+1].classList.add("selected-row");
 	}
 
 	var index = localStorage.getItem('index');
@@ -66,21 +62,6 @@ $(document).ready(function(){
 			}
 		}
 	}
-
-	//--------------------------------------------------------------------------------
-	// function showTable() {
-	// 	$('#tableDiv').show();
-	// 	localStorage.setItem('show', 'true'); //store state in localStorage
-	// }
-	
-	// $(document).ready(function(){
-	// 	var show = localStorage.getItem('show');
-	// 	if(show === 'true'){
-	// 		$('#tableDiv').show();
-	// 	}
-	// });
-	//--------------------------------------------------------------------------------
-
 });
 
 // AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE (Utile dans la gestion des périodes pour la page "Gestion des DSI")

@@ -70,10 +70,10 @@ class ServiceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+			$this->addFlash('message', 'Modifications enregistrées avec succés (' . $service->getCode() . ')');
             return $this->redirectToRoute('admin.services');
         }
 
-		$this->addFlash('message', 'Modifications enregistrées avec succés (' . $service->getCode() . ')');
         return $this->render('admin/service/edit.html.twig', [
             'service' => $service,
             'form' => $form->createView(),

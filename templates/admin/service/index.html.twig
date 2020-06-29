@@ -1,16 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service index{% endblock %}
-
-
-{% block body %}
-	<div class="text-center" style="margin-top: 30px;">
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
 		<h1>Gestion des services</h1> 
 		<p>
 			<em>Modifier, créer, supprimer un service du CROUS.</em>
 		</p>
-	</div>
+	</nav>
+{% endblock %}
 
+{% block body %}
 	{% for message in app.flashes('message') %}
 	<div class="alert alert-success table-services" style="margin-bottom: 10px;" role="alert">
 		{{ message }}

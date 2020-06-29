@@ -8,14 +8,16 @@
 </div>
 {% endmacro %}
 
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Gestion des fonctions DSI</h1> 
+		<p>
+			<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
+		</p>
+	</nav>
+{% endblock %}
 
 {% block body %}
-<div class="text-center" style="margin-top: 30px;">
-	<h1>Gestion des fonctions DSI</h1> 
-	<p>
-		<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.utilisateurs.validation') }}">ici</a></em>
-	</p>
-</div>
 
 <table id="table" class="table">
 	<thead class="thead-crous">
@@ -34,7 +36,6 @@
 			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
 			<td class="vert-middle">{{ user.email }}</td>
 			<td style="text-align: center;" class="vert-middle {% if user.verifyCurrentDsi() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
-			{# <td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td> #}
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -54,12 +55,11 @@
 <div class="detail-box">
 
 	{% for form in forms %}
-	{% form_theme form 'bootstrap_4_layout.html.twig' %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
-		
+
 		<p>
-			Gestion des périodes d'accès à la fonction DSI<br>
-			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+			Gestion des périodes d'accès à la fonction DSI pour l'agent <strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+			
 		</p>
 		{{ form_start(form) }}
 			<div class="form-error">

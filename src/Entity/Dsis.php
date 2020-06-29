@@ -25,8 +25,8 @@ class Dsis
     public function setDescription($description)
     {
         $this->description = $description;
-    }
-
+	}
+	
     public function getDsis()
     {
 		return $this->dsis;
@@ -49,19 +49,24 @@ class Dsis
     {
 		$errorMessages = [];
 		$length = count($this->dsis);
-
+		
 		for ($i = 0; $i < $length; $i++) {
 			$dsi1 = $this->dsis[$i];
 
-			for ($j = $i+1; $j < $length; $j++) {
-				$dsi2 = $this->dsis[$j];
-				if ($dsi1->getDateDeb() <= $dsi2->getDateFin() && $dsi2->getDateDeb() <= $dsi1->getDateFin()) {
-					$errorMessages[] = 'Les périodes n°' . ($i + 1) . ' et n°' . ($j + 1) . ' se chevauchent. Veuillez les modifier.';
+			if (!is_null($dsi1)) {
+				for ($j = $i+1; $j < $length; $j++) {
+					$dsi2 = $this->dsis[$j];
+					
+					if (!is_null($dsi2)) {
+						if ($dsi1->getDateDeb() <= $dsi2->getDateFin() && $dsi2->getDateDeb() <= $dsi1->getDateFin()) {
+							$errorMessages[] = 'Les périodes n°' . ($i + 1) . ' et n°' . ($j + 1) . ' se chevauchent. Veuillez les modifier.';
+						}
+					}
 				}
-			}
-
-			if ($dsi1->getDateDeb() > $dsi1->getDateFin()) {
-				$errorMessages[] = 'La date de début (' . $dsi1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $dsi1->getDateFin()->format('d/m/Y') . ')';
+	
+				if ($dsi1->getDateDeb() > $dsi1->getDateFin()) {
+					$errorMessages[] = 'La date de début (' . $dsi1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $dsi1->getDateFin()->format('d/m/Y') . ')';
+				}
 			}
 		}
 

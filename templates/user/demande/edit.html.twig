@@ -1,12 +1,16 @@
 {% extends "base.html.twig" %}
 
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Edition de la demande pour le service {{ service.getLibelleCourt() }}</h1>
+		<p>
+			<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
+		</p>
+	</nav>
+{% endblock %}
+
 {% block body %}
-<div class="text-center" style="margin-top: 30px;">
-	<h1>Edition de la demande pour le service</h1>
-	<p>
-		<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
-	</p>
-</div>
+
 
 <div class="applications-box">
 	<form action="" method="POST">

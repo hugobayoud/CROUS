@@ -1,23 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<div class="text-center" style="margin-top: 30px;">
-	<h1>Bonjour</h1>
-	<p>
-		<em>Vous êtes connectés en tant qu'administrateur. Si il y a de nouvelles demandes de validation de comptes ou de demandes, vous en êtes informés ci-dessous</em>
-	</p>
-</div>
-<div class="info-box">
-	{% if nbNewAccount == 0 %}
-		<em>Aucun nouveau compte à valider ou demandes à traiter.</em>
-	{% else %}
-		<ul>
-			<li>
-				Vous avez {{ nbNewAccount }} compte{% if nbNewAccount > 1 %}s{% endif %} à valider. <br>
-				Cliquez <a href="{{ path('admin.utilisateurs.validation') }}">ici</a> pour le{% if nbNewAccount > 1 %}s{% endif %} traiter.
-			</li>
-		</ul>	
-	{% endif %}
-</div>
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Bonjour</h1>
+		<p>
+			<em>Vous êtes connectés en tant qu'administrateur. Si il y a de nouvelles demandes de validation de comptes ou de demandes, vous en êtes informés ci-dessous</em>
+		</p>
+	</nav>
+{% endblock %}
 
+{% block body %}
+<div class="info-box">
+	<div>
+		<h5>Validation des nouveaux comptes</h5>
+		<div>
+		{% if nbNewAccount == 0 %}
+			<em>Aucun nouveau compte à valider ou demandes à traiter.</em>
+		{% else %}
+			Vous avez {{ nbNewAccount }} compte{% if nbNewAccount > 1 %}s{% endif %} à valider. <br>
+			<a href="{{ path('admin.utilisateurs.validation') }}">Cliquez ici  pour le{% if nbNewAccount > 1 %}s{% endif %} traiter.</a>
+		{% endif %}
+		</div>
+	</div>
+	<div>
+		<h5>Traitement des demandes validées</h5>
+		<div class="validate-demands-div">
+		{% if nbDemandsState2 == 0 %}
+			<em>Aucun nouveau compte à valider ou demandes à traiter.</em>
+		{% else %}
+			Vous avez {{ nbDemandsState2 }} demande{% if nbDemandsState2 > 1 %}s{% endif %} à traiter. <br>
+			Cliquez <a href="{{ path('admin.utilisateurs.validation') }}">ici</a> pour le{% if nbNewAccount > 1 %}s{% endif %} traiter.
+		{% endif %}
+		</div>
+	</div>
+</div>
 {% endblock %}

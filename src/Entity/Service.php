@@ -65,15 +65,15 @@ class Service
 	private $demandes;
 	
 	/**
-     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="service", orphanRemoval=true)
      */
-    private $valideurs;
+	private $valideurs;
 	
     public function __construct()
     {
 		$this->users = new ArrayCollection();
 		$this->valideurs = new ArrayCollection();
-        $this->demandes = new ArrayCollection();
+		$this->demandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -83,24 +83,24 @@ class Service
 
     public function getCode(): ?string
     {
-        return strtoupper($this->code);
+        return mb_strtoupper($this->code);
     }
 
     public function setCode(string $code): self
     {
-        $this->code = strtoupper($code);
+        $this->code = mb_strtoupper($code);
 
         return $this;
     }
 
     public function getLibelleCourt(): ?string
     {
-        return $this->libelle_court;
+        return ucwords(mb_strtolower($this->libelle_court));
 	}
 	
 	public function getlibelle_court(): ?string
 	{
-		return $this->getLibelleCourt();
+		return ucwords(mb_strtolower($this->getLibelleCourt()));
 	}
 
     public function setLibelleCourt(?string $libelle_court): self
@@ -112,7 +112,13 @@ class Service
 
     public function getLibelle_long(): ?string
     {
-        return $this->libelle_long;
+        return ucwords(mb_strtolower($this->libelle_long));
+	}
+	
+	
+    public function getLibelleLong(): ?string
+    {
+        return ucwords(mb_strtolower($this->libelle_long));
     }
 
     public function setLibelleLong(?string $libelle_long): self
@@ -128,12 +134,30 @@ class Service
     public function getUsers(): Collection
     {
         return $this->users;
-    }
+	}
+	
+	    /**
+     * @return Collection|User[]
+     */
+    public function getValidatedUsers(): Collection
+    {
+		$allValidated = new ArrayCollection();
+
+		foreach ($this->users as $user) {
+			if (is_null($user->getActivationToken())) {
+				$allValidated->add($user);
+			}
+		}
+
+        return $allValidated;
+	}
 
     public function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
-            $this->users[] = $user;
+			if (is_null($user->getActivationToken())) {
+				$this->users[] = $user;
+			}
         }
 
         return $this;
@@ -232,6 +256,21 @@ class Service
         }
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Nombre actuel de valideur dans ce service
+	 */
+	public function getNumberOfCurrentValidator()
+	{
+		$count = 0;
+		foreach ($this->users as $user) {
+			if ($user->verifyCurrentValidator($this->id)) {
+				$count++;
+			}
+		}
+		
+		return $count;
+	}
 
 }
