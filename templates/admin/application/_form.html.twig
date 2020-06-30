@@ -6,8 +6,10 @@
 	<div class="col-md-5">{{ form_row(form.libelle, {'label': 'Libellé', 'attr': {'placeholder': 'Libellé de l\'application (50 caractères)'}}) }}</div>
 </div>
 <div class="row">
-	<input type="checkbox" name="transverse_checkbox" id="transverse_checkbox"{% if application.getType() == 't' %} checked{% endif %}>
-	<label for="transverse_checkbox">Cocher la case si c'est une application TRANSVERSE</label>
+	<div class="col-md-12">
+		<input type="checkbox" name="transverse_checkbox" id="transverse_checkbox" {% if application.getType() == 't' %} checked{% endif %}>
+		<label for="transverse_checkbox">Cocher la case si c'est une application TRANSVERSE</label>
+	</div>
 </div>
 
 <hr>

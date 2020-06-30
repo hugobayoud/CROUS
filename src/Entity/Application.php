@@ -55,7 +55,7 @@ class Application
 
     public function getCode(): ?string
     {
-        return $this->code;
+        return mb_strtoupper($this->code);
     }
 
     public function setCode(string $code): self
@@ -67,7 +67,7 @@ class Application
 
     public function getLibelle(): ?string
     {
-        return ucwords(strtolower($this->libelle));
+        return ucwords(mb_strtolower($this->libelle));
     }
 
     public function setLibelle(?string $libelle): self
@@ -101,5 +101,14 @@ class Application
         $this->type = $type;
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Retourne si l'application est transverse ou non. Par defaut, l'application n'est pas tranverse
+	 * @return bool
+	 */
+	public function isTransverse(): bool
+	{
+		return $this->type === 't'; 
+	}
 }

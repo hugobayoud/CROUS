@@ -35,9 +35,16 @@ class ApplicationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($application);
-            $entityManager->flush();
+			$em = $this->getDoctrine()->getManager();
+			
+			if (isset($_POST['transverse_checkbox'])) {
+				$application->setType('t');
+			} else {
+				$application->setType('p');
+			}
+
+            $em->persist($application);
+            $em->flush();
 
 			$this->addFlash('message', 'L\'application (' . $application->getCode() . ') a bien été créée.');
             return $this->redirectToRoute('admin.applications');

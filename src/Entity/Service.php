@@ -88,7 +88,7 @@ class Service
 
     public function setCode(string $code): self
     {
-        $this->code = mb_strtoupper($code);
+        $this->code = $code;
 
         return $this;
     }
@@ -271,6 +271,41 @@ class Service
 		}
 		
 		return $count;
+	}
+
+	/**
+	 * Renvoi l'état de la demande associé au service pour un agent
+	 * @return int :
+	 * 		-1 	: demande pas encore faite (rien n'existe dans base pour ce service pour ce user)
+	 * 		0 	: demande faite mais pas validée par un valideur du service
+	 * 		1 	: demande validée par un valideur du service mais pas encore traitée par la DSI
+	 * 		2 	: demande traitée par la DSI
+	 * Si etat = 2 ,Tant que l'user ne souhaite pas refaire une nouvelle demande pour ce service, la demande reste à 2 puis revint à 0 quand il clique sur "nouvelle demande"  
+	 */
+	public function verifyStateDemand(int $userId): int
+	{
+		foreach ($this->demandes as $demande) {
+			if ($demande->getUser()->getId() === $userId) {
+				return $demande->getEtat();
+			}
+		}
+		
+		return -1;
+	}
+
+	/**
+	 * Retourne la date de dernière modification d'une demande pour un service et un agent donné
+	 * @return string|NULL
+	 */
+	public function getLastModif(int $userId): ?string
+	{
+		foreach ($this->demandes as $demande) {
+			if ($demande->getUser()->getId() === $userId) {
+				return $demande->getCreatedAt()->format('d/m/Y');
+			}
+		}
+
+		return NULL;
 	}
 
 }

@@ -26,7 +26,8 @@
         <thead class="thead-crous">
             <tr>
                 <th>Code</th>
-                <th>Libellé</th>
+				<th>Libellé</th>
+				<th>Transverse</th>
                 <th></th>
             </tr>
         </thead>
@@ -35,7 +36,8 @@
 		{# {% set numberOfAgents = application.getNumberOfAgentsLinked() %} #}
             <tr>
                 <td><strong>{{ application.code }}</strong></td>
-                <td>{{ application.libelle }}</td>
+				<td>{{ application.libelle }}</td>
+				<td style="text-align: center;" class="vert-middle {% if application.isTransverse() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
                 <td class="actions">
 					<div class="modify-links">
 						<a class="show-link" href="{{ path('admin.application.show', {'id': application.id}) }}"></a>

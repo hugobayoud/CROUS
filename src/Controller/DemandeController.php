@@ -23,28 +23,12 @@ class DemandeController extends AbstractController
 	 * @Route("/user/demandes", name="user.demandes")
 	 * @return Response
 	 */
-	public function servicesList(UserInterface $currentUser, ServiceRepository $serviceRepo, DemandeRepository $demandRepo): Response
+	public function servicesList(UserInterface $currentUser): Response
 	{
-		$services = $serviceRepo->findAllByUserId($currentUser->getId());
+		$services = $currentUser->getServices();
 
-		foreach ($services as $service) {
-			$demande =  $demandRepo->findOneBy([
-				'user' => (int)$currentUser->getId(), 
-				'service' => (int)$service['id']
-			]);
-
-			if (is_null($demande)) {
-				$etats[] = null;
-				$dates_modif[] = null;
-			} else {
-				$etats[] = $demande->getEtat();
-				$dates_modif[] = $demande->getCreatedAt()->format("d/m/Y");
-			}
-		}
 		return $this->render('user/demande/demandes.html.twig', [
-			'services' => $services,
-			'etats' => $etats,
-			'dates_modif' => $dates_modif
+			'services' => $services
 		]);
 	}
 

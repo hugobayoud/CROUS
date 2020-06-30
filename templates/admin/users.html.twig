@@ -11,17 +11,6 @@
 
 {% block body %}
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-
 <table id="table" class="table">
 	<thead class="thead-crous">
 		<th></th>
@@ -42,6 +31,17 @@
 		{% endfor %}
 	</tbody>
 </table>
+
+{% for message in app.flashes('message') %}
+<div class="alert alert-success" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('warning') %}
+<div class="alert alert-danger" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
 
 {{ form_start(form) }}
 <div class="detail-box">

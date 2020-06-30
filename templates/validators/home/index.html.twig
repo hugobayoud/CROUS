@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block body %}
-{% if (is_granted("ROLE_ADMIN"))  or (app.user.verifyCurrentDsi() == true) %}
+{% if (is_granted("ROLE_ADMIN"))  or app.user.verifyCurrentDsi() %}
 <div class="search-box">
 	<p><strong>Rechercher un service</strong></p>
 	{{ form_start(form) }}
@@ -40,6 +40,7 @@
 			<div class="card-text" style="height: 100px;">
 				{{ service.libelle_court }}
 				<div class="text-muted">{{ service.libelle_long }}</div>
+				{% if app.user.verifyCurrentValidator(service.id) %}<div class="text-info validator-div">Vous êtes valideur</div>{% endif %}
 			</div>
 			<div class="text-center" style="color: rgb(192, 125, 0); margin-bottom: 15px;">{{ service.getNumberOfCurrentValidator() }} valideur{% if service.getNumberOfCurrentValidator() > 1 %}s{% endif %} actuellement</div>
 			{% if app.user.verifyValidatorGranted(service.id) %}
