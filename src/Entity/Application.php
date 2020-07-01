@@ -131,7 +131,8 @@ class Application
         $this->demandes->removeElement($demande);
         // not needed for persistence, just keeping both sides in sync
         $demande->removeApplication($this);
-    }
+	}
+	
     /**
      * @return ArrayCollection|ApplicationDemande[]
      */
@@ -147,5 +148,20 @@ class Application
 	public function isTransverse(): bool
 	{
 		return $this->type === 't'; 
+	}
+
+	/**
+	 * Retourne si une application est déjà demandée par un agent, pour un service précis
+	 * @return bool
+	 */
+	public function isAlreadyRequested(int $userId, int $serviceId): bool
+	{
+		foreach ($this->demandes as $appli_demande) {
+			if ($appli_demande->getDemande()->getUser()->getId() === $userId && $appli_demande->getDemande()->getService()->getId() === $serviceId) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

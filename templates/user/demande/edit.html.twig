@@ -20,7 +20,7 @@
 			{% for application in applications %}
 				{% if application.isTransverse() %}
 				<div>
-					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}">
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
 					<label for="{{ application.code }}">{{ application.libelle }}</label>
 				</div>
 				{% endif %}
@@ -33,7 +33,7 @@
 			{% for application in applications %}
 				{% if not application.isTransverse() %}
 				<div>
-					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}">
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
 					<label for="{{ application.code }}">{{ application.libelle }}</label>
 				</div>
 				{% endif %}
