@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DemandeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -37,22 +36,22 @@ class Demande
     /**
      * @ORM\Column(type="integer")
      */
-    private $etat;
-
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
-	private $applications = [];
+	private $etat;
 	
-	/**
-     * @ORM\Column(type="json", nullable=true)
-     */
-    private $new_applications = [];
-
     /**
      * @ORM\Column(type="datetime")
      */
-    private $created_at;
+	private $created_at;
+	
+    /**
+     * @ORM\OneToMany(targetEntity="ApplicationDemande", mappedBy="demande")
+     */
+	private $applications;
+	
+	public function __construct()
+    {
+        $this->applications = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -95,37 +94,6 @@ class Demande
         return $this;
     }
 
-    public function getApplications(): ?array
-    {
-        return $this->applications;
-    }
-
-    public function setApplications(?array $applications): self
-    {
-        $this->applications = $applications;
-
-        return $this;
-	}
-	
-	public function getNewApplications(): ?array
-    {
-        return $this->new_applications;
-    }
-
-    public function setNewApplications(?array $new_applications): self
-    {
-        $this->new_applications = $new_applications;
-
-        return $this;
-	}
-	
-	public function addnewApplication(?array $new_application): self
-	{
-		$this->new_applications[key($new_application)] = $new_application[key($new_application)];
-
-		return $this;
-	}
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -136,5 +104,31 @@ class Demande
         $this->created_at = $created_at;
 
         return $this;
+	}
+	
+	/**
+     * @return ArrayCollection|ApplicationDemande[]
+     */
+    public function getApplications()
+    {
+        return $this->applications;
+    }
+    public function addApplication(Application $application)
+    {
+        if ($this->applications->contains($application)) {
+            return;
+        }
+		$this->applications[] = $application;
+        // not needed for persistence, just keeping both sides in sync
+        $application->addDemande($this);
+    }
+    public function removeApplication(Application $application)
+    {
+        if (!$this->applications->contains($application)) {
+            return;
+        }
+		$this->applications->removeElement($application);
+        // not needed for persistence, just keeping both sides in sync
+        $application->removeDemande($this);
     }
 }

@@ -2,7 +2,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Edition de la demande pour le service {{ service.getLibelleCourt() }}</h1>
+		<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
 		<p>
 			<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
 		</p>
@@ -14,22 +14,37 @@
 
 <div class="applications-box">
 	<form action="" method="POST">
-		<div class="boxes">
+		<div class="applications-row">
+			<div style="margin-bottom: 10px;"><strong>Applications transverses.</strong></div>
+			<div class="applications-div">
 			{% for application in applications %}
-			<div>
-				<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}" {% if applications_agent[application.id] is defined %} checked{% endif %}>
-				<label for="{{ application.code }}">{{ application.libelle }}</label>
+				{% if application.isTransverse() %}
+				<div>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}">
+					<label for="{{ application.code }}">{{ application.libelle }}</label>
+				</div>
+				{% endif %}
+				{% endfor %}
 			</div>
-			{% endfor %}
+		</div>
+		<div>
+			<div style="margin-bottom: 10px;"><strong>Applications non transverses.</strong></div>
+			<div class="applications-div">
+			{% for application in applications %}
+				{% if not application.isTransverse() %}
+				<div>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}">
+					<label for="{{ application.code }}">{{ application.libelle }}</label>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
 		</div>
 
 		<hr>
 
-		{% if etat == 1 %}<em>Cette demande a été acceptée par un valideur de ce service, vous ne pouvez donc plus la modifier.</em>{% endif %}
-
 		<div class="save-form-demand">
-			<button type="submit" class="bouton-crous"{% if etat > 0 %} disabled{% endif %}>
-			Faire la demande</button>
+			<button type="submit" class="bouton-crous">Faire la demande</button>
 		</div>
 	</form>
 </div>

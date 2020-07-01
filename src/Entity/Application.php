@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ApplicationRepository;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ApplicationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ApplicationRepository::class)
@@ -46,7 +47,17 @@ class Application
 	/**
      * @ORM\Column(type="string", length=2, nullable=true)
      */
-    private $type;
+	private $type;
+	
+	/**
+     * @ORM\OneToMany(targetEntity="ApplicationDemande", mappedBy="application", fetch="EXTRA_LAZY")
+     */
+	private $demandes;
+	
+	public function __construct()
+    {
+        $this->demandes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -102,6 +113,32 @@ class Application
 
         return $this;
 	}
+
+	public function addDemande(Demande $demande)
+    {
+        if ($this->demandes->contains($demande)) {
+            return;
+        }
+        $this->demandes[] = $demande;
+        // not needed for persistence, just keeping both sides in sync
+        $demande->addApplication($this);
+    }
+    public function removeDemande(Demande $demande)
+    {
+        if (!$this->demandes->contains($demande)) {
+            return;
+        }
+        $this->demandes->removeElement($demande);
+        // not needed for persistence, just keeping both sides in sync
+        $demande->removeApplication($this);
+    }
+    /**
+     * @return ArrayCollection|ApplicationDemande[]
+     */
+    public function getDemandes()
+    {
+        return $this->demandes;
+    }
 	
 	/**
 	 * Retourne si l'application est transverse ou non. Par defaut, l'application n'est pas tranverse

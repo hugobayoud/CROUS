@@ -527,19 +527,14 @@ tr{
 	min-height: 200px;
 }
 
-.boxes {
-	display: flex;
-	flex-wrap: wrap;
+.applications-row {
+	margin-bottom: 30px;
 }
 
-.boxes > div {
-	flex: 0 0 33.3333%;
-}
-
-.boxes > div > label {
-	padding: 15px 15px 15px 0;
-	cursor: pointer;
-	margin: 0;
+.applications-div {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 10px;
 }
 
 /* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/user/demandes) */
