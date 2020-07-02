@@ -1,0 +1,31 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Bonjour</h1>
+		<p>
+			<em>Vous êtes connectés en tant que valideur.</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<div class="info-box">
+	<div class="card">
+		<a href="{{ path('valideur.gestion-valideurs.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="image pour gestion-valideurs">
+			<div class="text-center">
+				Gestion des valideurs
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('valideur.validation-demandes.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/valideur-gestion-demandes.jpg" alt="image pour validation-demandes">
+			<div class="text-center">
+				Validation des demandes
+			</div>
+		</a>
+	</div>
+</div>
+{% endblock %}

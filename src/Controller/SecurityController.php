@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Service;
 use App\Helper\DateHelper;
 use App\Form\ResetPassType;
 use App\Form\RegistrationType;
@@ -23,7 +22,7 @@ class SecurityController extends AbstractController
 	/**
 	 * @Route("/inscription", name="security.registration")
 	 */
-	public function registration(UserPasswordEncoderInterface $encoder, Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer)
+	public function registration(UserPasswordEncoderInterface $encoder, Request $request, EntityManagerInterface $em)
 	{
 		$user = new User();
 		//Par défaut : dateDebValid à la date de l'inscription ET calcul de dateFinValid selon règle énoncée par M.MULLER
@@ -49,42 +48,8 @@ class SecurityController extends AbstractController
 			$em->persist($user);
 			$em->flush();
 
-			// On envoie un mail à un agent de la dsi pour validation
-			$messageUser = (new \Swift_Message("Activation de votre compte demandes d'ouverture d'acces aux outils informatiques"))
-				->setFrom('adresse.dsi@crous.fr')
-				->setTo($user->getEmail())
-				->setBody(
-					$this->renderView(
-						'emails/activation_user.html.twig',
-						['user' => $user]
-					),
-					'text/html'
-				);
-
-			// On envoie le message
-			$mailer->send($messageUser);
-
-
-			// On envoi un mail à l'user lui demandant d'attendre qu'un DSI valide
-			$messageDSI = (new \Swift_Message('Nouvel utilisateur a valider'))
-				->setFrom($user->getEmail())
-				->setTo('valideur.dsi@crous.fr')
-				->setBody(
-					$this->renderView(
-						'emails/activation_dsi.html.twig', 
-						[
-							'user' => $user, 
-							'token' => $user->getActivationToken()
-						]						
-					),
-					'text/html'
-				);
-			// On envoie le mail
-			$mailer->send($messageDSI);
-
 			// On notifie l'utilisateur qui vient de créer son compte qu'il doit être validé
 			$this->addFlash('message', 'Demande de création de compte bien envoyée. Vous pourrez vous connecter quand un agent de la DSI/Administrateur aura confirmé votre compte.');
-
 			return $this->redirectToRoute("security.login");
 		}
 
@@ -134,10 +99,7 @@ class SecurityController extends AbstractController
 		$em->persist($user);
 		$em->flush();
 
-		// On envoie un message flash
-		// $this->addFlash('message', "Compte activé");
-
-		return $this->redirectToRoute('admin.utilisateurs.validation');
+		return $this->redirectToRoute('admin.gestion-nouveaux-comptes');
 	}
 
 	/**
@@ -178,8 +140,8 @@ class SecurityController extends AbstractController
 				}
 				
 
-				//On gnénère l'url de réinitialisation
-				$url = $this->generateUrl('security.reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+				//On génère l'url de réinitialisation
+				$url = $this->generateUrl('reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
 				// On envoie le mail
 				$message = (new \Swift_Message('Réinitilisez votre mot de passe'))

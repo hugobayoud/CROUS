@@ -22,38 +22,43 @@ class DemandeController extends AbstractController
 	/**
 	 * Montre tous les services d'un agent pour lequel il peut faire une demande
 	 * 
-	 * @Route("/user/demandes", name="user.demandes")
+	 * @Route("/agent/gestion/demandes", name="agent.gestion-demandes.home")
 	 * @return Response
 	 */
-	public function servicesList(UserInterface $currentUser): Response
+	public function servicesList(): Response
 	{
-		$services = $currentUser->getServices();
+		$user = $this->getUser();
+		$services = $user->getServices();
 
-		return $this->render('user/demande/demandes.html.twig', [
+		return $this->render('agent/gestion-demandes/index.html.twig', [
 			'services' => $services
 		]);
 	}
 
 	/**
-	 * @Route("/user/demande/{id}", name="user.demande.edit")
+	 * Editer/créer la demande pour un service donné pour un agent
+	 * 
+	 * @Route("/agent/gestion/demandes/editer/{id}", name="agent.gestion-demandes.editer")
 	 * @return Response
 	 */
-	public function demandForOneService(UserInterface $currentUser, Service $service, ApplicationRepository $appliRepo, DemandeRepository $demandRepo): Response
+	public function demandForOneService(Service $service, ApplicationRepository $appliRepo, DemandeRepository $demandRepo): Response
 	{
+		$user = $this->getUser();
 		$applications = $appliRepo->findAll();
 
 		if (!empty($_POST)) {
-			$demande = $demandRepo->findOneBy([
-				'user' => $currentUser,
-				'service' => $service
-			]);
+			$demande = $user->getDemande($service->getId());
+			// $demande = $demandRepo->findOneBy([
+			// 	'user' => $user,
+			// 	'service' => $service
+			// ]);
 			
 			$em = $this->getDoctrine()->getManager();
 
 			// S'il n'existe pas encore de demande pour ce service pour ce user en base
 			if (is_null($demande)) {
 				$demande = new Demande();
-				$demande->setUser($currentUser);
+				$demande->setUser($user);
 				$demande->setService($service);
 			} else {
 				// Sinon, on supprime les anciennes demandes d'applications pour ce service pour cet agent dans application_demande
@@ -87,10 +92,10 @@ class DemandeController extends AbstractController
 			}
 
 			$this->addFlash('message', 'Demande enregistrée avec succès');
-			return $this->redirectToRoute('user.demandes');
+			return $this->redirectToRoute('agent.gestion-demandes.home');
 		}
 
-		return $this->render('user/demande/edit.html.twig', [
+		return $this->render('agent/gestion-demandes/edit.html.twig', [
 			'applications' => $applications,
 			'service' => $service
 		]);

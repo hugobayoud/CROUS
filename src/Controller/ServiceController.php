@@ -11,24 +11,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/service", name="admin.")
+ * @Route("/admin/gestion/services", name="admin.gestion-services.")
  */
 class ServiceController extends AbstractController
 {
     /**
-     * @Route("/", name="services", methods={"GET"})
+     * @Route("/", name="home", methods={"GET"})
      */
-    public function index(ServiceRepository $serviceRepository): Response
+    public function index(ServiceRepository $serviceRepo): Response
     {
-        return $this->render('admin/service/index.html.twig', [
-            'services' => $serviceRepository->findAll(),
+        return $this->render('admin/gestion-services/index.html.twig', [
+            'services' => $serviceRepo->findAll(),
         ]);
     }
 
     /**
-     * @Route("/nouveau", name="service.new", methods={"GET","POST"})
+     * @Route("/nouveau", name="nouveau-service", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newService(Request $request): Response
     {
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
@@ -40,29 +40,29 @@ class ServiceController extends AbstractController
             $entityManager->flush();
 
 			$this->addFlash('message', 'Le service (' . $service->getCode() . ') a bien été créé.');
-            return $this->redirectToRoute('admin.services');
+            return $this->redirectToRoute('admin.gestion-services.home');
         }
 
-        return $this->render('admin/service/new.html.twig', [
+        return $this->render('admin/gestion-services/new.html.twig', [
             'service' => $service,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="service.show", methods={"GET"})
+     * @Route("/{id}", name="voir-service", methods={"GET"})
      */
-    public function show(Service $service): Response
+    public function showService(Service $service): Response
     {
-        return $this->render('admin/service/show.html.twig', [
+        return $this->render('admin/gestion-services/show.html.twig', [
             'service' => $service,
         ]);
     }
 
     /**
-     * @Route("/{id}/modifier", name="service.edit", methods={"GET","POST"})
+     * @Route("/{id}/editer", name="editer-service", methods={"GET","POST"})
      */
-    public function edit(Request $request, Service $service): Response
+    public function editService(Request $request, Service $service): Response
     {
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
@@ -71,19 +71,19 @@ class ServiceController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
 			$this->addFlash('message', 'Modifications enregistrées avec succés (' . $service->getCode() . ')');
-            return $this->redirectToRoute('admin.services');
+            return $this->redirectToRoute('admin.gestion-services.home');
         }
 
-        return $this->render('admin/service/edit.html.twig', [
+        return $this->render('admin/gestion-services/edit.html.twig', [
             'service' => $service,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete", name="service.delete", methods={"DELETE"})
+     * @Route("/{id}/supprimer", name="supprimer-service", methods={"DELETE"})
      */
-    public function delete(Request $request, Service $service): Response
+    public function deleteService(Request $request, Service $service): Response
     {
         if ($this->isCsrfTokenValid('delete'.$service->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -92,6 +92,6 @@ class ServiceController extends AbstractController
 		}
 		
 		$this->addFlash('message', 'Service (' . $service->getCode() . ') supprimé');
-        return $this->redirectToRoute('admin.services');
+        return $this->redirectToRoute('admin.gestion-services');
     }
 }

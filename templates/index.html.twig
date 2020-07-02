@@ -1,0 +1,15 @@
+{% include "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<p>
+			<em>Veuillez vous connecter avent de vouloir aller plus loin <a href="{{ path('security.login') }}">se connecter</a></em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<p>
+	Connectez-vous à <a href="{{ path('security.login') }}">cette adresse</a>
+</p>
+{% endblock %}

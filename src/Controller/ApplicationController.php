@@ -11,24 +11,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/admin/application", name="admin.")
+ * @Route("/admin/gestion-applications", name="admin.gestion-applications.")
  */
 class ApplicationController extends AbstractController
 {
     /**
-     * @Route("/", name="applications", methods={"GET"})
+     * @Route("/", name="home", methods={"GET"})
      */
-    public function index(ApplicationRepository $applicationRepository): Response
+    public function index(ApplicationRepository $applicationRepo): Response
     {
-        return $this->render('admin/application/index.html.twig', [
-            'applications' => $applicationRepository->findAll(),
+        return $this->render('admin/gestion-applications/index.html.twig', [
+            'applications' => $applicationRepo->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="application.new", methods={"GET","POST"})
+     * @Route("/nouveau", name="nouvelle-application", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function newApplication(Request $request): Response
     {
         $application = new Application();
         $form = $this->createForm(ApplicationType::class, $application);
@@ -47,27 +47,27 @@ class ApplicationController extends AbstractController
             $em->flush();
 
 			$this->addFlash('message', 'L\'application (' . $application->getCode() . ') a bien été créée.');
-            return $this->redirectToRoute('admin.applications');
+            return $this->redirectToRoute('admin.gestion-applications.home');
         }
 
-        return $this->render('admin/application/new.html.twig', [
+        return $this->render('admin/gestion-applications/new.html.twig', [
             'application' => $application,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="application.show", methods={"GET"})
+     * @Route("/{id}", name="voir-application", methods={"GET"})
      */
-    public function show(Application $application): Response
+    public function showApplication(Application $application): Response
     {
-        return $this->render('admin/application/show.html.twig', [
+        return $this->render('admin/gestion-applications/show.html.twig', [
             'application' => $application,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="application.edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="editer-application", methods={"GET","POST"})
      */
     public function edit(Request $request, Application $application): Response
     {
@@ -87,19 +87,19 @@ class ApplicationController extends AbstractController
 			$em->flush();
 
 			$this->addFlash('message', 'Modifications enregistrées avec succés (' . $application->getCode() . ')');
-            return $this->redirectToRoute('admin.applications');
+            return $this->redirectToRoute('admin.gestion-applications.home');
         }
 
-        return $this->render('admin/application/edit.html.twig', [
+        return $this->render('admin/gestion-applications/edit.html.twig', [
             'application' => $application,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="application.delete", methods={"DELETE"})
+     * @Route("/{id}/supprimer", name="gestion-applications.supprimer", methods={"DELETE"})
      */
-    public function delete(Request $request, Application $application): Response
+    public function deleteApplication(Request $request, Application $application): Response
     {
         if ($this->isCsrfTokenValid('delete'.$application->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
@@ -108,6 +108,6 @@ class ApplicationController extends AbstractController
         }
 
 		$this->addFlash('message', 'Application (' . $application->getCode() . ') supprimée');
-        return $this->redirectToRoute('admin.applications');
+        return $this->redirectToRoute('admin.gestion-applications.home');
     }
 }

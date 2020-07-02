@@ -1,0 +1,17 @@
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Toutes les demandes en cours pour ce service</h1> 
+		<p>
+			<em>Ici s'affiche toutes les demandes en cours pour ce service</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<div class="previous-link">
+	<a href="{{ path('valideur.validation-demandes.home') }}">Page précédente</a>
+</div>
+
+{% endblock %}

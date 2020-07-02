@@ -1,0 +1,30 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Application</h1>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+    <table class="table">
+        <tbody>
+			<tr>
+				<th>Code</th>
+				<td>{{ application.code }}</td>
+			</tr>
+			<tr>
+				<th>Libellé</th>
+                <td>{{ application.libelle }}</td>
+			</tr>
+        </tbody>
+    </table>
+
+	<footer class="table-footer">
+		<div class="previous-link">
+			<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
+		</div>
+		<a class="edit-link" href="{{ path('admin.gestion-applications.editer-application', {'id': application.id}) }}"></a>
+	</footer>
+{% endblock %}

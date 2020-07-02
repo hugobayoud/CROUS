@@ -1,0 +1,37 @@
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Choisir un service</h1> 
+		<p>
+			<em>Ici s'affiche tous les services dont vous êtes actuellement valideur. Choissez un service pour valider les demandes associées</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+{% for message in app.flashes('message') %}
+<div class="alert alert-success" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('warning') %}
+<div class="alert alert-danger" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
+
+<div class="cards-crous">
+	{% for service in services %}
+	<div class="card">
+		<div class="card-body" style="background-color: rgba(240, 240, 240, 0.45);">
+			<h5 class="card-title text-center text-uppercase">{{ service.libelle_court }}</h5>
+			<hr>
+			<div class="modify-demand-div" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
+				Gérer les demandes de ce service
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+{% endblock %}

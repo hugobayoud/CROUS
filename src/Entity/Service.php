@@ -265,7 +265,7 @@ class Service
 	{
 		$count = 0;
 		foreach ($this->users as $user) {
-			if ($user->verifyCurrentValidator($this->id)) {
+			if ($user->isValidator($this->id)) {
 				$count++;
 			}
 		}
@@ -282,7 +282,7 @@ class Service
 	 * 		2 	: demande traitée par la DSI
 	 * Si etat = 2 ,Tant que l'user ne souhaite pas refaire une nouvelle demande pour ce service, la demande reste à 2 puis revint à 0 quand il clique sur "nouvelle demande"  
 	 */
-	public function verifyStateDemand(int $userId): int
+	public function getStateDemand(int $userId): int
 	{
 		foreach ($this->demandes as $demande) {
 			if ($demande->getUser()->getId() === $userId) {

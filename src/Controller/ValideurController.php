@@ -16,12 +16,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @Route("/valideurs", name="valideurs.")
+ * @Route("/valideur", name="valideur.")
  */
 class ValideurController extends AbstractController
 {
 	/**
-     * @Route("/", name="home")
+	 * Home pour un valideur (quelqu'un qui est valideur d'un ou plusieurs service(s))
+	 * @Route("/", name="home")
+	 */
+	public function index()
+	{
+		if (!$this->getUser()->isAValidator()) {
+			return $this->redirectToRoute('login');
+		}
+
+		return $this->render('valideur/index.html.twig');
+	}
+
+	/**
+     * @Route("/gestion/valideurs", name="gestion-valideurs.home")
 	 * 
 	 * On affiche tous les services de l'user et il choisit dans quel service il souhaite faire une modification de valideur
 	 * Trois types de personnes :
@@ -31,33 +44,34 @@ class ValideurController extends AbstractController
     */
 	public function servicesList(ServiceRepository $serviceRepo, Request $request)
 	{
+		$user = $this->getUser();
+
 		$data = new SearchData();
 		$form = $this->createForm(SearchForm::class, $data);
 		$form->handleRequest($request);
 
-		if ($this->getUser() !== NULL) {
-			if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || $this->getUser()->verifyCurrentDsi()) {
-				// Si l'user est un admin ou un dsi en cours alors il a accès à tous les services, qu'il soit valideur ou non
-				//$services = $serviceRepo->findAll();
-				$services = $serviceRepo->findSearch($data);
-			} else {
-				// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)
-				$services = $this->getUser()->getServices();
-			}
+		if ($user->isAdmin() || $user->isDSI()) {
+			// Si l'user est un admin ou un dsi en cours alors il a accès à tous les services, qu'il soit valideur ou non
+			$services = $serviceRepo->findSearch($data);
+		} else {
+			// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)
+			$services = $user->getServices();
 		}
 
-		return $this->render("validators/home/index.html.twig", [
+		return $this->render("valideur/gestion-valideurs/index.html.twig", [
 			'services' => $services,
 			'form' => $form->createView()
 		]);
 	}
 
 	/**
-     * @Route("/{id}", name="service")
+     * @Route("/gestion/valideurs/{id}", name="gestion-valideurs.service")
     */
-	public function validatorsServiceList(ValideurRepository $valideurRepo, Request $request, Service $service)
+	public function validatorsServiceList(Request $request, Service $service)
 	{
-		if (in_array('ROLE_ADMIN', $this->getUser()->getRoles()) || $this->getUser()->verifyCurrentDsi() || $this->getUser()->verifyCurrentValidator($service->getId())) {
+		$currentUser = $this->getUser();
+
+		if ($currentUser->isAdmin() || $currentUser->isDSI() || $currentUser->isValidator($service->getId())) {
 			// On récupère les agents de ce service (dont leur compte ont été validé)
 			$users = $service->getValidatedUsers();
 			$forms = [];
@@ -102,7 +116,7 @@ class ValideurController extends AbstractController
 		
 					// On notifie que tout s'est bien passé
 					$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
-					return $this->redirectToRoute('valideurs.service', [
+					return $this->redirectToRoute('valideur.gestion-valideurs.service', [
 						'id' => $service->getId()
 					]);
 				}
@@ -113,7 +127,7 @@ class ValideurController extends AbstractController
 				$renderedForms[] = $form->createView();
 			}
 
-			return $this->render('validators/service.html.twig', [
+			return $this->render('valideur/gestion-valideurs/service.html.twig', [
 				'service' => $service,
 				'users' => $users,
 				'forms' => $renderedForms, 
@@ -125,16 +139,42 @@ class ValideurController extends AbstractController
 	}
 
 	/**
-     * @Route("/show/{id}", name="service.show")
-    */
-	public function validatorsServiceShow(ValideurRepository $valideurRepo, Request $request, Service $service)
+	 * Validations des demandes. Affichage de tous les services dont l'user est valideur. Ne doit pasaccèder à cette page s'il est valideur dans aucun service
+	 * @Route("/validation/demandes", name="validation-demandes.home")
+	 */
+	public function validateDemandsHome()
 	{
-		// On récupère les agents de ce service (dont leur compte ont été validé)
-		$users = $service->getValidatedUsers();
+		$user = $this->getUser();
 
-		return $this->render('validators/service_show.html.twig', [
-			'service' => $service,
-			'users' => $users,
-		]);
+		if ($user->isAValidator()) {
+			$services = $user->getServicesWhereValidator();
+			return $this->render('valideur/validation-demandes/index.html.twig', [
+				'services' => $services
+			]);
+
+		} else {
+			$this->addFlash('warning', "ACCES REFUSE : Vous n'êtes valideur d'aucun service.");
+			return $this->redirectToRoute('home');
+		}
+	}
+
+	/**
+     * @Route("/validation/demandes/{id}", name="validation-demandes.service")
+    */
+	public function validateDemandsService(Request $request, Service $service)
+	{
+		$currentUser = $this->getUser();
+
+		if ($currentUser->isValidator($service->getId())) {
+			// On récupère les demandes de ce service
+			//$demandes = $service->getDemandeDeCeService();
+
+			return $this->render('valideur/validation-demandes/service.html.twig', [
+				'service' => $service
+			]);
+		} else {
+			$this->addFlash('warning', "acces refusé, vous n'êtes pas valideur de ce service");
+			return $this->redirectToRoute('valideur.validation-demandes.home');
+		}
 	}
 }

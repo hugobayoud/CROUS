@@ -213,7 +213,20 @@ class User implements UserInterface
     public function getServices(): Collection
     {
         return $this->services;
-    }
+	}
+	
+	public function getServicesWhereValidator(): Collection
+	{
+		$services = new ArrayCollection();
+
+		foreach ($this->services as $service) {
+			if ($this->isValidator($service->getId())) {
+				$services->add($service);
+			}
+		}
+
+        return $services;
+	}
 
     public function addService(Service $service = NULL): self
     {
@@ -256,11 +269,17 @@ class User implements UserInterface
 	/* AUTRES FONCTIONS !*/
 	
     /**
+	 * S'assurer en autre que le role_admin nest pas disponible pour la user en cours s'il n'est pas DSI
      * @see UserInterface
      */
     public function getRoles(): array
     {
         $roles = $this->roles;
+		if ($this->isDSI()) {
+			$roles[] = 'ROLE_ADMIN';
+		} else {
+			unset($this->roles[array_search('ROLE_ADMIN', $roles)]);
+		}
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
@@ -417,6 +436,20 @@ class User implements UserInterface
     public function getDemandes(): Collection
     {
         return $this->demandes;
+	}
+	
+	/**
+     * @return Demande|NULL
+     */
+    public function getDemande(int $serviceId): ?Demande
+    {
+		foreach ($this->demandes as $demande) {
+			if ($demande->getService()->getId() === $serviceId) {
+				return $demande;
+			}
+		}
+
+        return NULL;
     }
 
     public function addDemande(Demande $demande): self
@@ -441,13 +474,21 @@ class User implements UserInterface
 
         return $this;
 	}
+
+	/**
+	 * Retourne si l'agent est un administrateur du site ou non
+	 * @return bool
+	 */
+	public function isAdmin(): bool
+	{
+		return in_array('ROLE_ADMIN', $this->getRoles());
+	}
 	
 	/**
 	 * Retourne si l'agent est actuellement DSI ou non
-	 * 
 	 * @return bool : dsi ou non
 	 */
-	public function verifyCurrentDsi(): bool 
+	public function isDSI(): bool 
 	{
 		$currentDate = new DateTime('now');
 		foreach ($this->dsis as $dsi) {
@@ -459,12 +500,11 @@ class User implements UserInterface
 		return false;
 	}
 
-		/**
+	/**
 	 * Retourne si l'agent est actuellement Valideur ou non
-	 * 
 	 * @return bool : valideur ou non
 	 */
-	public function verifyCurrentValidator(int $serviceId): bool 
+	public function isValidator(int $serviceId): bool 
 	{
 		$currentDate = new DateTime('now');
 		foreach ($this->valideurs as $valideur) {
@@ -479,17 +519,17 @@ class User implements UserInterface
 	}
 
 	/**
-	 * Dit si l'user en cours est valideur ou non pour un service donné
+	 * Retourne si l'utilisateur est un valideur pour au moins un service
 	 * @return bool
-	 * 		false : l'user n'est ni valideur, ni dsi en cours, ni admin
-	 * 		true : l'user est soit valideur, soit admin, soit dsi encours donc il peut faire des modifications
 	 */
-	public function verifyValidatorGranted(int $serviceId): bool
+	public function isAValidator()
 	{
-		if (in_array('ROLE_ADMIN', $this->getRoles()) || $this->verifyCurrentDsi() || $this->verifyCurrentValidator($serviceId)) {
-			return true;
+		foreach ($this->services as $service) {
+			if ($this->isValidator($service->getId())) {
+				return true;
+			}
 		}
-		
+
 		return false;
-	}	
+	}
 }

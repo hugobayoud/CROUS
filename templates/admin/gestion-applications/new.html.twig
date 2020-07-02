@@ -1,0 +1,15 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Créer une nouvelle application</h1>
+	</nav>
+{% endblock %}
+
+{% block body %}
+	{% include "admin/gestion-applications/_form.html.twig" %}
+
+	<div class="previous-link">
+   		<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
+	</div>
+{% endblock %}

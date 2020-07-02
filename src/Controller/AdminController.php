@@ -22,38 +22,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     /**
+	 * Page d'accueil de l'administration et de la DSI. Propose toutes les fonctionnalités possibles en tant qu'admin
      * @Route("/", name="home")
      */
-    public function index(UserRepository $userRepo, DemandeRepository $demandRepo)
+    public function index()
     {
-        return $this->render('admin//home/index.html.twig', [
-			'controller_name' => 'AdminController',
-			'nbNewAccount' => $userRepo->countNewAccount(),
-			'nbDemandsState2' => $demandRepo->countDemandState(2)
-        ]);
+        return $this->render('admin/index.html.twig');
 	}
 	
 	/**
 	 * Liste tous les utilisateurs inscris en BDD qui ne sont pas encore validés
-	 * 
-	 * @Route("/utilisateurs_pour_validation", name="utilisateurs.validation")
+	 * @Route("/gestion/nouveaux-comptes", name="gestion-nouveaux-comptes")
 	 */
-	public function usersToValidationList(UserRepository $users)
+	public function administerNewAccounts(UserRepository $userRepo)
 	{
-		return $this->render("admin/users_validation.html.twig", [
-			'users' => $users->findAllNotValidated()
+		return $this->render("admin/gestion-nouveaux-comptes/index.html.twig", [
+			'users' => $userRepo->findAllNotValidated()
 		]);
 	}
 
 	/**
 	 * Liste tous les utilisateurs validés pour modification de leurs status
-	 * 
-	 * @param UserInterface $currentUser
-	 * 
-	 * @Route("/utilisateurs", name="utilisateurs")
+	 * @Route("/gestion/utilisateurs", name="gestion-utilisateurs")
 	 */
-	public function usersList(UserRepository $userRepo, Request $request, UserInterface $currentUser)
+	public function administerUsers(UserRepository $userRepo, Request $request)
 	{
+		$currentUser = $this->getUser();
 		// On crée un ArrayCollection de tous les users
 		$users = new Users();
 		// On récupère tous les users validés dans BDD (à l'exception de l'user connecté, il ne peut pas se modifier lui-même)
@@ -78,10 +72,10 @@ class AdminController extends AbstractController
 
 			// On notifie que tout s'est bien passé
 			$this->addFlash('message', "Modifications enregistrées avec succès");
-			return $this->redirectToRoute('admin.utilisateurs');
+			return $this->redirectToRoute('admin.gestion-utilisateurs');
         }
 
-        return $this->render('admin/users.html.twig', [
+        return $this->render('admin/gestion-utilisateurs/index.html.twig', [
 			'form' => $form->createView(),
 			'users' => $allUsers
         ]);
@@ -89,13 +83,13 @@ class AdminController extends AbstractController
 
 	/**
 	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS
-	 * 
-	 * @Route("/utilisateurs/dsi", name="utilisateurs.dsi")
+	 * @Route("/gestion/dsis", name="gestion-dsis")
 	 */
-	public function usersListDSI(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request, UserInterface $currentUser)
+	public function administerDSIS(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request)
 	{
+		$user = $this->getUser();
 		// Tableau de User
-		$users = $userRepo->findAllValidatedByNameASC($currentUser->getId());
+		$users = $userRepo->findAllValidatedByNameASC($user->getId());
 
 		$forms = [];
 		foreach ($users as $user) {
@@ -136,7 +130,7 @@ class AdminController extends AbstractController
 	
 				// On notifie que tout s'est bien passé
 				$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
-				return $this->redirectToRoute('admin.utilisateurs.dsi');
+				return $this->redirectToRoute('admin.gestion-dsis');
 			}
 		}
 
@@ -145,7 +139,7 @@ class AdminController extends AbstractController
 			$renderedForms[] = $form->createView();
 		}
 
-		return $this->render('admin/users_dsi.html.twig', [
+		return $this->render('admin/gestion-dsis/index.html.twig', [
 			'users' => $users,
 			'forms' => $renderedForms, 
 		]);
@@ -153,13 +147,14 @@ class AdminController extends AbstractController
 
 
 	/**
-	 * @Route("/utilisateur/{id}/delete", name="utilisateur.delete", methods="DELETE")
-	 * @param int $id : id de l'user en demande de validation a refuser ou l'user a enlever de la BDD
+	 * Supprimer une demande de nouveau compte ou supprimer un user de la BDD
+	 * @Route("/utilisateur/{id}/supprimer", name="supprimer-utilisateur", methods="DELETE")
 	 * @return Response
 	 */
-	public function delete(int $id, Request $request): Response
+	public function deleteUser(int $userId, Request $request): Response
 	{
-		$user = $this->getDoctrine()->getManager()->find(User::class, $id);
+		$user = $this->getDoctrine()->getManager()->find(User::class, $userId);
+
 		if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
 			$em = $this->getDoctrine()->getManager();
 			$em->remove($user);
@@ -167,14 +162,15 @@ class AdminController extends AbstractController
 			$this->addFlash('success', 'Suppression correctement effectuée');
 		}
 
-
 		// On cherche la bonne redirection car le bouton suppr est utilisé à plusieurs endroits
 		$url = $_SERVER['HTTP_REFERER'];
-		$target = 'admin.utilisateurs';
-
+		$target = 'admin.gestion';
 		$parts = explode('/', $url);
-		if (end($parts) === 'utilisateurs_pour_validation') {
-			$target .= '.validation';
+
+		if (end($parts) === 'nouveaux-comptes') {
+			$target .= '-nouveaux-comptes';
+		} else {
+			$target .= '-utilisateurs';
 		}
 		
 		return $this->redirectToRoute($target);

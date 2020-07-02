@@ -1,0 +1,55 @@
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
+		<p>
+			<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+
+<div class="applications-box">
+	<form action="" method="POST">
+		<div class="applications-row">
+			<div style="margin-bottom: 10px;"><strong>Applications transverses.</strong></div>
+			<div class="applications-div">
+			{% for application in applications %}
+				{% if application.isTransverse() %}
+				<div>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
+					<label for="{{ application.code }}">{{ application.libelle }}</label>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		<div>
+			<div style="margin-bottom: 10px;"><strong>Applications non transverses.</strong></div>
+			<div class="applications-div">
+			{% for application in applications %}
+				{% if not application.isTransverse() %}
+				<div>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
+					<label for="{{ application.code }}">{{ application.libelle }}</label>
+				</div>
+				{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+
+		<hr>
+
+		<div class="save-form-demand">
+			<button type="submit" class="bouton-crous">Faire la demande</button>
+		</div>
+	</form>
+</div>
+
+<div class="previous-link">
+	<a href="{{ path('agent.gestion-demandes.home') }}">Page précédente</a>
+</div>
+{% endblock %}
