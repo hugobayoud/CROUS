@@ -8,7 +8,7 @@
     "license": "UNLICENSED",
     "private": true,
     "scripts": {
-        "dev-server": "encore dev-server",
+        "dev-server": "encore dev-server --port 8080 --disable-host-check --hot",
         "dev": "webpack-dev-server --progress --colors",
         "watch": "encore dev --watch",
         "build": "encore production --progress"

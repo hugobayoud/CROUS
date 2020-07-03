@@ -184,7 +184,23 @@ class Service
     public function getDemandes(): Collection
     {
         return $this->demandes;
-    }
+	}
+	
+	/**
+	 * Récupère les demandes lié à un service qui sont à l'état 0 (attente de validation d'un valideur)
+	 * 
+	 * @return Demande[]
+	 */
+	public function getToApproveDemands()
+	{
+		foreach ($this->demandes as $demande) {
+			if ($demande->getEtat() === 0) {
+				$toApprove[] = $demande;
+			}
+		}
+
+		return $toApprove;
+	}
 
     public function addDemande(Demande $demande): self
     {

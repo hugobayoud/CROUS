@@ -215,13 +215,13 @@ class User implements UserInterface
         return $this->services;
 	}
 	
-	public function getServicesWhereValidator(): Collection
+	public function getServicesWhereValidator(): Array
 	{
-		$services = new ArrayCollection();
+		$services = [];
 
 		foreach ($this->services as $service) {
 			if ($this->isValidator($service->getId())) {
-				$services->add($service);
+				$services[] = $service;
 			}
 		}
 
@@ -274,13 +274,12 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+		$roles = $this->roles;
+		
 		if ($this->isDSI()) {
 			$roles[] = 'ROLE_ADMIN';
-		} else {
-			unset($this->roles[array_search('ROLE_ADMIN', $roles)]);
 		}
-        // guarantee every user at least has ROLE_USER
+		
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -366,13 +365,6 @@ class User implements UserInterface
      */
     public function getDsis(): Collection
     {
-		// Trier les dsis par date de la plus récente à la plus ancienne
-		// if (count($this->dsis) > 1) {
-		// 	$iteror = $this->dsis->getIterator();
-		// 	usort($iteror, function($a, $b) {
-		// 		return $a->getDateDeb() < $b->getDateDeb() ? -1 : 1;
-		// 	});	
-		// }
         return $this->dsis;
     }
 
@@ -532,4 +524,20 @@ class User implements UserInterface
 
 		return false;
 	}
+
+	/**
+	 * Retourne le nombre de service l'id des services où l'agent est valideur
+	 * @return int[]
+	 */
+	// public function getServicesWhereValidator()
+	// {
+	// 	$tab = [];
+	// 	foreach ($this->services as $service) {
+	// 		if ($this->isValidator($service->getId())) {
+	// 			$tab[] = (int)$service->getId();
+	// 		}
+	// 	}
+
+	// 	return $tab;
+	// }
 }

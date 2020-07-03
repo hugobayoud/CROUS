@@ -25,13 +25,29 @@ class DemandeRepository extends ServiceEntityRepository
 	 * 
 	 * @return int|NULL
 	 */
-    public function countDemandState(int $state): ?int
+    public function countDemandsState(int $state, array $services = NULL): ?int
     {
-		$query = $this->createQueryBuilder('p')
+		if (is_null($services)) {
+			$query = $this->createQueryBuilder('p')
 			->select('count(p.id)')
 			->where('p.etat = :state')
 			->setParameter('state', $state)
-		;
+			;
+		} else {
+			$query = $this->createQueryBuilder('p')
+			->select('count(p.id)');
+
+
+			foreach ($services as $service) {
+				$query = $query
+					->orWhere('p.service = :service')
+					->setParameter('service', $service);
+			}
+
+			$query = $query->andWhere('p.etat = :state')
+			->setParameter('state', $state);
+		}
+
 
         return $query->getQuery()->getSingleScalarResult();
 	}

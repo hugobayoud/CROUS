@@ -7,13 +7,11 @@ use App\Entity\Service;
 use App\Entity\Valideurs;
 use App\Form\SearchForm;
 use App\Form\ValideursType;
-use App\Repository\UserRepository;
+use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
-use App\Repository\ValideurRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/valideur", name="valideur.")
@@ -24,13 +22,20 @@ class ValideurController extends AbstractController
 	 * Home pour un valideur (quelqu'un qui est valideur d'un ou plusieurs service(s))
 	 * @Route("/", name="home")
 	 */
-	public function index()
+	public function index(DemandeRepository $demandRepo)
 	{
-		if (!$this->getUser()->isAValidator()) {
-			return $this->redirectToRoute('login');
+		$user = $this->getUser();
+
+		if (!$user->isAValidator()) {
+			return $this->redirectToRoute('home');
 		}
 
-		return $this->render('valideur/index.html.twig');
+		$tabOfServices = $user->getServicesWhereValidator();
+		$demandsState0 = $demandRepo->countDemandsState(0, $tabOfServices);
+
+		return $this->render('valideur/index.html.twig', [
+			'demandsState0' => $demandsState0,
+		]);
 	}
 
 	/**
@@ -135,46 +140,6 @@ class ValideurController extends AbstractController
 		} else {
 			$this->addFlash('warning', "acces refusé");
 			return $this->redirectToRoute('valideurs.home');
-		}
-	}
-
-	/**
-	 * Validations des demandes. Affichage de tous les services dont l'user est valideur. Ne doit pasaccèder à cette page s'il est valideur dans aucun service
-	 * @Route("/validation/demandes", name="validation-demandes.home")
-	 */
-	public function validateDemandsHome()
-	{
-		$user = $this->getUser();
-
-		if ($user->isAValidator()) {
-			$services = $user->getServicesWhereValidator();
-			return $this->render('valideur/validation-demandes/index.html.twig', [
-				'services' => $services
-			]);
-
-		} else {
-			$this->addFlash('warning', "ACCES REFUSE : Vous n'êtes valideur d'aucun service.");
-			return $this->redirectToRoute('home');
-		}
-	}
-
-	/**
-     * @Route("/validation/demandes/{id}", name="validation-demandes.service")
-    */
-	public function validateDemandsService(Request $request, Service $service)
-	{
-		$currentUser = $this->getUser();
-
-		if ($currentUser->isValidator($service->getId())) {
-			// On récupère les demandes de ce service
-			//$demandes = $service->getDemandeDeCeService();
-
-			return $this->render('valideur/validation-demandes/service.html.twig', [
-				'service' => $service
-			]);
-		} else {
-			$this->addFlash('warning', "acces refusé, vous n'êtes pas valideur de ce service");
-			return $this->redirectToRoute('valideur.validation-demandes.home');
 		}
 	}
 }

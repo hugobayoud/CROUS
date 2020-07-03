@@ -13,16 +13,26 @@
 <div class="info-box">
 	<div class="card">
 		<a href="{{ path('admin.gestion-nouveaux-comptes') }}">
+			<span class="notification-badge"><span>{{ newAccounts }}</span></span>
 			<img class="card-vignette" src="/ressource/vignettes/gestion-nouveaux-comptes.jpg" alt="Card image cap">
-			<div class="text-center" style="height: 100%; vertical-align: middle;">
+			<div class="text-center card-crous-body">
 				Gestion des nouveaux comptes
 			</div>
 		</a>
-		</div>
+	</div>
+	<div class="card">
+		<a href="#">
+			<span class="notification-badge"><span>{{ demandsState1 }}</span></span>
+			<img class="card-vignette" src="/ressource/vignettes/admin-gestion-demandes.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Gestion des demandes
+			</div>
+		</a>
+	</div>
 	<div class="card">
 		<a href="{{ path('admin.gestion-dsis') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-dsis.jpg" alt="Card image cap">
-			<div class="text-center">
+			<div class="text-center card-crous-body">
 				Gestion des fonctions DSI
 			</div>
 		</a>
@@ -30,23 +40,15 @@
 	<div class="card">
 		<a href="{{ path('admin.gestion-utilisateurs') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-utilisateurs.jpg" alt="Card image cap">
-			<div class="text-center">
+			<div class="text-center card-crous-body">
 				Gestion des utilisateurs
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="#">
-			<img class="card-vignette" src="/ressource/vignettes/admin-gestion-demandes.jpg" alt="Card image cap">
-			<div class="text-center">
-				Gestion des demandes
 			</div>
 		</a>
 	</div>
 	<div class="card">
 		<a href="{{ path('valideur.gestion-valideurs.home') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="Card image cap">
-			<div class="text-center">
+			<div class="text-center card-crous-body">
 				Gestion des valideurs
 			</div>
 		</a>
@@ -54,7 +56,7 @@
 	<div class="card">
 		<a href="{{ path('admin.gestion-applications.home') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-applications.jpg" alt="Card image cap">
-			<div class="text-center">
+			<div class="text-center card-crous-body">
 				Gestion des applications
 			</div>
 		</a>
@@ -62,7 +64,7 @@
 	<div class="card">
 		<a href="{{ path('admin.gestion-services.home') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-services.jpg" alt="Card image cap">
-			<div class="text-center">
+			<div class="text-center card-crous-body">
 				Gestion des services
 			</div>
 		</a>

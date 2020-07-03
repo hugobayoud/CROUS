@@ -9,9 +9,12 @@ use App\Entity\Service;
 use App\Helper\DateHelper;
 use App\Entity\ApplicationDemande;
 use App\Repository\UserRepository;
+use App\Entity\ApplicationDemandes;
+use App\Form\ApplicationDemandesType;
 use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\ApplicationRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -99,5 +102,108 @@ class DemandeController extends AbstractController
 			'applications' => $applications,
 			'service' => $service
 		]);
+	}
+
+	
+	/**
+	 * Validations des demandes. Affichage de tous les services dont l'user est valideur. 
+	 * Ne doit pas accèder à cette page s'il est valideur dans aucun service
+	 * 
+	 * @Route("valideur/validation/demandes", name="valideur.validation-demandes.home")
+	 */
+	public function validateDemandsHome()
+	{
+		$user = $this->getUser();
+
+		if ($user->isAValidator()) {
+			$services = $user->getServicesWhereValidator();
+			return $this->render('valideur/validation-demandes/index.html.twig', [
+				'services' => $services
+			]);
+
+		} else {
+			$this->addFlash('warning', "ACCES REFUSE : Vous n'êtes valideur d'aucun service.");
+			return $this->redirectToRoute('home');
+		}
+	}
+
+	/**
+	 * Valider les demande d'un service en tant que valideur
+	 * 
+     * @Route("valideur/validation/demandes/{id}", name="valideur.validation-demandes.service")
+    */
+	public function approveDemandsService(Request $request, Service $service)
+	{
+		$currentUser = $this->getUser();
+
+		if ($currentUser->isValidator($service->getId())) {
+			// On récupère les demandes de ce service dont l'état vaut 0
+			$demandes = $service->getToApproveDemands();
+
+			$forms = [];
+			foreach ($demandes as $demande) {
+				$applicationDemandes = new ApplicationDemandes();
+				foreach ($demande->getApplications() as $application) {
+					// Application demandée par l'agent de la demande ajoutée dans le formulaire
+					$applicationDemandes->getApplicationDemandes()->add($application);
+				}
+	
+				// On crée un form du tableau de ApplicationDemandes pour chaque demande différente
+				$forms[] = $this->createForm(ApplicationDemandesType::class, $applicationDemandes);
+			}
+
+			// Si le formulaire est envoyé, on récupère l'id correspondant à l'agent et les modifications à faire en BDD
+			if (isset($_POST["custId"])) {
+				$index = $_POST["custId"];
+				// On handleRequest() sur le bon formulaire
+				$form = $forms[$index]->handleRequest($request);
+
+				// Si le form est soumis et valide
+				if ($form->isSubmitted() && $form->isValid()) {
+					$em = $this->getDoctrine()->getManager();
+									
+					// SUPPRESION EN BASE DES ANCIENNES DEMANDES DAPPLICATION FAITE PAR LAGENT
+					// POUR LES REMPLACER PAR CELLE VALIDES PAR LE VALIDEUR
+					foreach ($demandes[$index]->getApplications() as $applicationDemande) {
+						$em->remove($applicationDemande);
+						$em->flush();
+					}
+		
+					// AJOUT EN BASE DES NOUVELLES PERIODES
+					foreach ($form->getData()->getApplicationDemandes() as $applicationDemande) {
+						// On associe cette période au bon agent
+						$applicationDemande->setDemande($demandes[$index]);
+						$applicationDemande->getDateFin()->setTime(23, 59, 59);
+						$applicationDemande->setASupprimer(0);
+						$em->persist($applicationDemande);
+						$em->flush();
+					}
+
+					$demandes[$index]->setEtat(1);
+					$em->persist($demandes[$index]);
+					$em->flush();
+		
+					// On notifie que tout s'est bien passé
+					$this->addFlash('message', "Validation de la demande bien enregistrée.");
+					return $this->redirectToRoute('valideur.validation-demandes.service', [
+						'id' => $service->getId()
+					]);
+				}
+			}
+
+			$renderedForms = [];
+			foreach ($forms as $form) {
+				$renderedForms[] = $form->createView();
+			}
+
+			return $this->render('valideur/validation-demandes/service.html.twig', [
+				'service' => $service,
+				'demandes' => $demandes,
+				'forms' => $renderedForms
+			]);
+		} else {
+			$this->addFlash('warning', "acces refusé, vous n'êtes pas valideur de ce service");
+			return $this->redirectToRoute('valideur.validation-demandes.home');
+		}
 	}
 }

@@ -51,14 +51,16 @@ $(document).ready(function(){
 	function changeColor(indice) {
 		var table = document.getElementById("table");
 
-		for(var i = 0; i < table.rows.length - 1; i++) {
-			if (i == indice) {
-				// on ajoute la class "selected" dans la ligne du tableau
-				table.rows[i+1].classList.add("selected-row");
-				localStorage.setItem('index', indice); //store state in localStorage
-			} else {
-				// on enlève la classe "selected" a tous les autres
-				table.rows[i+1].classList.remove("selected-row");
+		if (table) {
+			for(var i = 0; i < table.rows.length - 1; i++) {
+				if (i == indice) {
+					// on ajoute la class "selected" dans la ligne du tableau
+					table.rows[i+1].classList.add("selected-row");
+					localStorage.setItem('index', indice); //store state in localStorage
+				} else {
+					// on enlève la classe "selected" a tous les autres
+					table.rows[i+1].classList.remove("selected-row");
+				}
 			}
 		}
 	}
@@ -124,7 +126,7 @@ function addTagForm($collectionHolder, $newLinkLi) {
 }
 
 function addTagFormDeleteLink($tagFormLi) {
-	var $removeFormButton = $('<div class="col-md-4"><button type="button" class="remove-button">Retirer</button></div>');
+	var $removeFormButton = $('<div class="col-md-3"><button type="button" class="remove-button">Retirer</button></div>');
 	$tagFormLi.append($removeFormButton);
 
 	$removeFormButton.on('click', function(e) {

@@ -1,4 +1,13 @@
+{% import _self as formMacros %}
 {% extends "bases/crous-base.html.twig" %}
+
+{% macro printApplicationDemandeForm(appliForm) %}
+<div class="row form-row-center row-flex-start">
+	<div class="col-md-3">{{ form_widget(appliForm.application) }}</div>
+	<div class="col-md-3" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(appliForm.date_deb) }}</div>
+	<div class="col-md-3" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(appliForm.date_fin) }}</div>
+</div>
+{% endmacro %}
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
@@ -14,4 +23,68 @@
 	<a href="{{ path('valideur.validation-demandes.home') }}">Page précédente</a>
 </div>
 
+<table id="table" class="table">
+	<thead class="thead-crous">
+		<th></th>
+		<th>Nom</th>
+		<th>Prénom</th>
+		<th>Email</th>
+	</thead>
+	<tbody class="tbody-crous">
+		{% if demandes is not empty %}
+			{% for demande in demandes %}
+			<tr>
+				<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
+				<td class="vert-middle"><strong>{{ demande.user.nom }}</strong></td>
+				<td class="vert-middle"><strong>{{ demande.user.prenom }}</strong></td>
+				<td class="vert-middle">{{ demande.user.email }}</td>
+			</tr>
+			{% endfor %}
+		{% else %}
+			<em>Aucune demande à valider.</em>
+		{% endif %}
+	</tbody>
+</table>
+
+
+{% for message in app.flashes('message') %}
+<div class="alert alert-success" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
+{% for message in app.flashes('warning') %}
+<div class="alert alert-danger" role="alert">
+	{{ message }}
+</div>
+{% endfor %}
+
+
+<div class="detail-box">
+
+	{% for form in forms %}
+	<div class="panel" id="user_detail_{{ loop.index0 }}">
+
+		<p>
+			Validation des applications demandées pour l'agent <strong>{{ demandes[loop.index0].user.prenom }} {{ demandes[loop.index0].user.nom }}</strong>
+		</p>
+		{{ form_start(form) }}
+			<div class="form-error">
+					{{ form_errors(form)}}
+			</div>
+			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ formMacros.printApplicationDemandeForm(form.applicationDemandes.vars.prototype)|e('html_attr') }}">
+				{% for appliForm in form.applicationDemandes %}
+					{{ formMacros.printApplicationDemandeForm(appliForm) }}
+				{% endfor %}
+			</div>
+			<hr>
+			<div class="save-div">
+				{{ form_widget(form.save, {'label': 'Valider cette demande', 'attr': {'class': 'save-button'}}) }}
+			</div>
+			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
+		{{ form_end(form) }}
+
+	</div>
+	{% endfor %}
+
+</div>
 {% endblock %}

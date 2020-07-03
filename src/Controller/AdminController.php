@@ -13,7 +13,6 @@ use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
@@ -25,9 +24,15 @@ class AdminController extends AbstractController
 	 * Page d'accueil de l'administration et de la DSI. Propose toutes les fonctionnalités possibles en tant qu'admin
      * @Route("/", name="home")
      */
-    public function index()
+    public function index(DemandeRepository $demandRepo, UserRepository $userRepo)
     {
-        return $this->render('admin/index.html.twig');
+		$newAccounts = $userRepo->countNewAccounts();
+		$demandsState1 = $demandRepo->countDemandsState(1);
+
+        return $this->render('admin/index.html.twig', [
+			'newAccounts' => $newAccounts,
+			'demandsState1' => $demandsState1
+		]);
 	}
 	
 	/**

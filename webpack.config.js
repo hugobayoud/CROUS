@@ -15,6 +15,8 @@ Encore
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
 
+	.addExternals({jquery: 'jQuery'})
+
     /*
      * ENTRY CONFIG
      *
@@ -74,5 +76,5 @@ Encore
 ;
 
 
-module.exports = Encore.addExternals({ 
-	jquery: 'jQuery' }).getWebpackConfig();
+// export the final configuration
+module.exports = Encore.getWebpackConfig();

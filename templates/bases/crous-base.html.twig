@@ -15,6 +15,16 @@
 		</a>
 		<div class="navbar-crous-items">
 			{% if app.user %}
+			<div class="navbar-crous-roles">
+				<a href="{{ path('agent.home') }}" focus>Agent</a>
+				{% if app.user.isAValidator() %}
+				<a href="{{ path('valideur.home') }}">Valideur</a>
+				{% elseif app.user.isDSI() %}
+				<a href="{{ path('admin.home') }}">DSI</a>
+				{% elseif app.user.isAdmin() %}
+				<a href="{{ path('admin.home') }}">Administrateur</a>
+				{% endif %}
+			</div>
 			{# <div class="navbar-crous-gestion">
 				<div>
 					<a class="navbar-crous-link" href="{{ path('admin.gestion-nouveaux-comptes') }}">Validation des nouveaux comptes</a>
@@ -57,14 +67,7 @@
 	{% if app.user %}
 	<footer class="base-footer">
 		<div>
-			<a href="{{ path('agent.home') }}">Agent</a>
-			{% if app.user.isAValidator() %}
-			<a href="{{ path('valideur.home') }}">Valideur</a>
-			{% elseif app.user.isDSI() %}
-			<a href="{{ path('admin.home') }}">DSI</a>
-			{% elseif app.user.isAdmin() %}
-			<a href="{{ path('admin.home') }}">Administrateur</a>
-			{% endif %}
+			CROUS Clermont-Auvergne, <em>gestion et revues des droits</em> - @hugobayoud - version 1.10.0
 		</div>
 	</footer>
 	{% endif %}

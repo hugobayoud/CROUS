@@ -97,7 +97,7 @@ class UserRepository extends ServiceEntityRepository
 	 * 
 	 * @return int|NULL
 	 */
-    public function countNewAccount(): ?int
+    public function countNewAccounts(): ?int
     {
 		$query = $this->createQueryBuilder('p')
 			->select('count(p.id)')

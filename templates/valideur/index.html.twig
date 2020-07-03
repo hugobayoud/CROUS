@@ -12,18 +12,19 @@
 {% block body %}
 <div class="info-box">
 	<div class="card">
-		<a href="{{ path('valideur.gestion-valideurs.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="image pour gestion-valideurs">
-			<div class="text-center">
-				Gestion des valideurs
+		<a href="{{ path('valideur.validation-demandes.home') }}">
+			<span class="notification-badge"><span>{{ demandsState0 }}</span></span>
+			<img class="card-vignette" src="/ressource/vignettes/valideur-gestion-demandes.jpg" alt="image pour validation-demandes">
+			<div class="text-center card-crous-body">
+				Validation des demandes
 			</div>
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('valideur.validation-demandes.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/valideur-gestion-demandes.jpg" alt="image pour validation-demandes">
-			<div class="text-center">
-				Validation des demandes
+		<a href="{{ path('valideur.gestion-valideurs.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="image pour gestion-valideurs">
+			<div class="text-center card-crous-body">
+				Gestion des valideurs
 			</div>
 		</a>
 	</div>
