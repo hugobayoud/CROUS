@@ -448,19 +448,20 @@ tr{
 	justify-content: end;
 	align-items: center;
 	background-color: lightgrey;
-	width: 70%;
+	border: 1px solid rgb(133, 133, 133);
+	width: 90%;
 	margin: 0 auto;
 }
 
-.add-new-form>div:first-child {
+.add-new-form > div:first-child {
 	flex: none;
 	width: 100%;
 	justify-content: start;
-	margin-bottom: 0;
-	padding: 5px 0;
+	/*margin-bottom: 0;
+	padding: 5px 0;*/
 }
 
-.add-new-form>div:last-child {
+.add-new-form > div:last-child {
 	position: relative;
 	left: -33.333%;
 }
@@ -737,4 +738,40 @@ tr{
 	display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
+}
+
+/* GESTION DES DEMANDES POUR UN ADMIN/DSI */
+/* Card pour chaque demande */
+.large-card-crous {
+	width: 100%;
+	min-height: 200px;
+	margin: 10px 0;
+	padding: 0;
+	background-color: rgba(235, 235, 235, 0.767);
+	border: 1px solid grey;
+}
+
+.large-card-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 15px;
+	font-size: 1.1em;
+	background-color: rgb(167, 167, 167);
+}
+
+.large-card-crous > p {
+	padding: 0 15px;
+	background-color: lightgrey;
+}
+
+.large-card-body {
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+	grid-gap: 5px;
+	padding: 0 15px;
+}
+
+.large-card-body div {
+	border: 1px solid grey;
 }

@@ -206,4 +206,18 @@ class DemandeController extends AbstractController
 			return $this->redirectToRoute('valideur.validation-demandes.home');
 		}
 	}
+
+	/**
+	 * Affichage de toutes les demandes à traiter pour un admin/dsi (état 1 -> état 2)
+	 * @Route("/admin/gestion-demandes", name="admin.gestion-demandes")
+	 */
+	public function administerDemandsDSI(DemandeRepository $demandRepo)
+	{
+		// On récupère les demandes à l'état 1
+		$demandes = $demandRepo->findBy(['etat' => 1]);
+
+		return $this->render('admin/gestion-demandes/index.html.twig', [
+			'demandes' => $demandes
+		]);
+	}
 }

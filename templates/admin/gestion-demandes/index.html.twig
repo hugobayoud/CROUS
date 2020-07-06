@@ -1,0 +1,37 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Gestion des demandes pour la DSI</h1> 
+		<p>
+			<em>Ici s'affiche les demandes validée par un valideur du service (état 1). Veuillez notifier que cette demande à bien été prise en compte par un DSI en appuyant sur le bouton "Traiter".</a></em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+{% for demande in demandes %}
+	<div class="large-card-crous">
+		<div class="large-card-title">
+			<strong>{{ demande.user.nom }}</strong> {{ demande.user.prenom }} <em>{{ demande.user.email}}</em> {{ demande.service.getLibelleCourt() }}
+		</div>
+		<p>Applications demandées par l'agent :</p>
+		<div class="large-card-body">
+			<div>
+				Nouveaux droits
+				<hr>
+			</div>
+			<div>
+				Droits à supprimer
+				<hr>
+			</div>
+			<div>
+				Droits inchangés
+				<hr>
+			</div>
+		</div>
+	</div>
+{% endfor %}
+{% endblock %}
+
