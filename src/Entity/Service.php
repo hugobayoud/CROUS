@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Couple;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -63,6 +63,11 @@ class Service
      * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="service", orphanRemoval=true)
      */
 	private $demandes;
+
+	/**
+     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="service", orphanRemoval=true)
+     */
+	private $couples;
 	
 	/**
      * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="service", orphanRemoval=true)
@@ -74,6 +79,7 @@ class Service
 		$this->users = new ArrayCollection();
 		$this->valideurs = new ArrayCollection();
 		$this->demandes = new ArrayCollection();
+		$this->couples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -219,6 +225,37 @@ class Service
             // set the owning side to null (unless already changed)
             if ($demande->getService() === $this) {
                 $demande->setService(null);
+            }
+        }
+
+        return $this;
+	}
+
+	  /**
+     * @return Collection|Couple[]
+     */
+    public function getCouples(): Collection
+    {
+        return $this->couples;
+	}
+	
+    public function addCouple(Couple $couple): self
+    {
+        if (!$this->couples->contains($couple)) {
+            $this->couples[] = $couple;
+            $couple->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCouple(Couple $couple): self
+    {
+        if ($this->couples->contains($couple)) {
+            $this->couples->removeElement($couple);
+
+			if ($couple->getService() === $this) {
+                $couple->setService(null);
             }
         }
 

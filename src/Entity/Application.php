@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
+use App\Entity\Couple;
+use App\Entity\DroitEffectif;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ApplicationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -53,10 +54,16 @@ class Application
      * @ORM\OneToMany(targetEntity="ApplicationDemande", mappedBy="application", fetch="EXTRA_LAZY")
      */
 	private $demandes;
+
+	/**
+     * @ORM\OneToMany(targetEntity="DroitEffectif", mappedBy="application", fetch="EXTRA_LAZY")
+     */
+	private $couples;
 	
 	public function __construct()
     {
         $this->demandes = new ArrayCollection();
+        $this->couples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -139,6 +146,34 @@ class Application
     public function getDemandes()
     {
         return $this->demandes;
+	}
+	
+	// Couples
+	public function addCouple(Couple $couple)
+    {
+        if ($this->couples->contains($couple)) {
+            return;
+        }
+        $this->couples[] = $couple;
+        // not needed for persistence, just keeping both sides in sync
+        $couple->addApplication($this);
+    }
+    public function removeCouple(Couple $couple)
+    {
+        if (!$this->couples->contains($couple)) {
+            return;
+        }
+        $this->couples->removeElement($couple);
+        // not needed for persistence, just keeping both sides in sync
+        $couple->removeApplication($this);
+	}
+	
+    /**
+     * @return ArrayCollection|DroitEffectif[]
+     */
+    public function getCouples()
+    {
+        return $this->couples;
     }
 	
 	/**

@@ -4,13 +4,12 @@ namespace App\Entity;
 
 use DateTime;
 use App\Entity\Dsi;
+use App\Entity\Couple;
 use App\Entity\Service;
 use App\Entity\Valideur;
 use App\Helper\DateHelper;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OrderBy;
 use Doctrine\Common\Collections\Collection;
-use phpDocumentor\Reflection\Types\Boolean;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -119,7 +118,13 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="user", orphanRemoval=true)
 	 * @ORM\OrderBy({"created_at" = "ASC"})
      */
-    private $demandes;
+	private $demandes;
+
+	/**
+     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="user", orphanRemoval=true)
+     */
+	private $couples;
+
 
     public function __construct()
     {
@@ -127,6 +132,7 @@ class User implements UserInterface
 		$this->dsis = new ArrayCollection();
 		$this->valideurs = new ArrayCollection();
 		$this->demandes = new ArrayCollection();
+		$this->couples = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -461,6 +467,52 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($demande->getUser() === $this) {
                 $demande->setUser(null);
+            }
+        }
+
+        return $this;
+	}
+
+	
+    /**
+     * @return Collection|Couple[]
+     */
+    public function getCouples(): Collection
+    {
+        return $this->couples;
+	}
+	
+	/**
+     * @return Couple|NULL
+     */
+    public function getCouple(int $serviceId): ?Couple
+    {
+		foreach ($this->couples as $couple) {
+			if ($couple->getService()->getId() === $serviceId) {
+				return $couple;
+			}
+		}
+
+        return NULL;
+    }
+
+    public function addCouple(Couple $couple): self
+    {
+        if (!$this->couples->contains($couple)) {
+            $this->couples[] = $couple;
+            $couple->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCouple(Couple $couple): self
+    {
+        if ($this->couples->contains($couple)) {
+            $this->couples->removeElement($couple);
+            // set the owning side to null (unless already changed)
+            if ($couple->getUser() === $this) {
+                $couple->setUser(null);
             }
         }
 
