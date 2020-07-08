@@ -97,7 +97,7 @@ class ApplicationController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/supprimer", name="gestion-applications.supprimer", methods={"DELETE"})
+     * @Route("/{id}/supprimer", name="supprimer-application", methods={"DELETE"})
      */
     public function deleteApplication(Request $request, Application $application): Response
     {

@@ -41,7 +41,9 @@
 			</tr>
 			{% endfor %}
 		{% else %}
-			<em>Aucune demande à valider.</em>
+			<tr>
+				<td colspan="4"><em>Aucune demande à valider.</em></td>
+			</tr>
 		{% endif %}
 	</tbody>
 </table>
@@ -64,7 +66,7 @@
 	{% for form in forms %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 
-		<p>
+		<p class="info-p">
 			Validation des applications demandées pour l'agent <strong>{{ demandes[loop.index0].user.prenom }} {{ demandes[loop.index0].user.nom }}</strong>
 		</p>
 		{{ form_start(form) }}

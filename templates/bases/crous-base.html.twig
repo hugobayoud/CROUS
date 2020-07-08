@@ -25,24 +25,6 @@
 				<a href="{{ path('admin.home') }}">Administrateur</a>
 				{% endif %}
 			</div>
-			{# <div class="navbar-crous-gestion">
-				<div>
-					<a class="navbar-crous-link" href="{{ path('admin.gestion-nouveaux-comptes') }}">Validation des nouveaux comptes</a>
-				</div>
-				<div class="dropdown">
-					<a class="navbar-crous-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Gestion
-					</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-						<a class="dropdown-item" href="{{ path('admin.gestion-utilisateurs') }}">Gestion des utilisateurs</a>
-						<a class="dropdown-item" href="{{ path('admin.gestion-dsis') }}">Gestion des DSI</a>
-						<a class="dropdown-item" href="#">Gestion des valideurs</a>
-						<div class="dropdown-divider"></div>
-						<a class="dropdown-item" href="{{ path('admin.gestion-services.home') }}">Gestion des services</a>
-						<a class="dropdown-item" href="{{ path('admin.gestion-applications.home') }}">Gestion des applications</a>
-					</div>
-				</div>
-			</div> #}
 			<div class="status-connected">
 				<div class="who-connected">
 					(connecté(e) avec : <em>{{ app.user.email }}</em>)
@@ -67,7 +49,7 @@
 	{% if app.user %}
 	<footer class="base-footer">
 		<div>
-			CROUS Clermont-Auvergne, <em>gestion et revues des droits</em> - @hugobayoud - version 1.10.1
+			CROUS Clermont-Auvergne, <em>gestion et revues des droits</em> - @hugobayoud - version 1.11.0
 		</div>
 	</footer>
 	{% endif %}

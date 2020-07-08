@@ -30,11 +30,8 @@ class ValideurController extends AbstractController
 			return $this->redirectToRoute('home');
 		}
 
-		$tabOfServices = $user->getServicesWhereValidator();
-		$demandsState0 = $demandRepo->countDemandsState(0, $tabOfServices);
-
 		return $this->render('valideur/index.html.twig', [
-			'demandsState0' => $demandsState0,
+			'demandsState0' => $user->getNumberToApprove(),
 		]);
 	}
 

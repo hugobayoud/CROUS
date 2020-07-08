@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Entity\Couple;
@@ -10,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=ServiceRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\ServiceRepository")
  * @UniqueEntity(
  * 		fields={"code"},
  * 		message="Code déjà utilisé pour un autre service"
@@ -195,10 +194,11 @@ class Service
 	/**
 	 * Récupère les demandes lié à un service qui sont à l'état 0 (attente de validation d'un valideur)
 	 * 
-	 * @return Demande[]
+	 * @return Demande[]|NULL
 	 */
 	public function getToApproveDemands()
 	{
+		$toApprove = [];
 		foreach ($this->demandes as $demande) {
 			if ($demande->getEtat() === 0) {
 				$toApprove[] = $demande;

@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=CoupleRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\CoupleRepository")
  * @UniqueEntity(
  * 		fields={"user_id", "service_id"},
  * 		message="Il existe deja une ligne pour cet agent pour ce service en BDD"
@@ -96,5 +96,10 @@ class Couple
 		$this->applications->removeElement($application);
         // not needed for persistence, just keeping both sides in sync
         $application->removeCouple($this);
-    }
+	}
+	
+	public function __toString()
+	{
+		return $this->user->getNom();
+	}
 }

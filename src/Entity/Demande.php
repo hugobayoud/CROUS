@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -112,7 +113,8 @@ class Demande
     public function getApplications()
     {
         return $this->applications;
-    }
+	}
+	
     public function addApplication(Application $application)
     {
         if ($this->applications->contains($application)) {
@@ -121,7 +123,8 @@ class Demande
 		$this->applications[] = $application;
         // not needed for persistence, just keeping both sides in sync
         $application->addDemande($this);
-    }
+	}
+	
     public function removeApplication(Application $application)
     {
         if (!$this->applications->contains($application)) {
@@ -130,5 +133,14 @@ class Demande
 		$this->applications->removeElement($application);
         // not needed for persistence, just keeping both sides in sync
         $application->removeDemande($this);
-    }
+	}
+	
+	/**
+	 * Retourne le nombre de jour depuis quand la demande a été créée
+	 * @return int
+	 */
+	public function createdDaysAgo(): int
+	{
+		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
+	}
 }

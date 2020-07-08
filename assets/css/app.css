@@ -345,9 +345,8 @@ tr{
 /* GESTION DES PSEUDO ELEMENTS pour Gestion des DSI */
 .add-div {
 	display: flex;
-	justify-content: flex-end;
-	width: 44%;
-	margin: 10px auto 0 auto;
+	justify-content: flex-start;
+	width: 50%;
 }
 
 .add-button {
@@ -456,14 +455,9 @@ tr{
 .add-new-form > div:first-child {
 	flex: none;
 	width: 100%;
-	justify-content: start;
-	/*margin-bottom: 0;
+	/*justify-content: start;
+	margin-bottom: 0;
 	padding: 5px 0;*/
-}
-
-.add-new-form > div:last-child {
-	position: relative;
-	left: -33.333%;
 }
 
 /* Visuel de la notification OUI ou NON dsi dans le tableau Gestion des DSI */
@@ -744,8 +738,8 @@ tr{
 /* Card pour chaque demande */
 .large-card-crous {
 	width: 100%;
-	min-height: 200px;
-	margin: 10px 0;
+	min-height: 150px;
+	margin: 20px 0;
 	padding: 0;
 	background-color: rgba(235, 235, 235, 0.767);
 	border: 1px solid grey;
@@ -761,6 +755,7 @@ tr{
 }
 
 .large-card-crous > p {
+	margin: 0;
 	padding: 0 15px;
 	background-color: lightgrey;
 }
@@ -770,8 +765,85 @@ tr{
     grid-template-columns: repeat(3, 1fr);
 	grid-gap: 5px;
 	padding: 0 15px;
+	margin: 10px 0;
 }
 
-.large-card-body div {
+.large-card-body > div {
 	border: 1px solid grey;
+}
+
+.to-add, .to-delete, .to-remain {
+	text-align: center;
+	padding: 10px;
+	font-weight: 600;
+}
+
+.to-add > div {
+	color: green;
+} 
+
+.to-delete > div {
+	color: red;
+}
+
+.to-remain > div {
+	color: grey;
+}
+
+/* CONSULATION DES DROITS EFFETIFS PAR L'ADMINM */
+.user-access-box {
+	background-color: rgba(243, 243, 243, 0.5);
+	border: 1px solid lightgrey;
+	margin: 10px;
+	padding: 15px;
+}
+
+.user-access-box > div {
+	padding: 5px 15px;
+}
+
+/* information de l'agent */
+.user-access-box > .user-info {
+	background-color: lightblue;
+	font-weight: 500;
+	padding: 15px;
+}
+
+.info-services {
+	display: inline;
+}
+
+.user-info > div:first-child {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* information sur DSI */
+.no-dsi-info {
+	background-color: rgba(173, 216, 230, 0.6);
+	border-top: 1px solid rgba(111, 111, 248, 0.6);
+}
+
+.yes-dsi-info {
+	background-color: rgba(230, 173, 173, 0.6);
+	border-top: 1px solid red;
+}
+
+/* informations sur la fonction valideur */
+.no-validator-info {
+	background-color: rgba(173, 216, 230, 0.3);
+	border-top: 1px solid rgba(111, 111, 248, 0.3);
+}
+
+.yes-validator-info {
+	background-color: rgba(230, 173, 173, 0.3);
+	border-top: 1px solid rgba(255, 55, 55, 0.6);
+}
+
+/* informations pour chaque service où l'agent à des droits effetifs */
+.access-info {
+	background-color: rgba(250, 207, 207, 0.3);
+	border-top: 1px solid rgba(255, 55, 55, 0.3);
 }

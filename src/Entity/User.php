@@ -545,6 +545,19 @@ class User implements UserInterface
 	}
 
 	/**
+	 * Retourne la date de fin de dsi formatée si l'user est ACTUELLEMENT DSI, sinon, renvoie " "
+	 * @return string
+	 */
+	public function getDateEndDSI(): string
+	{
+		if ($this->isDSI()) {
+			return $this->formatDate($this->dsis[0]->getDateFin());
+		} else {
+			return " ";
+		}
+	}
+
+	/**
 	 * Retourne si l'agent est actuellement Valideur ou non
 	 * @return bool : valideur ou non
 	 */
@@ -577,19 +590,86 @@ class User implements UserInterface
 		return false;
 	}
 
-	/**
-	 * Retourne le nombre de service l'id des services où l'agent est valideur
-	 * @return int[]
+	/** 
+	 * retourne le nombre de demandes que peut valider un user en tant que valideur
+	 * @return int
 	 */
-	// public function getServicesWhereValidator()
-	// {
-	// 	$tab = [];
-	// 	foreach ($this->services as $service) {
-	// 		if ($this->isValidator($service->getId())) {
-	// 			$tab[] = (int)$service->getId();
-	// 		}
-	// 	}
+	public function getNumberToApprove()
+	{
+		$countMe = 0;
 
-	// 	return $tab;
-	// }
+		foreach ($this->services as $service) {
+			if ($this->isValidator($service->getId())) {
+				foreach ($service->getDemandes() as $demande) {
+					if ($demande->getEtat() === 0) {
+						$countMe++;
+					}
+				}
+			}
+		}
+		return $countMe;
+	}
+
+	/**
+	 * Liste l'ensemble des services dans lequel se trouve l'user, sous forme de string (pour HTML)
+	 * @return string
+	 */
+	public function listServices(): string
+	{
+		if (!$this->services->isEmpty()) {
+			foreach ($this->services as $service) {
+				$servicesLibelle[] = $service->getLibelleCourt();
+			}
+			return implode(" / ", $servicesLibelle);
+		} else {
+			return 'aucuns services';
+		}
+	}
+
+	/**
+	 * Retourne le libelle court d'un service d'un user valideur et de sa fin de contrat dans celui-ci sous forme de string
+	 * @return string
+	 */
+	public function serviceToString(int $serviceId): string
+	{
+		$currentDate = new DateTime('now');
+		foreach ($this->valideurs as $valideur) {
+			$service = $valideur->getService();
+
+			if ($service->getId() === $serviceId) {
+				if ($currentDate >= $valideur->getDateDeb() && $currentDate <= $valideur->getDateFin()) {
+					return $service->getLibelleCourt() . ' (jusqu\'au ' . $this->formatDate($valideur->getDateFin()) . ')';
+				}
+			}
+		}
+
+		return "Non valideur de ce service actuellement";
+	}
+
+	/**
+	 * Retourne de l'html donnant les informations des droits effectifs d'un agent pour un service donné
+	 * @return string
+	 */
+	public function droitsEffectifs_html(Service $service): ?string
+	{
+		$html = NULL;
+
+		foreach ($this->couples as $couple) {
+			// Si on a le bon service sur lequel on veut travailler
+			if ($couple->getService() == $service) {
+				$html .= '<div class="access-service-info">';
+				$html .= '<p>' . $service->getLibelleCourt() . '</p>';
+
+				foreach ($couple->getApplications() as $droitEffectif) {
+					$html .= '<div>';
+					$html .= '<strong>' . $droitEffectif->getApplication()->getLibelle() . '</strong> jusqu\'au ' . $this->formatDate($droitEffectif->getDateFin());
+					$html .= '</div>';
+				}
+				$html .= '</div>'; 
+			}
+
+		}
+
+		return $html;
+	}
 }

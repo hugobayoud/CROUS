@@ -10,10 +10,13 @@ use App\Helper\DateHelper;
 use App\Entity\ApplicationDemande;
 use App\Repository\UserRepository;
 use App\Entity\ApplicationDemandes;
+use App\Entity\Couple;
+use App\Entity\DroitEffectif;
 use App\Form\ApplicationDemandesType;
 use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\ApplicationRepository;
+use App\Repository\CoupleRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -51,10 +54,6 @@ class DemandeController extends AbstractController
 
 		if (!empty($_POST)) {
 			$demande = $user->getDemande($service->getId());
-			// $demande = $demandRepo->findOneBy([
-			// 	'user' => $user,
-			// 	'service' => $service
-			// ]);
 			
 			$em = $this->getDoctrine()->getManager();
 
@@ -85,10 +84,7 @@ class DemandeController extends AbstractController
 				$ad->setDemande($demande);
 				$ad->setDateDeb(new DateTime('now'));
 				$ad->setDateFin(DateHelper::calculDateFin(new DateTime('now')));
-
-				//temporaire
 				$ad->setASupprimer(false);
-				//-----
 
 				$em->persist($ad);
 				$em->flush();
@@ -171,10 +167,10 @@ class DemandeController extends AbstractController
 		
 					// AJOUT EN BASE DES NOUVELLES PERIODES
 					foreach ($form->getData()->getApplicationDemandes() as $applicationDemande) {
-						// On associe cette période au bon agent
 						$applicationDemande->setDemande($demandes[$index]);
 						$applicationDemande->getDateFin()->setTime(23, 59, 59);
-						$applicationDemande->setASupprimer(0);
+						$applicationDemande->setASupprimer(false);
+
 						$em->persist($applicationDemande);
 						$em->flush();
 					}
@@ -211,10 +207,65 @@ class DemandeController extends AbstractController
 	 * Affichage de toutes les demandes à traiter pour un admin/dsi (état 1 -> état 2)
 	 * @Route("/admin/gestion-demandes", name="admin.gestion-demandes")
 	 */
-	public function administerDemandsDSI(DemandeRepository $demandRepo)
+	public function administerDemandsDSI(DemandeRepository $demandRepo, CoupleRepository $coupleRepo)
 	{
 		// On récupère les demandes à l'état 1
 		$demandes = $demandRepo->findBy(['etat' => 1]);
+
+		if (isset($_POST['demande_id'])) {
+			// Pour les applications dans "droits à ajouter", on les ajoutent en base droitEffectif
+			// Pour les applications dans "droits à supprimer", on les enlève de la base droitEffectif si elles existaient bien avant
+			// Pour les applications dans "droits inchangés", on ne touche à rien
+
+			$demande = $demandRepo->findOneBy(['id' => $_POST['demande_id']]);
+			$user = $demande->getUser();
+			$service = $demande->getService();
+			
+			$em = $this->getDoctrine()->getManager();
+			
+			$couple = $coupleRepo->findOneBy(['user' => $user, 'service' => $service]);
+			if(is_null($couple)) {
+				$couple = new Couple();
+				$couple->setUser($user);
+				$couple->setService($service);
+				$em->persist($couple);
+				$em->flush();
+			}
+
+			foreach ($demande->getApplications() as $applicationDemande) {
+				if ($applicationDemande->needNewAccess() && !$applicationDemande->getASupprimer()) {
+					$droitEffectif = new DroitEffectif();
+					$droitEffectif->setCouple($couple);
+					$droitEffectif->setApplication($applicationDemande->getApplication());
+					$droitEffectif->setDateDeb($applicationDemande->getDateDeb());
+					$droitEffectif->setDateFin($applicationDemande->getDateFin());
+
+					$em->persist($droitEffectif);
+					$em->flush();
+				} else if ($applicationDemande->getASupprimer()) {
+					foreach ($couple->getApplications() as $droitEffectif) {
+						if ($droitEffectif->getApplication() === $applicationDemande->getApplication()) {
+							$em->remove($droitEffectif);
+							$em->flush();
+						}
+					}
+				}
+				
+				// On supprime toutes les lignes dans application_demande car les droits ont bien été traités.
+				$em->remove($applicationDemande);
+				$em->flush();
+			}
+
+			$demande->setEtat(2);
+			$em->persist($demande);
+			$em->flush();
+			
+
+
+			$this->addFlash('message', 'droit correctement modifié pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
+			return $this->redirectToRoute('admin.gestion-demandes');
+
+		}
 
 		return $this->render('admin/gestion-demandes/index.html.twig', [
 			'demandes' => $demandes

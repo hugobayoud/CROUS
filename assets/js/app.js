@@ -75,62 +75,66 @@ var $newLinks = [];
 
 for (let $i = 0; $i < $countMe; $i++) {
 	$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter</button>'));
-	$newLinks.push($('<div class="add-div"></div>').append($addTagButtons[$i])); 
+	$newLinks.push($('<div class="add-div"></div>').append($addTagButtons[$i]));
 }
 
 jQuery(document).ready(function() {
 	for (let $i = 0; $i < $countMe; $i++) {
-		// Get the ul that holds the collection of tags
-		$collectionHolders[$i] = $('div.dsis_' + $i);
+		// Récupérer la div qui contient toutes les périodes d'un user
+		$collectionHolders[$i] = $('.dsis_' + $i);
 
-		// add a delete link to all of the existing tag form li elements
-		$collectionHolders[$i].find('div.form-row-center').each(function() {
+		// Ajouter le bouton "RETIRER" à chaque formulaire déjà existant
+		$collectionHolders[$i].find('.form-row-center').each(function() {
 			addTagFormDeleteLink($(this));
 		});
 
-		// add the "Ajouter une période" anchor and li to the tags ul
-		$collectionHolders[$i].append($newLinks[$i]);
-
-		// count the current form inputs we have for the actual user
-		// in order to get a new index when inserting a new item
-		$collectionHolders[$i].data('index', $collectionHolders[$i].find('input').length);
-
-		// On appelle la fonction addTagForm() dès lors que l'on clique sur le bouton "Ajouter une période"
+	 	// Compter le nombre de formulaires pour obtenir un index unique
+	 	$collectionHolders[$i].data('index', $collectionHolders[$i].find('input').length);
+		
+	 	// Ajouter le bouton "AJOUTER" après le paragraphe en haut de la div detail-box
+		//$('.info-p').after($newLinks[$i]);
+		 $collectionHolders[$i].prepend($newLinks[$i]);
+		
+		// Appeler la fonction addTagForm() dès lors que l'on clique sur le bouton "Ajouter une période"
 		$addTagButtons[$i].on('click', function(e) {
-			addTagForm($collectionHolders[$i], $newLinks[$i]);
-		});	
+			addTagForm($collectionHolders[$i], $i);
+		});
 	}
 });
 
-function addTagForm($collectionHolder, $newLinkLi) {
-	// Get the data-prototype explained earlier
-	var prototype = $collectionHolder.data('prototype');
+function addTagForm($collectionHolder, indice) {
+	// Récupérer le prototype du formulaire comme nouveau formulaire
+	var newForm = $collectionHolder.data('prototype');
 
-	// get the new index
+	// Récupérer un nouvel index pour une classe unique
 	var index = $collectionHolder.data('index');
-
-	var newForm = prototype;
-
-	// Replace '__name__' in the prototype's HTML with the index to be sure to have a unique id
 	newForm = newForm.replace(/__name__/g, index);
 
-	// increase the index with one for the next item
+	// Incrémenter l'index pour le prochain item
 	$collectionHolder.data('index', index + 1);
 
-	// Display the form in the page in an li, before the "Add a tag" link li
+	// Ajouter le nouveau formulaire dans une div (background-color: grey;)
 	var $newFormLi = $('<div class="add-new-form"></div>').append(newForm);
-	$newLinkLi.before($newFormLi);
 
-	// add a delete link to the new form
+	// Ajouter le nouveau formulaire à la fin du grand formulaire
+	$('.dsis_' + indice).append($newFormLi);
+
+	// Ajouter le bouton "RETIRER" pour chaque formulaire
 	addTagFormDeleteLink($newFormLi);
 }
 
 function addTagFormDeleteLink($tagFormLi) {
+	// Création du bouton "RETIRER"
 	var $removeFormButton = $('<div class="col-md-3"><button type="button" class="remove-button">Retirer</button></div>');
+	
+	// Ajouter le bouton "RETIRER" pour périodes déjà existantes
 	$tagFormLi.append($removeFormButton);
 
+	// Ajout le bouton "RETIRER" pour les périodes ajoutées
+	$tagFormLi.find('.form-row-center').append($removeFormButton);
+
+	// Retirer le formulaire sur le clique du bouton "RETIRER"
 	$removeFormButton.on('click', function(e) {
-		// remove the li for the tag form
 		$tagFormLi.remove();
 	});
 }

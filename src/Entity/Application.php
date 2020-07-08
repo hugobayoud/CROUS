@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=ApplicationRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\ApplicationRepository")
  * @UniqueEntity(
  * 		fields={"code"},
  * 		message="Code déjà utilisé pour une autre application"
@@ -193,6 +193,12 @@ class Application
 	{
 		foreach ($this->demandes as $appli_demande) {
 			if ($appli_demande->getDemande()->getUser()->getId() === $userId && $appli_demande->getDemande()->getService()->getId() === $serviceId) {
+				return true;
+			}
+		}
+
+		foreach ($this->couples as $droitEffectif) {
+			if ($droitEffectif->getCouple()->getUser()->getId() === $userId && $droitEffectif->getCouple()->getService()->getId() === $serviceId) {
 				return true;
 			}
 		}

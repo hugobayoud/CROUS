@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -100,5 +101,19 @@ class ApplicationDemande
         $this->date_fin = $date_fin;
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Retourne si l'application est une nouvelle application dont il faut ajouter les droits (pour un agent et un service donné)
+	 * @return bool
+	 */
+	public function needNewAccess(): bool
+	{
+		foreach ($this->application->getCouples() as $droitEffectif) {
+			if ($this->demande->getUser() === $droitEffectif->getCouple()->getUser() && $this->demande->getService() === $droitEffectif->getCouple()->getService()) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

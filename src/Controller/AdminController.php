@@ -90,7 +90,7 @@ class AdminController extends AbstractController
 	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS
 	 * @Route("/gestion/dsis", name="gestion-dsis")
 	 */
-	public function administerDSIS(UserRepository $userRepo, DsiRepository $dsiRepo, Request $request)
+	public function administerDSIS(UserRepository $userRepo, Request $request)
 	{
 		$user = $this->getUser();
 		// Tableau de User
@@ -179,5 +179,18 @@ class AdminController extends AbstractController
 		}
 		
 		return $this->redirectToRoute($target);
+	}
+
+	/**
+	 * Consultation des droits effetifs en cours pour tout le centre Clermont-Auvergne
+	 * @Route("/consultation-droits", name="consultation-droits.home")
+	 */
+	public function consultAccess(UserRepository $userRepo)
+	{
+		$users = $userRepo->findAll();
+		
+		return $this->render('admin/consultation-droits/index.html.twig', [
+			'users' => $users
+		]);
 	}
 }

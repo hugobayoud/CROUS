@@ -1,0 +1,77 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{% macro printDsiForm(dsiForm) %}
+<div class="row form-row-center row-flex">
+	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
+</div>
+{% endmacro %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Consultation des droits effectifs</h1> 
+		<p>
+			<em>Consulter les droits en cours pour chaque agent du CROUS</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+{% if users is empty %}
+	<tr>
+		<tr colspan="3">
+			Il semble qu'il n'y ait aucun droit effectif....
+		</tr>
+	</tr>
+{% else %}
+	{% for user in users %}
+	<div class="user-access-box">
+		<div class="user-info">
+			<div>
+				<div>{{ user.nom }} {{ user.prenom }}</div>
+				<div>{{ user.email }}</div>
+			</div>
+			<div>Contrat terminé le : {{ user.formatDate(user.getDateFinValid()) }}</div>
+			<div>
+				Membre des services : 
+				<div class="text-muted info-services">
+					{{ user.listServices() }}
+				</div>
+			</div>
+		</div>
+		{% if not user.isDSI() %}
+		<div class="no-dsi-info">
+			<div>N'occupe pas la fonction DSI actuellement</div>
+		</div>
+		{% else %}
+		<div class="yes-dsi-info">
+			<div>Occupe la fonction DSI jusqu'au <strong>{{ user.getDateEndDSI() }}</strong></div>
+		</div>
+		{% endif %}
+		{% if not user.isAValidator() %}
+		<div class="no-validator-info">
+			<div>N'occupe aucune fonction de valideur actuellement</div>
+		</div>
+		{% else %}
+		<div class="yes-validator-info">
+			<div>Est valideur du ou des service(s) suivant(s) :</div>
+		{% for service in user.services %}
+			{% if user.isValidator(service.id) %}
+				<div>{{ user.serviceToString(service.id) }}</div>
+			{% endif %}
+		{% endfor %}
+		</div>
+		{% endif %}
+		<div class="access-info">
+		{% for service in user.services %}
+			{{ user.droitsEffectifs_html(service) | raw }}				
+		{% endfor %}
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% endblock %}
+
