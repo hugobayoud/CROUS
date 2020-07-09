@@ -2,25 +2,21 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Faire une demande</h1>
-		<p>
-			<em>Veuillez choisir le service pour lequel pour souhaitez faire une demande</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Faire une demande</h1>
+			<p>
+				<em>Veuillez choisir le service pour lequel pour souhaitez faire une demande</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
+{% include "bases/_display-flashes.html.twig" %}
 
 <div class="cards-crous">
 	{% for service in services %}

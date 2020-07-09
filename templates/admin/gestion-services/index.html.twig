@@ -2,61 +2,58 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Gestion des services</h1> 
-		<p>
-			<em>Modifier, créer, supprimer un service du CROUS.</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des services</h1> 
+			<p>
+				<em>Modifier, créer, supprimer un service du CROUS.</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-	{% for message in app.flashes('message') %}
-	<div class="alert alert-success table-services" style="margin-bottom: 10px;" role="alert">
-		{{ message }}
-	</div>
-	{% endfor %}
-	{% for message in app.flashes('warning') %}
-	<div class="alert alert-danger table-services"  style="margin-bottom: 10px;" role="alert">
-		{{ message }}
-	</div>
-	{% endfor %}
 
-    <table class="table table-services">
-        <thead class="thead-crous">
-            <tr>
-                <th>Code</th>
-                <th>Libellé</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-		{% for service in services %}
-		{% set numberOfAgents = service.getNumberOfAgentsLinked() %}
-            <tr>
-                <td><strong>{{ service.code }}</strong></td>
-                <td>{{ service.libelleCourt }}</td>
-                <td class="actions">
-					<div class="modify-links">
-						<a class="show-link" href="{{ path('admin.gestion-services.voir-service', {'id': service.id}) }}"></a>
-						<a class="edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
-						<form method="post" action="{{ path('admin.gestion-services.supprimer-service', {'id': service.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer ce service ?{% if numberOfAgents == 0 %}Il n\'y a pas d\'agents reliés à ce service{% else %} Il y a encore {{ numberOfAgents }} agent{% if numberOfAgents > 1 %}s{% endif %} dans ce service.{% endif %}');">
-							<input type="hidden" name="_method" value="DELETE">
-							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
-							<button class="delete-link"></button>
-						</form>
-					</div>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucun service enregistré en base de données</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{% include "bases/_display-flashes.html.twig" %}
 
-	<div class="add-item-div" onclick="location.href='{{ path('admin.gestion-services.nouveau-service') }}';" style="cursor: pointer;">
-			Créer un nouveau service
-	</div>
+<table class="table table-services">
+	<thead class="thead-crous">
+		<tr>
+			<th>Code</th>
+			<th>Libellé</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for service in services %}
+	{% set numberOfAgents = service.getNumberOfAgentsLinked() %}
+		<tr>
+			<td><strong>{{ service.code }}</strong></td>
+			<td>{{ service.libelleCourt }}</td>
+			<td class="actions">
+				<div class="modify-links">
+					<a class="show-link" href="{{ path('admin.gestion-services.voir-service', {'id': service.id}) }}"></a>
+					<a class="edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
+					<form method="post" action="{{ path('admin.gestion-services.supprimer-service', {'id': service.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer ce service ?{% if numberOfAgents == 0 %}Il n\'y a pas d\'agents reliés à ce service{% else %} Il y a encore {{ numberOfAgents }} agent{% if numberOfAgents > 1 %}s{% endif %} dans ce service.{% endif %}');">
+						<input type="hidden" name="_method" value="DELETE">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
+						<button class="delete-link"></button>
+					</form>
+				</div>
+			</td>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="5">Aucun service enregistré en base de données</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<div class="add-item-div" onclick="location.href='{{ path('admin.gestion-services.nouveau-service') }}';" style="cursor: pointer;">
+		Créer un nouveau service
+</div>
 
 {% endblock %}

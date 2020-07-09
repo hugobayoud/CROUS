@@ -2,10 +2,15 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Choisir un service</h1> 
-		<p>
-			<em>Ici s'affiche tous les services dont vous êtes actuellement valideur. Choissez un service pour valider les demandes associées</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Choisir un service</h1> 
+			<p>
+				<em>Ici s'affiche tous les services dont vous êtes actuellement valideur. Choissez un service pour valider les demandes associées</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 

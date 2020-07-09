@@ -3,10 +3,15 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Gestion des valideurs pour le service {{ service.libelle_court }}</h1> 
-		<p>
-			<em>Modifier les droits de valideur pour un agent de ce service en cliquant sur celui-ci. Vous pouvez le faire car vous êtes valideur de ce service actuellement.</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des valideurs pour le service {{ service.libelle_court }}</h1> 
+			<p>
+				<em>Modifier les droits de valideur pour un agent de ce service en cliquant sur celui-ci. Vous pouvez le faire car vous êtes valideur de ce service actuellement.</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
@@ -18,10 +23,6 @@
 {% endmacro %}
 
 {% block body %}
-<div class="previous-link">
-	<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
-</div>
-
 <table id="table" class="table">
 	<thead class="thead-crous">
 		<th></th>

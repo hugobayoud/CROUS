@@ -2,18 +2,19 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>{{ service.libelle_court }}</h1> 
-		<p>
-			<em>Vous ne pouvez que voir qui est valideur car vous n'êtes qu'un agent de ce service.</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>{{ service.libelle_court }}</h1> 
+			<p>
+				<em>Vous ne pouvez que voir qui est valideur car vous n'êtes qu'un agent de ce service.</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-<div class="previous-link">
-	<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
-</div>
-
 <table id="table" class="table">
 	<thead class="thead-crous">
 		<th>Nom</th>

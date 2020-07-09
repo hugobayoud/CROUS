@@ -2,14 +2,17 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Créer une nouvelle application</h1>
+		<div class="previous-link">
+			<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Créer une nouvelle application</h1>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-	{% include "admin/gestion-applications/_form.html.twig" %}
 
-	<div class="previous-link">
-   		<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
-	</div>
+	{% include "admin/gestion-applications/_form.html.twig" %}
+	
 {% endblock %}

@@ -85,7 +85,7 @@ class Application
 
     public function getLibelle(): ?string
     {
-        return ucwords(mb_strtolower($this->libelle));
+        return $this->libelle;
     }
 
     public function setLibelle(?string $libelle): self

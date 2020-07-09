@@ -2,7 +2,12 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Application</h1>
+		<div class="previous-link">
+			<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Application</h1>
+		</div>
 	</nav>
 {% endblock %}
 
@@ -22,9 +27,6 @@
     </table>
 
 	<footer class="table-footer">
-		<div class="previous-link">
-			<a href="{{ path('admin.gestion-applications.home') }}">Page précédente</a>
-		</div>
 		<a class="edit-link" href="{{ path('admin.gestion-applications.editer-application', {'id': application.id}) }}"></a>
 	</footer>
 {% endblock %}

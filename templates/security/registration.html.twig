@@ -2,13 +2,16 @@
 
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
+{% block subnavbar %}
+<nav class="subnavbar-crous">
+	<h1>Inscription</h1>
+	<p>
+		<em>Créer votre compte pour faire une demande d'accès aux outils informatiques</em>
+	</p>
+</nav>
+{% endblock %}
+
 {% block body %}
-	<h1 class="text-center">Créer votre compte pour faire une demande d'accès aux outils informatiques</h1>
-	{% if errors is defined %}
-		{% for error in errors %}
-		<li>{{ error.message }}</li>
-		{% endfor %}
-	{% endif %}
 		<div style="margin-top: 30px;">
 		{{ form_start(form) }}
 			<div class="row">

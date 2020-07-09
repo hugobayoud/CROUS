@@ -100,12 +100,12 @@ class Service
 
     public function getLibelleCourt(): ?string
     {
-        return ucwords(mb_strtolower($this->libelle_court));
+        return $this->libelle_court;
 	}
 	
 	public function getlibelle_court(): ?string
 	{
-		return ucwords(mb_strtolower($this->getLibelleCourt()));
+		return $this->getLibelleCourt();
 	}
 
     public function setLibelleCourt(?string $libelle_court): self
@@ -117,13 +117,13 @@ class Service
 
     public function getLibelle_long(): ?string
     {
-        return ucwords(mb_strtolower($this->libelle_long));
+        return $this->libelle_long;
 	}
 	
 	
     public function getLibelleLong(): ?string
     {
-        return ucwords(mb_strtolower($this->libelle_long));
+        return $this->libelle_long;
     }
 
     public function setLibelleLong(?string $libelle_long): self

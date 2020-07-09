@@ -3,26 +3,21 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Gestion des demandes pour la DSI</h1> 
-		<p>
-			<em>Ici s'affiche les demandes validée par un valideur du service (état 1). Veuillez notifier que cette demande à bien été prise en compte par un DSI en appuyant sur le bouton "Traiter".</a></em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des demandes pour la DSI</h1> 
+			<p>
+				<em>Ici s'affiche les demandes validée par un valideur du service (état 1). Veuillez notifier que cette demande à bien été prise en compte par un DSI en appuyant sur le bouton "Traiter".</a></em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success table-applications" style="margin-bottom: 10px;" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger table-applications"  style="margin-bottom: 10px;" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-
+{% include "bases/_display-flashes.html.twig" %}
 
 {% for demande in demandes %}
 	<div class="large-card-crous">

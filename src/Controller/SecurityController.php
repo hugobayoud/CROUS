@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
 			$em->flush();
 
 			// On notifie l'utilisateur qui vient de créer son compte qu'il doit être validé
-			$this->addFlash('message', 'Demande de création de compte bien envoyée. Vous pourrez vous connecter quand un agent de la DSI/Administrateur aura confirmé votre compte.');
+			$this->addFlash('message', 'Inscription bien envoyée. Vous pourrez vous connecter quand un agent de la DSI ou un administrateur aura confirmé votre compte.');
 			return $this->redirectToRoute("security.login");
 		}
 

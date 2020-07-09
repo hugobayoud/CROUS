@@ -11,18 +11,19 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Toutes les demandes en cours pour ce service</h1> 
-		<p>
-			<em>Ici s'affiche toutes les demandes en cours pour ce service</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('valideur.validation-demandes.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Toutes les demandes en cours pour ce service</h1> 
+			<p>
+				<em>Ici s'affiche toutes les demandes en cours pour ce service</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-<div class="previous-link">
-	<a href="{{ path('valideur.validation-demandes.home') }}">Page précédente</a>
-</div>
-
 <table id="table" class="table">
 	<thead class="thead-crous">
 		<th></th>

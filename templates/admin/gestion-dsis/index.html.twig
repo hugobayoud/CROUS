@@ -10,10 +10,15 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Gestion des fonctions DSI</h1> 
-		<p>
-			<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.gestion-nouveaux-comptes') }}">ici</a></em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des fonctions DSI</h1> 
+			<p>
+				<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.gestion-nouveaux-comptes') }}">ici</a></em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
@@ -40,16 +45,7 @@
 	</tbody>
 </table>
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
+{% include "bases/_display-flashes.html.twig" %}
 
 <div class="detail-box">
 

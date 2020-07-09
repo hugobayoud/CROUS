@@ -35,7 +35,9 @@
 			</div>
 			{% else %}
 			<div class="status-disconnected">
-				<a href="{{ path('security.login') }}" class="navbar-crous-link login-perso">Se connecter</a>
+				<div class="login-div">
+					<a href="{{ path('security.login') }}" class="navbar-crous-link login-perso">Se connecter</a>
+				</div>
 			</div>
 			{% endif %}
 		</div>

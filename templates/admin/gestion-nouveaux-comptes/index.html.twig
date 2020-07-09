@@ -2,27 +2,23 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Gestion des validations de compte</h1>
-		<p>
-			<em>Pour modifier les informations liées à un agent, veuillez vous rendre <a href="{{ path('admin.gestion-utilisateurs') }}">ici</a></em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des validations de compte</h1>
+			<p>
+				<em>Pour modifier les informations liées à un agent, veuillez vous rendre <a href="{{ path('admin.gestion-utilisateurs') }}">ici</a></em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
+{% include "bases/_display-flashes.html.twig" %}
 
-<table class="table" style="margin-top: 50px;">
+<table class="table">
 	<thead>
 		<th>Identité</th>
 		<th>Services demandés</th>

@@ -2,16 +2,19 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
-		<p>
-			<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
-		</p>
+		<div class="previous-link">
+			<a href="{{ path('agent.gestion-demandes.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
+			<p>
+				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
+			</p>
+		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-
-
 <div class="applications-box">
 	<form action="" method="POST">
 		<div class="applications-row">
@@ -47,9 +50,5 @@
 			<button type="submit" class="bouton-crous">Faire la demande</button>
 		</div>
 	</form>
-</div>
-
-<div class="previous-link">
-	<a href="{{ path('agent.gestion-demandes.home') }}">Page précédente</a>
 </div>
 {% endblock %}

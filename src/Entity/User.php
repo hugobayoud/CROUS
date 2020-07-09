@@ -8,6 +8,8 @@ use App\Entity\Couple;
 use App\Entity\Service;
 use App\Entity\Valideur;
 use App\Helper\DateHelper;
+use App\Entity\DroitEffectif;
+use App\Helper\HtmlHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -610,66 +612,41 @@ class User implements UserInterface
 		return $countMe;
 	}
 
+	/* TO HTML FUNCTIONS */
+	
 	/**
-	 * Liste l'ensemble des services dans lequel se trouve l'user, sous forme de string (pour HTML)
+	 * Retourne les informations sur l'user en HTML
 	 * @return string
 	 */
-	public function listServices(): string
+	public function userInfo_html(): string
 	{
-		if (!$this->services->isEmpty()) {
-			foreach ($this->services as $service) {
-				$servicesLibelle[] = $service->getLibelleCourt();
-			}
-			return implode(" / ", $servicesLibelle);
-		} else {
-			return 'aucuns services';
-		}
+		return HtmlHelper::userInfo($this);
+	}
+	
+	/**
+	 * Retourne si l'user est DSI ou non en HTML
+	 * @return string
+	 */
+	public function dsi_html(): string
+	{
+		return HtmlHelper::dsi($this);
 	}
 
 	/**
 	 * Retourne le libelle court d'un service d'un user valideur et de sa fin de contrat dans celui-ci sous forme de string
 	 * @return string
 	 */
-	public function serviceToString(int $serviceId): string
+	public function valideur_html(): string
 	{
-		$currentDate = new DateTime('now');
-		foreach ($this->valideurs as $valideur) {
-			$service = $valideur->getService();
-
-			if ($service->getId() === $serviceId) {
-				if ($currentDate >= $valideur->getDateDeb() && $currentDate <= $valideur->getDateFin()) {
-					return $service->getLibelleCourt() . ' (jusqu\'au ' . $this->formatDate($valideur->getDateFin()) . ')';
-				}
-			}
-		}
-
-		return "Non valideur de ce service actuellement";
+		return HtmlHelper::servicesWhereValidator($this);
 	}
 
 	/**
-	 * Retourne de l'html donnant les informations des droits effectifs d'un agent pour un service donné
+	 * Retourne la liste des droits effectifs de l'user en HTML
 	 * @return string
 	 */
-	public function droitsEffectifs_html(Service $service): ?string
+	public function droitsEffectifs_html(): string
 	{
-		$html = NULL;
-
-		foreach ($this->couples as $couple) {
-			// Si on a le bon service sur lequel on veut travailler
-			if ($couple->getService() == $service) {
-				$html .= '<div class="access-service-info">';
-				$html .= '<p>' . $service->getLibelleCourt() . '</p>';
-
-				foreach ($couple->getApplications() as $droitEffectif) {
-					$html .= '<div>';
-					$html .= '<strong>' . $droitEffectif->getApplication()->getLibelle() . '</strong> jusqu\'au ' . $this->formatDate($droitEffectif->getDateFin());
-					$html .= '</div>';
-				}
-				$html .= '</div>'; 
-			}
-
-		}
-
-		return $html;
+		return HtmlHelper::droitsEffectifs($this);
 	}
 }
