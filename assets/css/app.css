@@ -17,7 +17,7 @@
     padding: .75rem 1.25rem;
     margin-bottom: 1rem;
 	border: 1px solid transparent;
-	margin: 10px;
+	margin: 10px 0;
 	font-weight: 600;
 }
 
@@ -189,9 +189,10 @@
 	margin: 0;
 }
 
-/* .subnavbar-title {
-	float: right;
-} */
+.subnavbar-title {
+	width: 62%;
+	margin: 0 auto;
+}
 
 /* Icone pour "se connecter", "se déconnecter" */
 .who-connected {
@@ -319,6 +320,16 @@ tr{
 	padding: 10px;
 }
 
+.detail-box-banner {
+	min-height: 45px;
+}
+
+.detail-phrase {
+	float: left;
+	margin: 0;
+	width: 80%;
+}
+
 /* Aligner chaque ligne du formulaire (gestion) au milieu de la page (horizontalement) */
 .form-row-center {
 	width: 90%;
@@ -373,11 +384,15 @@ tr{
     display: inline-block;
 }
 
-/* GESTION DES PSEUDO ELEMENTS pour Gestion des DSI */
+/* GESTION DES PSEUDO ELEMENTS pour les pages de gestion avec Formulaires Imbriqués */
 .add-div {
 	display: flex;
 	justify-content: flex-start;
 	width: 50%;
+}
+
+.add-button-div {
+	float: right;
 }
 
 .add-button {
@@ -585,7 +600,7 @@ tr{
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 15%;
+	width: 170px;
 }
 
 .previous-link > a {

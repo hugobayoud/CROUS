@@ -15,10 +15,10 @@
 	</nav>
 {% endblock %}
 
-{% macro printDsiForm(dsiForm) %}
+{% macro printValidatorForm(validatorForm) %}
 <div class="row form-row-center row-flex">
-	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
-	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(validatorForm.date_deb) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(validatorForm.date_fin) }}</div>
 </div>
 {% endmacro %}
 
@@ -55,33 +55,25 @@
 	</tbody>
 </table>
 
-{% for message in app.flashes('message') %}
-<div class="alert alert-success" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-<div class="alert alert-danger" role="alert">
-	{{ message }}
-</div>
-{% endfor %}
+{% include "bases/_display-flashes.html.twig" %}
 
 <div class="detail-box">
 
 	{% for form in forms %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 		
-		<p class="info-p">
-			Gestion des périodes d'accès à la fonction valideur de ce service<br>
-			<strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
-		</p>
+		<div class="detail-box-banner banner_{{ loop.index0 }}">
+			<div class="detail-phrase">
+				Gestion des périodes d'accès à la fonction valideur de ce service <strong>{{ users[loop.index0].prenom }} {{ users[loop.index0].nom }}</strong>
+			</div>
+		</div>
 		{{ form_start(form) }}
 			<div class="form-error">
 					{{ form_errors(form)}}
 			</div>
-			<div class="dsis_{{ loop.index0 }}" data-prototype="{{ formMacros.printDsiForm(form.valideurs.vars.prototype)|e('html_attr') }}">
-				{% for dsiForm in form.valideurs %}
-					{{ formMacros.printDsiForm(dsiForm) }}
+			<div class="form_{{ loop.index0 }}" data-prototype="{{ formMacros.printValidatorForm(form.valideurs.vars.prototype)|e('html_attr') }}">
+				{% for validatorForm in form.valideurs %}
+					{{ formMacros.printValidatorForm(validatorForm) }}
 				{% endfor %}
 			</div>
 			<hr>

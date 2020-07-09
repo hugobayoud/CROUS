@@ -66,22 +66,27 @@ $(document).ready(function(){
 	}
 });
 
-// AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE (Utile dans la gestion des périodes pour la page "Gestion des DSI")
+// AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE (Utile dans la gestion des périodes pour la page "Gestion des DSI", "Gestion des Valideurs", "Validation des demandes")
 // On calcule le nombre de users enregsitrés
 var $countMe = $('.panel').length;
 var $collectionHolders = [];
+var $otherCollectionHolders = [];
 var $addTagButtons = [];
 var $newLinks = [];
+var $newNewLinks = [];
 
 for (let $i = 0; $i < $countMe; $i++) {
-	$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter</button>'));
-	$newLinks.push($('<div class="add-div"></div>').append($addTagButtons[$i]));
+	//$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter</button>'));
+	$addTagButtons.push($('<button type="button" class="add-button">Ajouter</button>'));
+	$newNewLinks.push($('<div class="add-button-div"></div>').append($addTagButtons[$i]));
+	$newLinks.push($('<div class="add-div"></div>'));
 }
 
 jQuery(document).ready(function() {
 	for (let $i = 0; $i < $countMe; $i++) {
 		// Récupérer la div qui contient toutes les périodes d'un user
-		$collectionHolders[$i] = $('.dsis_' + $i);
+		$collectionHolders[$i] = $('.form_' + $i);
+		$otherCollectionHolders[$i] = $('.banner_' + $i);
 
 		// Ajouter le bouton "RETIRER" à chaque formulaire déjà existant
 		$collectionHolders[$i].find('.form-row-center').each(function() {
@@ -93,7 +98,9 @@ jQuery(document).ready(function() {
 		
 	 	// Ajouter le bouton "AJOUTER" après le paragraphe en haut de la div detail-box
 		//$('.info-p').after($newLinks[$i]);
-		 $collectionHolders[$i].prepend($newLinks[$i]);
+		//$collectionHolders[$i].prepend($newLinks[$i]);
+		$otherCollectionHolders[$i].append($newNewLinks[$i]);
+		$collectionHolders[$i].append($newLinks[$i]);
 		
 		// Appeler la fonction addTagForm() dès lors que l'on clique sur le bouton "Ajouter une période"
 		$addTagButtons[$i].on('click', function(e) {
@@ -117,7 +124,7 @@ function addTagForm($collectionHolder, indice) {
 	var $newFormLi = $('<div class="add-new-form"></div>').append(newForm);
 
 	// Ajouter le nouveau formulaire à la fin du grand formulaire
-	$('.dsis_' + indice).append($newFormLi);
+	$('.form_' + indice).append($newFormLi);
 
 	// Ajouter le bouton "RETIRER" pour chaque formulaire
 	addTagFormDeleteLink($newFormLi);
