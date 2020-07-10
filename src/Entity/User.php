@@ -363,6 +363,16 @@ class User implements UserInterface
 		return DateHelper::formatMyDate($date);
 	}
 
+	/**
+	 * Formate la date pour présentation sous la forme jj/mm/yyyy HH:mm:ss
+	 * 
+	 * @return string
+	 */
+	public function fullyFormatDate(\DateTime $date = NULL): string
+	{
+		return DateHelper::fullyFormatMyDate($date);
+	}
+
 	public function __toString()
 	{
 		return $this->email;

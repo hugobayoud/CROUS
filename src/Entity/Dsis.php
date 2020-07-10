@@ -1,10 +1,12 @@
 <?php
 namespace App\Entity;
 
+use DateTime;
 use App\Entity\Dsi;
+use App\Helper\DateHelper;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class Dsis
 {
@@ -45,35 +47,9 @@ class Dsis
 	/**
      * @Assert\Callback
      */
-    public function validate(ExecutionContextInterface $context, $payload)
+	public function validate(ExecutionContextInterface $context, $payload)
     {
-		$errorMessages = [];
-		$length = count($this->dsis);
-		
-		for ($i = 0; $i < $length; $i++) {
-			$dsi1 = $this->dsis[$i];
-
-			if (!is_null($dsi1)) {
-				for ($j = $i+1; $j < $length; $j++) {
-					$dsi2 = $this->dsis[$j];
-					
-					if (!is_null($dsi2)) {
-						if ($dsi1->getDateDeb() <= $dsi2->getDateFin() && $dsi2->getDateDeb() <= $dsi1->getDateFin()) {
-							$errorMessages[] = 'Les périodes n°' . ($i + 1) . ' et n°' . ($j + 1) . ' se chevauchent. Veuillez les modifier.';
-						}
-					}
-				}
-	
-				if ($dsi1->getDateDeb() > $dsi1->getDateFin()) {
-					$errorMessages[] = 'La date de début (' . $dsi1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $dsi1->getDateFin()->format('d/m/Y') . ')';
-				}
-			}
-		}
-
-		foreach ($errorMessages as $message) {
-			$context->buildViolation($message)
-			->atPath('dsis')
-			->addViolation();
-		}
+		$endDate = isset($_POST['endDate']) ? DateTime::createFromFormat("d/m/Y H:i:s", $_POST['endDate']) : NULL;
+		DateHelper::validateMyDates($this->dsis, $context, $endDate);
     }
 }

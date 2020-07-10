@@ -1,10 +1,12 @@
 <?php
 namespace App\Entity;
 
+use DateTime;
 use App\Entity\Valideur;
+use App\Helper\DateHelper;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 
 class Valideurs
 {
@@ -47,33 +49,8 @@ class Valideurs
      */
     public function validate(ExecutionContextInterface $context, $payload)
     {
-		$errorMessages = [];
-		$length = count($this->valideurs);
+		$endDate = isset($_POST['endDate']) ? DateTime::createFromFormat("d/m/Y H:i:s", $_POST['endDate']) : NULL;
+		DateHelper::validateMyDates($this->valideurs, $context, $endDate);
+	}
 
-		for ($i = 0; $i < $length; $i++) {
-			$valideur1 = $this->valideurs[$i];
-
-			if (!is_null($valideur1)) {
-				for ($j = $i+1; $j < $length; $j++) {
-					$valideur2 = $this->valideurs[$j];
-
-					if (!is_null($valideur2)) {
-						if ($valideur1->getDateDeb() <= $valideur2->getDateFin() && $valideur2->getDateDeb() <= $valideur1->getDateFin()) {
-							$errorMessages[] = 'Les périodes n°' . ($i + 1) . ' et n°' . ($j + 1) . ' se chevauchent. Veuillez les modifier.';
-						}
-					}
-				}
-
-				if ($valideur1->getDateDeb() > $valideur1->getDateFin()) {
-					$errorMessages[] = 'La date de début (' . $valideur1->getDateDeb()->format('d/m/Y') . ') ne doit pas être antérieure à la date de fin (' . $valideur1->getDateFin()->format('d/m/Y') . ')';
-				}
-			}
-		}
-
-		foreach ($errorMessages as $message) {
-			$context->buildViolation($message)
-			->atPath('valideurs')
-			->addViolation();
-		}
-    }
 }

@@ -66,83 +66,92 @@ $(document).ready(function(){
 	}
 });
 
-// AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE (Utile dans la gestion des périodes pour la page "Gestion des DSI", "Gestion des Valideurs", "Validation des demandes")
-// On calcule le nombre de users enregsitrés
+/* AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE
+ *	Utilisé dans la gestion des périodes pour la page "Gestion des DSI", "Gestion des Valideurs", "Validation des demandes")
+*/
+
+// Nombre d'user enregistrés sur la page
 var $countMe = $('.panel').length;
-var $collectionHolders = [];
-var $otherCollectionHolders = [];
-var $addTagButtons = [];
-var $newLinks = [];
-var $newNewLinks = [];
+// Formulaires déjà existants
+var $formsHolders = [];
+// Bandeau de chaque user pour ajout du bouton "AJOUTER" au bon endroit dans la detail-box
+var $bannerHolders = [];
+// Boutons "AJOUTER" pour chaque user
+var $addButtons = [];
+// Div où vont s'ajouter les nouveaux formulaires après clic sur "AJOUTER"
+var $newFormContainers = [];
+// Div où va s'ajouter le bouton "AJOUTER" pour chaque user
+var $addButtonContainers = [];
 
 for (let $i = 0; $i < $countMe; $i++) {
-	//$addTagButtons.push($('<button type="button" class="add_tag_link add-button">Ajouter</button>'));
-	$addTagButtons.push($('<button type="button" class="add-button">Ajouter</button>'));
-	$newNewLinks.push($('<div class="add-button-div"></div>').append($addTagButtons[$i]));
-	$newLinks.push($('<div class="add-div"></div>'));
+	$addButtons.push($('<button type="button" class="add-button">Ajouter</button>'));
+	$addButtonContainers.push($('<div class="add-button-div"></div>').append($addButtons[$i]));
+	$newFormContainers.push($('<div class="add-div"></div>'));
 }
 
 jQuery(document).ready(function() {
 	for (let $i = 0; $i < $countMe; $i++) {
-		// Récupérer la div qui contient toutes les périodes d'un user
-		$collectionHolders[$i] = $('.form_' + $i);
-		$otherCollectionHolders[$i] = $('.banner_' + $i);
+		// Récupérer la div qui contient toutes les formulaires d'un user déjà enregistrés en base
+		$formsHolders[$i] = $('.form_' + $i);
+		$bannerHolders[$i] = $('.banner_' + $i);
 
 		// Ajouter le bouton "RETIRER" à chaque formulaire déjà existant
-		$collectionHolders[$i].find('.form-row-center').each(function() {
+		$formsHolders[$i].find('.form-row-center').each(function() {
 			addTagFormDeleteLink($(this));
 		});
 
 	 	// Compter le nombre de formulaires pour obtenir un index unique
-	 	$collectionHolders[$i].data('index', $collectionHolders[$i].find('input').length);
+	 	$formsHolders[$i].data('index', $formsHolders[$i].find('input').length);
 		
 	 	// Ajouter le bouton "AJOUTER" après le paragraphe en haut de la div detail-box
-		//$('.info-p').after($newLinks[$i]);
-		//$collectionHolders[$i].prepend($newLinks[$i]);
-		$otherCollectionHolders[$i].append($newNewLinks[$i]);
-		$collectionHolders[$i].append($newLinks[$i]);
+		$bannerHolders[$i].append($addButtonContainers[$i]);
+
+		// Ajouter la div "add-div" pour les nouveaux formulaires dans la div detail-box
+		$formsHolders[$i].append($newFormContainers[$i]);
 		
 		// Appeler la fonction addTagForm() dès lors que l'on clique sur le bouton "Ajouter une période"
-		$addTagButtons[$i].on('click', function(e) {
-			addTagForm($collectionHolders[$i], $i);
+		$addButtons[$i].on('click', function(e) {
+			addTagForm($formsHolders[$i], $i);
 		});
 	}
 });
 
-function addTagForm($collectionHolder, indice) {
+function addTagForm($formsHolder, indice) {
 	// Récupérer le prototype du formulaire comme nouveau formulaire
-	var newForm = $collectionHolder.data('prototype');
+	var formPrototype = $formsHolder.data('prototype');
 
 	// Récupérer un nouvel index pour une classe unique
-	var index = $collectionHolder.data('index');
-	newForm = newForm.replace(/__name__/g, index);
+	var index = $formsHolder.data('index');
+
+	// Changer le nom du form créé pour s'assurer une classe unique
+	formPrototype = formPrototype.replace(/__name__/g, index);
 
 	// Incrémenter l'index pour le prochain item
-	$collectionHolder.data('index', index + 1);
+	$formsHolder.data('index', index + 1);
 
-	// Ajouter le nouveau formulaire dans une div (background-color: grey;)
-	var $newFormLi = $('<div class="add-new-form"></div>').append(newForm);
+	// Ajouter le nouveau formulaire dans une div (pour un background-color: grey;)
+	var $newForm = $('<div class="add-new-form"></div>').append(formPrototype);
 
 	// Ajouter le nouveau formulaire à la fin du grand formulaire
-	$('.form_' + indice).append($newFormLi);
+	$('.form_' + indice).append($newForm);
 
 	// Ajouter le bouton "RETIRER" pour chaque formulaire
-	addTagFormDeleteLink($newFormLi);
+	addTagFormDeleteLink($newForm);
 }
 
-function addTagFormDeleteLink($tagFormLi) {
+function addTagFormDeleteLink($form) {
 	// Création du bouton "RETIRER"
 	var $removeFormButton = $('<div class="col-md-3"><button type="button" class="remove-button">Retirer</button></div>');
 	
 	// Ajouter le bouton "RETIRER" pour périodes déjà existantes
-	$tagFormLi.append($removeFormButton);
+	$form.append($removeFormButton);
 
 	// Ajout le bouton "RETIRER" pour les périodes ajoutées
-	$tagFormLi.find('.form-row-center').append($removeFormButton);
+	$form.find('.form-row-center').append($removeFormButton);
 
 	// Retirer le formulaire sur le clique du bouton "RETIRER"
 	$removeFormButton.on('click', function(e) {
-		$tagFormLi.remove();
+		$form.remove();
 	});
 }
 

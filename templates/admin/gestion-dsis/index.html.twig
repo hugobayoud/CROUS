@@ -71,6 +71,7 @@
 				{{ form_widget(form.save, {'label': 'Enregistrer', 'attr': {'class': 'save-button'}}) }}
 			</div>
 			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
+			<input type="hidden" id="endDate" name="endDate" value="{{ users[loop.index0].fullyFormatDate(users[loop.index0].getDateFinValid()) }}">
 		{{ form_end(form) }}
 
 	</div>

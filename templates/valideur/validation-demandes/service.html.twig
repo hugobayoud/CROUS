@@ -54,11 +54,12 @@
 <div class="detail-box">
 
 	{% for form in forms %}
+	{% set user = demandes[loop.index0].user %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 
 		<div class="detail-box-banner banner_{{ loop.index0 }}">
 			<div class="detail-phrase">
-				Validation des applications demandées pour l'agent <strong>{{ demandes[loop.index0].user.prenom }} {{ demandes[loop.index0].user.nom }}</strong>
+				Validation des applications demandées pour l'agent <strong>{{ user.prenom }} {{ user.nom }}</strong>
 			</div>
 		</div>
 		{{ form_start(form) }}
@@ -75,6 +76,7 @@
 				{{ form_widget(form.save, {'label': 'Valider cette demande', 'attr': {'class': 'save-button'}}) }}
 			</div>
 			<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
+			<input type="hidden" id="endDate" name="endDate" value="{{ user.fullyFormatDate(user.getDateFinValid()) }}">
 		{{ form_end(form) }}
 
 	</div>
