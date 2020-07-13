@@ -24,6 +24,9 @@
 
 {% block body %}
 
+{# {% include "bases/_research-form.html.twig" %} #}
+<a href="{{ path('toPDF-droits-effetifs') }}" target="_blank" class="to-print">Imprimer</a>
+
 {% if users is empty %}
 	<div>
 		Il semble qu'il n'y ait aucun droit effectif....
@@ -32,10 +35,6 @@
 	{% for user in users %}
 	<div class="user-access-box">
 		{{ user.userInfo_html() | raw }}
-
-		{# {{ user.dsi_html() | raw }} #}
-
-		{# {{ user.valideur_html() | raw  }} #}
 
 		{{ user.droitsEffectifs_html() | raw }}
 	</div>

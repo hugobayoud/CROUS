@@ -659,4 +659,23 @@ class User implements UserInterface
 	{
 		return HtmlHelper::droitsEffectifs($this);
 	}
+
+	/* POUR PDF */
+	/**
+	 * Retourne les informations sur l'user pour PDF
+	 * @return string
+	 */
+	public function userInfo_toPDF(): string
+	{
+		return HtmlHelper::userInfo_toPDF($this);
+	}
+
+	/**
+	 * Retourne la liste des droits effectifs de l'user pour PDF
+	 * @return string
+	 */
+	public function droitsEffectifs_toPDF(): string
+	{
+		return HtmlHelper::droitsEffectifs_toPDF($this);
+	}
 }

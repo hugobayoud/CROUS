@@ -1,12 +1,39 @@
-{# ./templates/default/mypdf.html.twig #}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Title of the PDF</title>
+		<title>{{ titlePDF }}</title>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+		<style>
+			.user-box {
+				margin: 10px;
+				border: 1px solid black;
+			}
+
+			.info-header {
+				background-color: rgb(227, 6, 19);
+				color: white;
+				padding: 15px;
+			}
+
+			.info-body {
+				background-color: rgb(238, 238, 238);
+				color: black;
+				padding: 15px;
+			}
+		</style>
     </head>
-    <body>
-        <h4>{{ title }}</h4>
-        <p>Lorem Ipsum</p>
+    <body style="font-family: 'Roboto', sans-serif;">
+		{% for user in users %}
+		<div style="page-break-after:always">
+			<h1 style="text-align: center;">{{ titlePDF }}</h1>
+			<hr>
+			<div class="user-box">
+				{{ user.userInfo_toPDF() | raw }}
+		
+				{{ user.droitsEffectifs_toPDF() | raw }}
+			</div>
+		</div>
+		{% endfor %}
     </body>
 </html>

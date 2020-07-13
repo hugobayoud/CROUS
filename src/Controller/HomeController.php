@@ -1,10 +1,13 @@
 <?php
 namespace App\Controller;
 
+use App\Repository\UserRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class HomeController extends AbstractController
 {
@@ -32,4 +35,41 @@ class HomeController extends AbstractController
 
 		return $this->render('index.html.twig');
 	}
+
+	/**
+	 * Générer le PDF des droits effectifs des agents
+	 * @Route("/toPDF/droits-effetifs", name="toPDF-droits-effetifs")
+	 */
+    public function droitsEffectifsToPDF(UserRepository $userRepo)
+    {
+		$currentDate = new DateTime('now');
+		$date_html = $currentDate->format('d.m.Y');
+
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        
+        // Retrieve the HTML generated in our twig file
+        $html = $this->renderView('toPDF/default.html.twig', [
+			'titlePDF' => "CROUS Clermont-Auvergne, droits effectifs au $date_html",
+			'users' => $userRepo->findAll()
+        ]);
+        
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html);
+        
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+		$dompdf->render();
+		
+		// Output the generated PDF to Browser (inline view)
+        $dompdf->stream("CROUS-($date_html)-droits_effectifs.pdf", [
+            "Attachment" => false
+        ]);
+    }
 }

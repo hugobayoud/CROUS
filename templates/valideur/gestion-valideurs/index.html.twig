@@ -15,14 +15,9 @@
 {% endblock %}
 
 {% block body %}
+
 {% if app.user.isAdmin()  or app.user.isDSI() %}
-<div class="search-box">
-	<p><strong>Rechercher un service</strong></p>
-	{{ form_start(form) }}
-		{{ form_widget(form.q) }}
-		<button type="submit" class="btn btn-primary w-100">Filtrer</button>
-	{{ form_end(form) }}
-</div>
+	{% include "bases/_research-form.html.twig" %}
 {% endif %}
 
 {% include "bases/_display-flashes.html.twig" %}
