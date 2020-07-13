@@ -29,11 +29,12 @@
 <div class="cards-crous">
 	{% for service in services %}
 	<div class="card">
-		<div class="card-body" style="background-color: rgba(240, 240, 240, 0.45);">
-			<h5 class="card-title text-center text-uppercase">{{ service.libelle_court }}</h5>
-			<hr>
-			<div class="modify-demand-div" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
-				Gérer les demandes de ce service
+		<span class="notification-badge"><span>{{ service.getNumberDemands0And1() }}</span></span>
+		<div class="card-body">
+			<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
+			<p class="card-libelle-long">{{ service.libelle_long }}</p>
+			<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
+				Traiter les demandes
 			</div>
 		</div>
 	</div>

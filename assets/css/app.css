@@ -196,7 +196,7 @@
 
 /* Icone pour "se connecter", "se déconnecter" */
 .who-connected {
-	color: red;
+	color: rgb(227, 6, 19);
 }
 
 .logout-div, .login-div {
@@ -268,7 +268,7 @@
 	padding: 5px 10px;
 	margin-top: 15px;
 	border: 1.5px solid rgb(121, 0, 0);
-	border-radius: 3px;
+	border-radius: 0;
 }
 
 .bouton-crous:disabled {
@@ -286,7 +286,7 @@
 .thead-crous {
 	font-size: 1.4em;
 	color: black;
-	background-color: rgb(255, 61, 61);
+	background-color: rgb(227, 6, 19);
 	align-items: center;
 }
 
@@ -399,7 +399,7 @@ tr{
     display: flex;
     justify-content: center;
 	align-items: center;
-	border-radius: 5px;
+	border-radius: 0;
 	color: white;
 	border: 2px solid rgb(0, 63, 24);
 	background: rgb(1, 165, 1);
@@ -412,7 +412,7 @@ tr{
     display: flex;
     justify-content: center;
 	align-items: center;
-	border-radius: 5px;
+	border-radius: 0;
 	color: rgb(255, 0, 0);
 	font-weight: 700;
 	transition: 0.3s;
@@ -470,7 +470,7 @@ tr{
 	font-weight: 700;
 	padding: 5px 15px;
 	border: 1.5px solid rgb(121, 0, 0);
-	border-radius: 3px;
+	border-radius: 0;
 	transition: 0.3s;
 }
 
@@ -630,7 +630,7 @@ tr{
     display: flex;
     justify-content: center;
 	align-items: center;
-	border-radius: 5px;
+	border-radius: 0;
 	border: 2px solid rgb(0, 63, 24);
 	background: rgb(1, 165, 1);
 	font-weight: 700;
@@ -681,41 +681,68 @@ tr{
 	grid-gap: 10px;
 }
 
-/* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/user/demandes) */
+/* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/agent/gestion/demandes) */
 .cards-crous {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 10px;
+	justify-items: center;
+	grid-gap: 40px 0;
+	margin-top: 20px;
+}
+
+.card-title {
+	min-height: 50px;
+}
+
+.card-title > span {
+	display: inline;
+	margin: 0;
+	font-weight: 700;
 }
 
 .cards-crous > * {
-	width: 18rem;
-	margin: 10px;
+	width: 19rem;
+	border-radius: 0;
+	margin: 0;
 }
 
-.modify-demand-div, .create-demand-div {
-	position: relative;
-	bottom: 10px;
+.card-body {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	background-color: rgba(240, 240, 240, 0.45);
+}
+
+.card-body > p {
+	min-height: 70px;
+	font-style: italic ;
+}
+
+.status-btn {
     display: flex;
     justify-content: center;
 	align-items: center;
-	border-radius: 5px;
+	padding: 5px;
+	border-radius: 0;
 	font-size: 0.9em;
 	color: black;
-	padding-right: 5px;
+	border: 1.5px solid black;
 	transition: 0.3s;
 }
 
-.modify-demand-div {
-	border: 2px solid rgb(102, 109, 0);
-	background: rgb(236, 240, 0);
-}
-.create-demand-div {
-	border: 2px solid rgb(0, 51, 20);
-	background: rgb(15, 185, 0);
+.modify {
+	background-color: rgb(236, 240, 0);
 }
 
-.modify-demand-div::before, .create-demand-div::before, .validator-div::before {
+.create {
+	background-color: rgb(15, 185, 0);
+}
+
+.impossible {
+	background-color: red;
+}
+
+.modify::before, .create::before, .impossible::before, .show::before {
 	margin: 5px 10px 5px 5px;
 	content:'';
 	background-size: 100% 100%;
@@ -724,43 +751,59 @@ tr{
 	display: inline-block;
 }
 
-.create-demand-div::before {
+.create::before {
 	background-image: url('/ressource/form.png');
 }
 
-.modify-demand-div::before {
+.modify::before {
 	background-image: url('/ressource/pencil-black.png');
 }
 
-.modify-demand-div:hover {
-	cursor: pointer;
-	background-color: rgb(219, 179, 0);
-
+.impossible::before {
+	background-image: url('/ressource/x-4x.png');
 }
 
-.create-demand-div:hover {
+.modify:hover {
+	cursor: pointer;
+	background-color: rgb(219, 179, 0);
+}
+
+.create:hover {
 	cursor: pointer;
 	background-color: rgb(19, 233, 0);
 }
 
-.impossible-demand-div {
-	border: 1px solid black;
-	background-color: lightgrey;
-	align-content: center;
-	vertical-align: middle;
+/* Gestion des validateurs, card dans /valiideur/gestion/valideurs */
+.card-current-validator {
+	color: rgb(227, 6, 19);
+	font-weight: 500;
 }
 
-.validator-div {
+.card-you {
+	color: rgb(227, 6, 19);
+	line-height: 0.9em;
+	font-weight: 300;
+}
+
+.card-libelle-long {
 	display: flex;
-    justify-content: start;
 	align-items: center;
+	margin-top: 10px;
+	font-weight: 600;
+	font-size: 0.8em;
 }
 
-.validator-div::before {
-	margin: 0 3px 0 0;
-	width: 14px;
-    height: 14px;
-	background-image: url('/ressource/chevron-left.png');
+.show {
+	background-color: rgb(255, 180, 0);
+}
+
+.show::before {
+	background-image: url('/ressource/question.png');
+}
+
+.show:hover {
+	cursor: pointer;
+	background-color: rgba(248, 192, 61, 0.8);
 }
 
 /* Enregistrer le formulaire de demande */
@@ -849,114 +892,61 @@ tr{
 
 /* CONSULATION DES DROITS EFFETIFS PAR L'ADMIN */
 .user-access-box {
-	background-color: rgba(243, 243, 243, 0.5);
-	border: 1px solid lightgrey;
+	border: 1px solid black;
 	margin: 10px auto;
-	padding: 15px;
 	width: 80%;
 }
 
 .user-access-box > div {
-	padding: 45px 15px 25px 15px;
-}
-
-.box-title {
-	position: absolute;
-	left: 2px;
-	top: 2px;
-	width: fit-content;
-	text-transform: uppercase;
-	font-size: 1.1em;
-	font-weight: 600;
-	padding: 3px;
+	padding: 15px;
 }
 
 /* information sur l'agent */
 .user-access-box > .user-info-box {
-	background-color: rgba(15, 206, 1, 0.6);
+	background-color: rgb(227, 6, 19);
+	color: white;
 	position: relative;
 	font-weight: 500;
-	padding-top: 45px;
 }
 
-.user-info-title {
-	background-color: rgb(14, 206, 1);
-	border: 2px solid green;
-}
-
-.user-info-services {
-	display: inline;
-}
-
-.user-info-box > div:nth-child(2) {
-	width: 100%;
+.user-info-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.user-info-box > div:nth-child(2) > div:first-child {
-	font-weight: 700;
-	font-size: 1.4em;
+.user-info-header > div:first-child {
+	font-size: 1.8em;
 }
 
-.text-muted {
-	display: inline;
-	font-weight: 400;
+.user-info-body > div {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
 }
 
-/* information sur DSI */
-.no-dsi-box, .yes-dsi-box {
-	position: relative;
-	background-color: rgba(254, 0, 0, 0.6);
-	border-top: 1px solid black;
-}
-
-.dsi-title {
-	background-color: rgb(254, 0, 0);
-	border: 2px solid brown;
-}
-
-/* informations sur la fonction valideur */
-.no-validator-box, .yes-validator-box {
-	position: relative;
-	background-color: rgba(255, 180, 0, 0.6);
-	border-top: 1px solid black;
-}
-
-.validator-title {
-	background-color: rgb(255, 180, 0);
-	border: 2px solid rgb(172, 112, 0);
+.user-info-body > div > div:first-child {
+	color: black;
 }
 
 /* informations sur les droits effectifs */
-.no-droits-effectifs-box, .yes-droits-effectifs-box {
-	position: relative;
-	background-color: rgba(0, 247, 255, 0.6);
-	border-top: 1px solid black;	
+.yes-validator-box, .no-validator-box {
+	background-color: rgb(192, 192, 192);
+	border-bottom: 1px solid rgba(7, 7, 19, 0.4);
 }
 
-.droits-effectifs-title {
-	background-color: rgb(79, 199, 255);
-	border: 2px solid rgb(62, 130, 255);
+.no-droits-effectifs-box, .yes-droits-effectifs-box {
+	background-color: rgb(238, 238, 238);
 }
 
 .one-service-div > p, .transverses-div > p {
 	text-transform: uppercase;
-	color: brown;
+	color: rgb(227, 6, 19);
 	font-weight: 600;
-	font-size: 1em;
+	font-size: 1.1em;
 	margin-bottom: 0.8rem;
 }
 
 .one-service-div {
 	margin: 20px 0 30px 0;
-}
-
-.transverses-div {
-	border-bottom: 1px solid rgba(0, 0, 255, 0.4);
-}
-
-.transverses-div > p {
-	color: blue;
 }

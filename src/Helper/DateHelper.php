@@ -35,7 +35,7 @@ class DateHelper
 
 	/**
 	 * Valide un tableau (array ouAarrayCollection) de DateTime et inscrit les erreurs pour affichage
-	 * @param array|ArrayCollection
+	 * @param void
      */
 	public static function validateMyDates($collection, ExecutionContextInterface $context, DateTime $endDate = NULL, bool $acceptOverlapping = FALSE): void
 	{
@@ -43,6 +43,7 @@ class DateHelper
 		if (!$collection instanceof ArrayCollection && !is_array($collection)) {
 			throw new Exception('DateHelper::validateMyDates() : l\'argument 1 n\'est pas un array ni un ArrayCollection');
 		} else {
+			$dates = [];
 			// On réinitialise toutes les clés du tableau
 			foreach ($collection as $datetimeObject) {
 				$dates[] = $datetimeObject;
@@ -88,7 +89,7 @@ class DateHelper
 			 	} else if ($date1->getDateFin() > $endDate) {
 			 		$errorMessages[] = 'La période n°' . ($i + 1) . ' se termine après la date de fin de contrat de l\'agent. Veuillez modifier cette période.';
 			 	}
-			 }
+			}
 		}
 
 		foreach ($errorMessages as $message) {

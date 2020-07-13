@@ -361,4 +361,24 @@ class Service
 		return NULL;
 	}
 
+	/**
+	 * Retourne le nombre de demandes d'un service à l'état 0 et 1 (pour gestion des demandes pour un valideur)
+	 * @return int
+	 */
+	public function getNumberDemands0And1(): int
+	{
+		if ($this->demandes->isEmpty()) {
+			return 0;
+		}
+
+		$count = 0;
+
+		foreach ($this->demandes as $demande) {
+			if ($demande->getEtat() === 0 || $demande->getEtat() === 1) {
+				$count++;
+			}
+		}
+
+		return $count;
+	}
 }

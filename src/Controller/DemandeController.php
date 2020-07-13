@@ -259,12 +259,9 @@ class DemandeController extends AbstractController
 			$demande->setEtat(2);
 			$em->persist($demande);
 			$em->flush();
-			
 
-
-			$this->addFlash('message', 'droit correctement modifié pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
+			$this->addFlash('message', 'Drtois correctement modifiés pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
 			return $this->redirectToRoute('admin.gestion-demandes');
-
 		}
 
 		return $this->render('admin/gestion-demandes/index.html.twig', [

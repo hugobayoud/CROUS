@@ -23,29 +23,27 @@
 	{% set etat = service.getStateDemand(app.user.id) %}
 
 	<div class="card">
-		<div class="card-body" style="background-color: rgba(240, 240, 240, 0.45);">
-			<h5 class="card-title text-center">{{ service.libelle_court }}</h5>
+		<div class="card-body">
+			<h5 class="card-title text-center"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 			{% if etat == -1 %}
 			<p class="card-text">Aucune demande n'a encore été faite pour ce service.</p>
-			<hr>
-			<div class="create-demand-div" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<div class="status-btn create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Faire une nouvelle demande
 			</div>
 			{% elseif etat == 0 %}
-			<p class="card-text">La demande associée à ce service est en cours de validation. Vous pouvez encore la modifier.</p>
-			<p class="card-text" style="font-size: 0.8em;"><em>derniere modification : le <strong>{{ service.getLastModif(app.user.id) }}</strong></em></p>
-			<div class="modify-demand-div" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<p class="card-text">La demande associée à ce service est en attente de traitement par votre responsable. Vous pouvez encore la modifier.
+			<em>derniere modification : le <strong>{{ service.getLastModif(app.user.id) }}</strong></em></p>
+			<div class="status-btn modify" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Modifier ma demande
 			</div>
 			{% elseif etat == 1 %}
-			<p class="card-text">Demande validée par un valideur de ce service. En attente de traitement par la DSI</p>
-			<div class="impossible-demand-div">
+			<p class="card-text">Demande validée par un responsable de ce service. En attente de traitement par la DSI</p>
+			<div class="status-btn impossible">
 				Modification impossible
 			</div>
 			{% else %}
 			<p class="card-text">Votre dernière demande a été traitée par la DSI. Vous pouvez à tout moment en refaire une en cliquant sur le bouton.</p>
-			<hr>
-			<div class="create-demand-div" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<div class="status-btn create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Faire une nouvelle demande
 			</div>			
 			{% endif %}

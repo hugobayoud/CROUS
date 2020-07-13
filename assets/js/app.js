@@ -13,58 +13,151 @@ let $ = require('jquery')
 require('select2');
 $('select').select2()
 
-// CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIQUE et GERE L'AFFICHAGE DE LA LIGNE SELECTIONNEE
-$(document).ready(function(){
-	var show = localStorage.getItem('show');
-	var cible = localStorage.getItem('target');
-	if (show === 'true'){
-		$(cible).show();
-		localStorage.removeItem('show');
-		localStorage.removeItem('target');
-		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
-
-	}
-
-	var index = localStorage.getItem('index');
-	if (index > -1) {
-		changeColor(index);
-	}
-	localStorage.removeItem('index');
+// /* CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIC et GERER L'AFFICHAGE DE LA LIGNE SELECTIONNEE
+//  * Utilisé dans tous les tableaux où les lignes ont une detail-box associées
+// */
+// jQuery(document).ready(function(){
+// 	// Variable stockée en locale pour savoir si on doit, après rechargement de la page, scrolle down pour montrer le detail d'un agent
+// 	var show = localStorage.getItem('show');
 	
+// 	// Si show vaut null, pas besoin de montrer la detail-box, pn supprime la variable stockée en local target
+// 	if (show == null) {
+// 		localStorage.removeItem('currentTarget');
+// 	} else {
+// 		localStorage.removeItem('show');
+// 	}
 
-	$(".flip").on("click", function(e) {  
+// 	var currentTarget = localStorage.getItem('currentTarget');
+// 	// Si currentTarget est défini : une detail-box etait ouverte au moment où un form a été envoyé
+// 	if (currentTarget) {
+// 		// On réouvre la div
+// 		$(currentTarget).show();
+// 		// On regrise la ligne du tableau
+// 		changeColor(currentTarget);
+// 		// on scroll en bas de la page
+// 		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
+// 	}
+
+// 	$(".flip").on("click", function(e) {
+// 		// Div panel sur laquelle on  cliqué pour voir ou cacher les infos 
+// 		var target = $(this).attr("href");
+// 		// Ouvrir/Fermer la div panel cliquée
+// 		$(target).toggle();
+// 		// Fermer toutes les div panel sauf celle cliquée
+// 		$(".panel").not(target).hide();
+// 		e.preventDefault();
+
+// 		// Si la detail-box est ouverte en cliquant sur le pinceau, on scroll down
+// 		if (!$(target).is(':hidden')) {
+// 			$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+// 		}
+
+// 		// Changer la couleur des lignes du tableau
+// 		changeColor(target);
+
+// 		// SSI une detail-box est ouverte, ajouter la classe "selected-row"
+// 		if (!$(target).is(':hidden')) {
+// 			// On stocke l'info qu'une detail-box est ouverte au cas où la page serait rechargée pour remettre dans le même état
+// 			localStorage.setItem('currentTarget', target);
+// 		} else {
+// 			localStorage.removeItem('currentTarget');
+// 		}
+// 	});
+
+// 	// En cliquant sur le bouton "ENREGISTRER", on retient l'info qu'après avoir rechargé la page, il faut scroll down
+// 	$("#save-div").click(function() {
+//  		localStorage.setItem('show', true);
+// 	});
+
+// 	// Changement de la couleur des lignes du tableau suivant si une detail-box est ouverte ou non
+// 	function changeColor(target) {
+// 		// Récupérer l'element TABLE de la page (s'il existe)
+// 		var table = document.getElementById("table");
+// 		if (table) {
+// 			// Enlever la classe "selected-row" de toutes les lignes du tableau
+// 			for(var i = 0; i < table.rows.length - 1; i++) {
+// 				table.rows[i+1].classList.remove("selected-row");
+// 			}
+
+// 			if (target) {
+// 				// SSI une detail-box est ouverte, ajouter la classe "selected-row"
+// 				if (!$(target).is(':hidden')) {
+// 					// Récupérer l'indice de la detail-box ouverte
+// 					var indice = parseInt(target.split('_')[2]);
+// 					// Ajouter la class "selected"
+// 					table.rows[indice + 1].classList.add("selected-row");
+// 				}
+// 			}
+// 		}
+// 	}
+// });
+
+
+
+/* CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIC et GERER L'AFFICHAGE DE LA LIGNE SELECTIONNEE
+ * Utilisé dans tous les tableaux où les lignes ont une detail-box associées
+*/
+jQuery(document).ready(function(){
+	var currentTarget = localStorage.getItem('currentTarget');
+	// Si currentTarget est défini : une detail-box etait ouverte au moment où un form a été envoyé
+	if (currentTarget) {
+		// On réouvre la div
+		$(currentTarget).show();
+		// On regrise la ligne du tableau
+		changeColor(currentTarget);
+		// on scroll en bas de la page
+		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
+		localStorage.removeItem("currentTarget");
+	}
+
+	$(".flip").on("click", function(e) {
+		// Div panel sur laquelle on  cliqué pour voir ou cacher les infos 
 		var target = $(this).attr("href");
-		var indice = target.substring(target.length -1, target.length);
-
+		// Ouvrir/Fermer la div panel cliquée
 		$(target).toggle();
+		// Fermer toutes les div panel sauf celle cliquée
 		$(".panel").not(target).hide();
 		e.preventDefault();
 
-		$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
-		changeColor(parseInt(indice));
-		
-		localStorage.setItem('show', 'true'); //store state in localStorage
-		localStorage.setItem('target', target); //store state in localStorage
+		// Si la detail-box est ouverte en cliquant sur le pinceau, on scroll down
+		if (!$(target).is(':hidden')) {
+			$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
+		}
+
+		// Changer la couleur des lignes du tableau
+		changeColor(target);
 	});
 
+	// En cliquant sur le bouton "ENREGISTRER", on retient l'info qu'après avoir rechargé la page, il faut scroll down
+	$("#save-div").click(function() {
+		console.log(this);
+		console.log("this");
+ 		localStorage.setItem('currentTarget', true);
+	});
 
-	function changeColor(indice) {
+	// Changement de la couleur des lignes du tableau suivant si une detail-box est ouverte ou non
+	function changeColor(target) {
+		// Récupérer l'element TABLE de la page (s'il existe)
 		var table = document.getElementById("table");
-
 		if (table) {
+			// Enlever la classe "selected-row" de toutes les lignes du tableau
 			for(var i = 0; i < table.rows.length - 1; i++) {
-				if (i == indice) {
-					// on ajoute la class "selected" dans la ligne du tableau
-					table.rows[i+1].classList.add("selected-row");
-					localStorage.setItem('index', indice); //store state in localStorage
-				} else {
-					// on enlève la classe "selected" a tous les autres
-					table.rows[i+1].classList.remove("selected-row");
+				table.rows[i+1].classList.remove("selected-row");
+			}
+
+			if (target) {
+				// SSI une detail-box est ouverte, ajouter la classe "selected-row"
+				if (!$(target).is(':hidden')) {
+					// Récupérer l'indice de la detail-box ouverte
+					var indice = parseInt(target.split('_')[2]);
+					// Ajouter la class "selected"
+					table.rows[indice + 1].classList.add("selected-row");
 				}
 			}
 		}
 	}
 });
+
 
 /* AJOUTER/SUPPRIMER UN FORMULAIRE PROTOTYPE
  *	Utilisé dans la gestion des périodes pour la page "Gestion des DSI", "Gestion des Valideurs", "Validation des demandes")
