@@ -16,6 +16,7 @@ class ApplicationType extends AbstractType
         $builder
             ->add('code')
 			->add('libelle')
+			->add('libelle_long')
 			->add('save', SubmitType::class)
         ;
     }

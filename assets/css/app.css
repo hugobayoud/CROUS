@@ -625,8 +625,8 @@ tr{
 /*Bouton ajout d'un service*/
 .add-item-div {
 	position: fixed;
-	top: 250px;
-	left: 70%;
+	top: 165px;
+	right: 10%;
     display: flex;
     justify-content: center;
 	align-items: center;

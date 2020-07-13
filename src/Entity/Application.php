@@ -37,13 +37,22 @@ class Application
     private $code;
 
     /**
-     * @ORM\Column(type="string", length=50, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
 	 * @Assert\Length(
-	 * 		max=50,
-	 * 		maxMessage="Le libellé d'une application doit ne doit pas dépasser 50 caractères"
+	 * 		max=20,
+	 * 		maxMessage="Le libellé (court) d'une application doit ne doit pas dépasser 20 caractères"
 	 * 	)
      */
-	private $libelle;
+    private $libelle;
+
+    /**
+     * @ORM\Column(type="string", length=80, nullable=true)
+	 * @Assert\Length(
+	 * 		max=80,
+	 * 		maxMessage="Le libellé (long) d'une application doit ne doit pas dépasser 80 caractères"
+	 * 	)
+     */
+    private $libelle_long;
 	
 	/**
      * @ORM\Column(type="string", length=2, nullable=true)
@@ -86,11 +95,30 @@ class Application
     public function getLibelle(): ?string
     {
         return $this->libelle;
-    }
+	}
 
-    public function setLibelle(?string $libelle): self
+	public function getLibelleLong(): ?string
     {
-        $this->libelle = $libelle;
+        return $this->libelle_long;
+	}
+	
+    public function setLibelle(?string $libelle_court): self
+    {
+        $this->libelle = $libelle_court;
+
+        return $this;
+	}
+
+	public function setLibelleCourt(?string $libelle_court): self
+    {
+        $this->libelle = $libelle_court;
+
+        return $this;
+	}
+
+	public function setLibelleLong(?string $libelle_long): self
+    {
+        $this->libelle_long = $libelle_long;
 
         return $this;
 	}
