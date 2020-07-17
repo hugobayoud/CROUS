@@ -663,7 +663,7 @@ tr{
 }
 
 /* DEMANDE POUR UN USER */
-.applications-box {
+.user-demand-box {
 	margin-top: 30px;
 	padding: 10px;
 	border: 1px dotted black;
@@ -671,14 +671,32 @@ tr{
 	min-height: 200px;
 }
 
-.applications-row {
+.user-demand-box .user-demand {
 	margin-bottom: 30px;
+}
+
+.user-demand-box .user-demand:last-child {
+	margin-bottom: 0;
+}
+
+.user-demand > p:first-child {
+	text-transform: uppercase;
+	color: rgb(227, 6, 19);
+	font-weight: 500;
+	font-size: 1.1em;
+	margin-bottom: 1em;
 }
 
 .applications-div {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: 10px;
+}
+
+.info-term {
+	font-size: 0.8em;
+	margin: 0 auto;
+	width: 80%;
 }
 
 /* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/agent/gestion/demandes) */

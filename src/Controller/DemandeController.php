@@ -41,49 +41,114 @@ class DemandeController extends AbstractController
 		]);
 	}
 
+	// /**
+	//  * Editer/créer la demande pour un service donné pour un agent
+	//  * 
+	//  * @Route("/agent/gestion/demandes/editer/{id}", name="agent.gestion-demandes.editer")
+	//  * @return Response
+	//  */
+	// public function demandForOneService(Service $service, ApplicationRepository $appliRepo, DemandeRepository $demandRepo): Response
+	// {
+	// 	$user = $this->getUser();
+	// 	$applications = $appliRepo->findAll();
+
+	// 	if (!empty($_POST)) {
+	// 		$demande = $user->getDemande($service->getId());
+			
+	// 		$em = $this->getDoctrine()->getManager();
+
+	// 		// S'il n'existe pas encore de demande pour ce service pour ce user en base
+	// 		if (is_null($demande)) {
+	// 			$demande = new Demande();
+	// 			$demande->setUser($user);
+	// 			$demande->setService($service);
+	// 		} else {
+	// 			// Sinon, on supprime les anciennes demandes d'applications pour ce service pour cet agent dans application_demande
+	// 			$rows = $demande->getApplications();
+	// 			foreach ($rows as $appli_demande) {
+	// 				$em->remove($appli_demande);
+	// 				$em->flush();
+	// 			}
+	// 		}
+
+	// 		$demande->setEtat(0);
+	// 		$demande->setCreatedAt(new DateTime('now'));
+
+	// 		$em->persist($demande);
+	// 		$em->flush();
+			
+	// 		// On enregistre chaque application demandée dans la table application_demande
+	// 		foreach ($_POST as $id => $code) {
+	// 			$ad = new ApplicationDemande();
+	// 			$ad->setApplication($appliRepo->findOneBy(['id' => $id]));
+	// 			$ad->setDemande($demande);
+	// 			$ad->setDateDeb(new DateTime('now'));
+	// 			$ad->setDateFin(DateHelper::calculDateFin(new DateTime('now')));
+	// 			$ad->setASupprimer(false);
+
+	// 			$em->persist($ad);
+	// 			$em->flush();
+	// 		}
+
+	// 		$this->addFlash('message', 'Demande enregistrée avec succès');
+	// 		return $this->redirectToRoute('agent.gestion-demandes.home');
+	// 	}
+
+	// 	return $this->render('agent/gestion-demandes/edit.html.twig', [
+	// 		'applications' => $applications,
+	// 		'service' => $service
+	// 	]);
+	// }
+
+	
 	/**
 	 * Editer/créer la demande pour un service donné pour un agent
 	 * 
 	 * @Route("/agent/gestion/demandes/editer/{id}", name="agent.gestion-demandes.editer")
 	 * @return Response
 	 */
-	public function demandForOneService(Service $service, ApplicationRepository $appliRepo, DemandeRepository $demandRepo): Response
+	public function demandForOneService(Service $service, ApplicationRepository $appliRepo): Response
 	{
 		$user = $this->getUser();
 		$applications = $appliRepo->findAll();
+		$demande = $user->getDemande($service->getId());
 
 		if (!empty($_POST)) {
-			$demande = $user->getDemande($service->getId());
-			
+			$now = new DateTime('now');
 			$em = $this->getDoctrine()->getManager();
 
-			// S'il n'existe pas encore de demande pour ce service pour ce user en base
+			// S'il n'existe pas encore de demande pour ce service pour ce user en base on la crée
 			if (is_null($demande)) {
 				$demande = new Demande();
 				$demande->setUser($user);
 				$demande->setService($service);
-			} else {
-				// Sinon, on supprime les anciennes demandes d'applications pour ce service pour cet agent dans application_demande
-				$rows = $demande->getApplications();
-				foreach ($rows as $appli_demande) {
-					$em->remove($appli_demande);
-					$em->flush();
-				}
 			}
 
+			// TO-DO : On ajout les ressources supplémentaires à la demande
 			$demande->setEtat(0);
-			$demande->setCreatedAt(new DateTime('now'));
+			$demande->setCreatedAt($now);
 
 			$em->persist($demande);
 			$em->flush();
 			
-			// On enregistre chaque application demandée dans la table application_demande
+			//On supprime les anciennes demandes d'applications pour cette demande dans APPLICATION_DEMANDE
+			foreach ($demande->getApplications() as $appli_demande) {
+				$em->remove($appli_demande);
+				$em->flush();
+			}
+
+			// On enregistre chaque application demandée dans la table APPLICATION_DEMANDE
+			// Seule les applications dont l'agent n'a pas encore les droits sont ajoutées à la demande
+			// Le reste se trouve déjà dans DROIT_EFFECTIF
+			dd($_POST);
 			foreach ($_POST as $id => $code) {
 				$ad = new ApplicationDemande();
+
 				$ad->setApplication($appliRepo->findOneBy(['id' => $id]));
 				$ad->setDemande($demande);
-				$ad->setDateDeb(new DateTime('now'));
-				$ad->setDateFin(DateHelper::calculDateFin(new DateTime('now')));
+				$ad->setDateDeb($now);
+				$ad->setDateFin(DateHelper::calculDateFin($now));
+				// Ici toutes les applications sont de nouveaux droits à ajouter, aucune n'est à supprimer
 				$ad->setASupprimer(false);
 
 				$em->persist($ad);
@@ -96,7 +161,8 @@ class DemandeController extends AbstractController
 
 		return $this->render('agent/gestion-demandes/edit.html.twig', [
 			'applications' => $applications,
-			'service' => $service
+			'service' => $service,
+			'demande' => $demande
 		]);
 	}
 

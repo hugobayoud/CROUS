@@ -8,43 +8,70 @@
 		<div class="subnavbar-title">
 			<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
 			<p>
-				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}". Cocher l'ensemble des applications nécessaires</em>
+				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}"</em>
 			</p>
 		</div>
 	</nav>
 {% endblock %}
 
 {% block body %}
-<div class="applications-box">
+<div class="user-demand-box">
 	<form action="" method="POST">
-		<div class="applications-row">
-			<div style="margin-bottom: 10px;"><strong>Applications transverses.</strong></div>
+		<p><em>Cocher l'ensemble des applications nécessaires. Vous ne pouvez pas décocher une application dont vous avez actuellement les droits. Seul un responsable du service peut le faire.</em></p>
+		<div class="user-demand">
+			<p>Applications transverses</p>
 			<div class="applications-div">
 			{% for application in applications %}
 				{% if application.isTransverse() %}
 				<div>
 					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
-					<label for="{{ application.code }}">{{ application.libelle }}</label>
+					<label for="{{ application.code }}"><strong>{{ application.code }}</strong> - {{ application.libelle }}</label>
 				</div>
 				{% endif %}
 				{% endfor %}
 			</div>
 		</div>
-		<div>
-			<div style="margin-bottom: 10px;"><strong>Applications non transverses.</strong></div>
+		<div class="user-demand">
+			<p>Applications à profil</p>
 			<div class="applications-div">
 			{% for application in applications %}
 				{% if not application.isTransverse() %}
 				<div>
 					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
-					<label for="{{ application.code }}">{{ application.libelle }}</label>
+					<label for="{{ application.code }}"><strong>{{ application.code }}</strong> - {{ application.libelle }}</label>
 				</div>
 				{% endif %}
 				{% endfor %}
 			</div>
 		</div>
+		<div class="user-demand">
+			<p>Ressources supplémentaires</p>
+			<div>
+				<div>
+					<label for="phone">Téléphone portable à réaffecter (facultatif) :
+					</label>
+					<input type="text" name="phone" id="phone" value="0698352892">
+				</div>
+				<div>
+					<label for="mailTo">Recoit les mails de (facultatif)<sup class="crous-tooltip" style="font-size: 0.9em; color: red;">1</sup> : </label>
+					<input type="text" name="mailTo" id="mailTo" value="gpp@crous-clemront.fr">
+				</div>
+				<div>
+					<label for="folders">Précisez les répertoires de travail (facultatif)<sup class="crous-tooltip" style="font-size: 0.9em; color: red;">2</sup> : </label>
+					<input type="text" name="folders" id="folders" value="ad server; blabla; folder2;">
+				</div>
+			</div>
+			<div>
+				<ul style="font-size: 0.8em;">
+					<li><em><span style="color: red;">1</span> : À compléter  si vous souhaitez que lesmails à destination d’une adresse générique arrivent dans la boite de cette personne (ex.: cite‐lebon@crous‐clermont.fr)</em></li>
+					<li><em><span style="color: red;">2</span> : En cas de champs vide, l’agent n’aura pas d’espace de stockage sauvegardé pour enregistrer ses documents. Le cas échéant, préciser le groupe si des profils différents d’accès aux fichiers sur serveur est en place dans votre service</em></li>
+				</ul>
+			</div>
+		</div>
 
 		<hr>
+
+		<div class="info-term text-center">Une fois créée, votre demande doit être validée par un responsable du service associé puis traitée par la DSI qui se chargera de vous octroyer les droits. Tant qu'un responsable ne l'a pas validée ou refusée, vous pouvez modifier cette demande à votre guise. Seul le dernier enregistrement sera visible par votre responsable.</div>
 
 		<div class="save-form-demand">
 			<button type="submit" class="bouton-crous">Faire la demande</button>

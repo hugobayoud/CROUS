@@ -48,11 +48,26 @@ class Demande
      * @ORM\OneToMany(targetEntity="ApplicationDemande", mappedBy="demande")
      */
 	private $applications;
+
+    /**
+     * @ORM\Column(type="string", length=14, nullable=true)
+     */
+    private $telephone;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $repertoires_serveur;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mail_de;
 	
 	public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-    }
+         	{
+         		$this->applications = new ArrayCollection();
+         	}
 
     public function getId(): ?int
     {
@@ -134,13 +149,49 @@ class Demande
         // not needed for persistence, just keeping both sides in sync
         $application->removeDemande($this);
 	}
-	
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getRepertoiresServeur(): ?string
+    {
+        return $this->repertoires_serveur;
+    }
+
+    public function setRepertoiresServeur(?string $repertoires_serveur): self
+    {
+        $this->repertoires_serveur = $repertoires_serveur;
+
+        return $this;
+	}
+		
 	/**
 	 * Retourne le nombre de jour depuis quand la demande a été créée
 	 * @return int
 	 */
 	public function createdDaysAgo(): int
-	{
-		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
-	}
+         	{
+         		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
+         	}
+
+    public function getMailDe(): ?string
+    {
+        return $this->mail_de;
+    }
+
+    public function setMailDe(?string $mail_de): self
+    {
+        $this->mail_de = $mail_de;
+
+        return $this;
+    }
 }

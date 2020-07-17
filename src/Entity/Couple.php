@@ -37,11 +37,26 @@ class Couple
      * @ORM\OneToMany(targetEntity="DroitEffectif", mappedBy="couple")
      */
 	private $applications;
+
+    /**
+     * @ORM\Column(type="string", length=14, nullable=true)
+     */
+    private $telephone;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $repertoires_serveur;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mail_de;
 	
 	public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-    }
+         	{
+         		$this->applications = new ArrayCollection();
+         	}
 
     public function getId(): ?int
     {
@@ -76,9 +91,10 @@ class Couple
      * @return ArrayCollection|DroitEffectif[]
      */
 	public function getApplications()
-    {
-        return $this->applications;
-    }
+         	{
+         		return $this->applications;
+         	}
+
     public function addApplication(Application $application)
     {
         if ($this->applications->contains($application)) {
@@ -87,7 +103,8 @@ class Couple
 		$this->applications[] = $application;
         // not needed for persistence, just keeping both sides in sync
         $application->addCouple($this);
-    }
+	}
+	
     public function removeApplication(Application $application)
     {
         if (!$this->applications->contains($application)) {
@@ -97,9 +114,45 @@ class Couple
         // not needed for persistence, just keeping both sides in sync
         $application->removeCouple($this);
 	}
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getRepertoiresServeur(): ?string
+    {
+        return $this->repertoires_serveur;
+    }
+
+    public function setRepertoiresServeur(?string $repertoires_serveur): self
+    {
+        $this->repertoires_serveur = $repertoires_serveur;
+
+        return $this;
+	}
 	
 	public function __toString()
-	{
-		return $this->user->getNom();
-	}
+         	{
+         		return $this->user->getNom();
+         	}
+
+    public function getMailDe(): ?string
+    {
+        return $this->mail_de;
+    }
+
+    public function setMailDe(?string $mail_de): self
+    {
+        $this->mail_de = $mail_de;
+
+        return $this;
+    }
 }
