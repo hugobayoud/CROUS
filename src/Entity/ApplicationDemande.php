@@ -1,7 +1,6 @@
 <?php
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -109,6 +108,7 @@ class ApplicationDemande
 	 */
 	public function needNewAccess(): bool
 	{
+		// Pour chaque couple (user, service) pour une application
 		foreach ($this->application->getCouples() as $droitEffectif) {
 			if ($this->demande->getUser() === $droitEffectif->getCouple()->getUser() && $this->demande->getService() === $droitEffectif->getCouple()->getService()) {
 				return false;

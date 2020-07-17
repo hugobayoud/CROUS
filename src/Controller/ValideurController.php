@@ -67,9 +67,10 @@ class ValideurController extends AbstractController
 	}
 
 	/**
+	 * Page de gestion des valideurs pour modification des droits en tant que valideur d'un service
      * @Route("/gestion/valideurs/{id}", name="gestion-valideurs.service")
     */
-	public function validatorsServiceList(Request $request, Service $service)
+	public function administerValidators(Request $request, Service $service)
 	{
 		$currentUser = $this->getUser();
 

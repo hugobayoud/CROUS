@@ -939,16 +939,29 @@ tr{
 	background-color: rgb(238, 238, 238);
 }
 
-.one-service-div > p, .transverses-div > p {
+.one-service-div > div:first-child, .transverses-div > p {
 	text-transform: uppercase;
 	color: rgb(227, 6, 19);
 	font-weight: 600;
 	font-size: 1.1em;
-	margin-bottom: 0.8rem;
+	margin-bottom: 1em;
+}
+
+.myServiceLibelle {
+	text-transform: none;
+	font-style: italic;
+	font-weight: 400;
+	line-height: 0.7em;
+	font-size: 1em;
 }
 
 .one-service-div {
 	margin: 20px 0 30px 0;
+}
+
+.application-row {
+	display: flex;
+	justify-content: space-between;
 }
 
 /* Bouton "IMPRIMER */

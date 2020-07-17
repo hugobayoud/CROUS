@@ -27,7 +27,14 @@
 	<tbody class="tbody-crous">
 		{% for user in users %}
 		<tr>
-			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
+			<td class="vert-middle">
+				<a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a>
+				{# <form action="{{ path('admin.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
+					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+					<input type="hidden" name="_method" value="DELETE">
+					<button class="btn btn-danger">Supprimer</button>
+				</form> #}
+			</td>
 			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
 			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
 			<td class="vert-middle">{{ user.email }}</td>

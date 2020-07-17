@@ -8,7 +8,6 @@ use App\Entity\Users;
 use App\Form\DsisType;
 use App\Form\UsersType;
 use App\Repository\DemandeRepository;
-use App\Repository\DsiRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +25,9 @@ class AdminController extends AbstractController
      */
     public function index(DemandeRepository $demandRepo, UserRepository $userRepo)
     {
+		// Nombre de nouveaux comptes à valider
 		$newAccounts = $userRepo->countNewAccounts();
+		// Nombre de demandes en cours en attente de validation par un DSI
 		$demandsState1 = $demandRepo->countDemandsState(1);
 
         return $this->render('admin/index.html.twig', [
@@ -93,11 +94,12 @@ class AdminController extends AbstractController
 	public function administerDSIS(UserRepository $userRepo, Request $request)
 	{
 		$user = $this->getUser();
-		// Tableau de User
+		// On récupère tous les users
 		$users = $userRepo->findAllValidatedByNameASC($user->getId());
 
 		$forms = [];
 		foreach ($users as $user) {
+			// On crée un tableau qui recense toutes les périodes DSI de l'agent
 			$dsis = new Dsis();
 			foreach ($user->getDsis() as $dsi) {
 				// Dsis d'un user qui sera utile pour les formulaires
@@ -111,11 +113,12 @@ class AdminController extends AbstractController
 		// Si le formulaire est envoyé, on récupère l'id correspondant à l'agent et les modifications à faire en BDD
 		if (isset($_POST["custId"])) {
 			$index = $_POST["custId"];
-			// On handleRequest() sur le bon formulaire
+			// On handleRequest() sur le bon formulaire qui a été modifié
 			$form = $forms[$index]->handleRequest($request);
 
 			// Si le form est soumis et valide
 			if ($form->isSubmitted() && $form->isValid()) {
+				// On récupère l'entity manager
 				$em = $this->getDoctrine()->getManager();
 								
 				// SUPPRESION EN BASE DES ANCIENNES PERIODES
@@ -135,10 +138,12 @@ class AdminController extends AbstractController
 	
 				// On notifie que tout s'est bien passé
 				$this->addFlash('message', "Modifications enregistrées avec succès pour l'agent " . $users[$index]->getPrenom() . " " . $users[$index]->getNom() . ".");
+				// On rédirige vers la page en cours
 				return $this->redirectToRoute('admin.gestion-dsis');
 			}
 		}
 
+		// On fait le rendu de chaque formulaire
 		$renderedForms = [];
 		foreach ($forms as $form) {
 			$renderedForms[] = $form->createView();
@@ -162,9 +167,9 @@ class AdminController extends AbstractController
 
 		if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
 			$em = $this->getDoctrine()->getManager();
-			$em->remove($user);
-			$em->flush();
-			$this->addFlash('success', 'Suppression correctement effectuée');
+			//$em->remove($user);
+			//$em->flush();
+			$this->addFlash('message', 'Suppression correctement effectuée');
 		}
 
 		// On cherche la bonne redirection car le bouton suppr est utilisé à plusieurs endroits

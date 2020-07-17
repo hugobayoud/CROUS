@@ -13,7 +13,6 @@ class HtmlHelper {
 	public static function userInfo(User $user): string
 	{
 		$myHTML = '<div class="user-info-box">';
-		//$myHTML .= '<div class="box-title user-info-title">Informations agent</div>';
 		$myHTML .= 		'<div class="user-info-header">';
 		$myHTML .= 			'<div>' . $user->getNom() . ' ' . $user->getPrenom() . '</div>';
 		$myHTML .= 			'<div>' . $user->getEmail() . '</div>';
@@ -49,11 +48,9 @@ class HtmlHelper {
 	{
 		if (!$user->isDSI()) {
 			$myHTML = '	<div class="no-dsi-box">';
-			//$myHTML .= '<div class="box-title dsi-title">Informations DSI</div>';
 			$myHTML .= '<div><em>Ne possède pas la fonction DSI</em></div>';
 		} else {
 			$myHTML = '<div class="yes-dsi-box">';
-			//$myHTML .= '<div class="box-title dsi-title">Informations DSI</div>';
 			$myHTML .= '<em>Occupe la fonction DSI (jusqu\'au <strong>' . $user->getDateEndDSI() .'</strong>)</em>';
 		}
 
@@ -80,12 +77,10 @@ class HtmlHelper {
 
 		if (!empty($sv)) {
 			$myHTML = '<div class="yes-validator-box">';
-			// $myHTML .= '<div class="box-title validator-title">Informations validateur</div>';
 			$myHTML .= '<p>Actuellement valideur :</p>';
 			$myHTML .= implode("<br>", $sv);
 		} else {
 			$myHTML = '<div class="no-validator-box">';
-			// $myHTML .= '<div class="box-title validator-title">Informations validateur</div>';
 			$myHTML .= 'Valideur d\'aucun service actuellement';
 		}
 
@@ -111,20 +106,22 @@ class HtmlHelper {
 
 			foreach ($couple->getApplications() as $droitEffectif) {
 				$application = $droitEffectif->getApplication();
-				$libelle = $application->getCode() . ' : ' . $application->getLibelle();
+				$libelle = '<strong>' . $application->getCode() . '</strong> - ' . $application->getLibelleLong();
 
 				if ($application->isTransverse()) {
-					$transverses[] = '<strong>' . $libelle . '</strong>';
+					$transverses[] = $libelle;
 				} else {
-					$applications[] = '<div><strong>' . $libelle . '</strong> jusqu\'au ' . DateHelper::formatMyDate($droitEffectif->getDateFin()) . '</div>';
+					$applications[] = '<div class="application-row"><div>' . $libelle . '</div><div>jusqu\'au ' . DateHelper::formatMyDate($droitEffectif->getDateFin()) . '</div></div>';
 				}
 			}
 
+			sort($applications);
+
 			// Si il y a des applications PROFIL dans le service
 			if (!empty($applications)) {
-				$libelle = $service->getCode() . ' : ' . $service->getLibelleCourt();
+				$libelle = '<div><div><strong>' . $service->getCode() . '</strong></div><div class="myServiceLibelle">' . $service->getLibelleLong() . '</div></div>';
 				$html = '<div class="one-service-div">';
-				$html .= '<p>' . $libelle . '</p>';
+				$html .= $libelle;
 				$html .= implode(" ", $applications);
 				$html .= '</div>';
 
@@ -136,13 +133,11 @@ class HtmlHelper {
 
 		if(empty($transverses) && empty($html_services)) {
 			$myHTML .= '<div class="no-droits-effectifs-box">';
-			//$myHTML .= '<div class="box-title droits-effectifs-title">Droits effectifs</div>';
 			$myHTML .= '<div>Ne possède aucun droit pour aucune application</div>';
 		} else {
 			$myHTML .= '<div class="yes-droits-effectifs-box">';
-			//$myHTML .= '<div class="box-title droits-effectifs-title">Droits effectifs</div>';
 			if (!empty($transverses)) {
-				$myHTML .= '<div class="transverses-div"><p>Applications transverses :</p><div>' . implode("&nbsp; / &nbsp;", $transverses) . '</div></div>';
+				$myHTML .= '<div class="transverses-div"><p>Applications transverses :</p><div>' . implode("&nbsp; / &nbsp;", array_unique($transverses)) . '</div></div>';
 
 				if (!empty($html_services)) {
 					$myHTML .= '<hr>';
