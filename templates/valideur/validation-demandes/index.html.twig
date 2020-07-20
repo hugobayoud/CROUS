@@ -29,7 +29,7 @@
 <div class="cards-crous">
 	{% for service in services %}
 	<div class="card">
-		<span class="notification-badge"><span>{{ service.getNumberDemands0And1() }}</span></span>
+		<span class="notification-badge"><span>{{ service.getNumberDemands0() }}</span></span>
 		<div class="card-body">
 			<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 			<p class="card-libelle-long">{{ service.libelle_long }}</p>

@@ -678,4 +678,58 @@ class User implements UserInterface
 	{
 		return HtmlHelper::droitsEffectifs_toPDF($this);
 	}
+
+	/**
+	 * Renvoie le numéro de téléphone associé à un couple (user, service) en droit effectif
+	 * @return string|NULL
+	 */
+	public function getPhoneByService(int $serviceId): ?string
+	{
+		$couple = $this->getCouple($serviceId);
+
+		if (!is_null($couple)) {
+			$phone = $couple->getTelephone();
+
+			if (!is_null($phone)) {
+				return htmlentities($phone);
+			}
+		}
+		return NULL;
+	}
+
+	/**
+	 * Renvoie la liste des adresses mails que recoit l'agent (qui fait la demande)
+	 * @return string|NULL
+	 */
+	public function getMailsByService(int $serviceId): ?string
+	{
+		$couple = $this->getCouple($serviceId);
+
+		if (!is_null($couple)) {
+			$mails = $couple->getRepertoiresServeur();
+
+			if (!is_null($mails)) {
+				return htmlentities($mails);
+			}
+		}
+		return NULL;
+	}
+
+	/**
+	 * Renvoie la liste des répertoires serveus auxquels souhaite accéder l'agent (qui fait une demande)
+	 * @return string|NULL
+	 */
+	public function getFoldersByService(int $serviceId): ?string
+	{
+		$couple = $this->getCouple($serviceId);
+
+		if (!is_null($couple)) {
+			$folders = $couple->getRepertoiresServeur();
+
+			if (!is_null($folders)) {
+				return htmlentities($folders);
+			}
+		}
+		return NULL;	
+	}
 }

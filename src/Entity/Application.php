@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use App\Entity\Couple;
 use App\Entity\DroitEffectif;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -231,12 +232,12 @@ class Application
 	}
 
 	/**
-	 * Retourne si une application est déjà demandée par un agent, pour un service précis ou si il possède déjà les droits
+	 * Retourne si une application est déjà demandée par un agent, pour un service précis
 	 * @return bool
 	 */
 	public function isAlreadyRequested(int $userId, int $serviceId): bool
 	{
-		// Application déjà en cours de demande
+		// Applications déjà en cours de demande
 		foreach ($this->demandes as $appliDemande) {
 			$demande = $appliDemande->getDemande();
 			if ($demande->getUser()->getId() === $userId && $demande->getService()->getId() === $serviceId) {
@@ -244,11 +245,23 @@ class Application
 			}
 		}
 
-		// Application déjà comme droit effectif pour l'agent pour ce service
+		return false;
+	}
+
+	/**
+	 * Retourne si un couple (user, service) possède déjà les droits pour cette application
+	 * @return bool
+	 */
+	public function hasAlreadyAccess(int $userId, int $serviceId): bool
+	{
+		// Applications déjà comme droit effectif pour l'agent pour ce service
 		foreach ($this->couples as $droitEffectif) {
-			$couple = $droitEffectif->getCouple();
-			if ($couple->getUser()->getId() === $userId && $couple->getService()->getId() === $serviceId) {
-				return true;
+			// On vérifie que la date de fin du droit effectif n'est pas dépassée
+			if ($droitEffectif->getDateFin() > (new DateTime('now'))) {
+				$couple = $droitEffectif->getCouple();
+				if ($couple->getUser()->getId() === $userId && $couple->getService()->getId() === $serviceId) {
+					return true;
+				}
 			}
 		}
 

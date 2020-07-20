@@ -8,11 +8,15 @@
 		<div class="subnavbar-title">
 			<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
 			<p>
-				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleCourt() }}"</em>
+				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleLong() }}"</em>
 			</p>
 		</div>
 	</nav>
 {% endblock %}
+
+{% set currentPhone = app.user.getPhoneByService(service.id) %}
+{% set currentMails = app.user.getMailsByService(service.id) %}
+{% set currentFolders = app.user.getFoldersByService(service.id) %}
 
 {% block body %}
 <div class="user-demand-box">
@@ -24,7 +28,8 @@
 			{% for application in applications %}
 				{% if application.isTransverse() %}
 				<div>
-					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) or application.hasAlreadyAccess(app.user.id, service.id) %} checked{% endif %} {% if application.hasAlreadyAccess(app.user.id, service.id) %} disabled{% endif %}
+					>
 					<label for="{{ application.code }}"><strong>{{ application.code }}</strong> - {{ application.libelle }}</label>
 				</div>
 				{% endif %}
@@ -37,7 +42,8 @@
 			{% for application in applications %}
 				{% if not application.isTransverse() %}
 				<div>
-					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) %} checked{% endif %}>
+					<input type="checkbox" name="{{ application.id }}" id="{{ application.code }}" value="{{ application.code }}"{% if application.isAlreadyRequested(app.user.id, service.id) or application.hasAlreadyAccess(app.user.id, service.id) %} checked{% endif %} {% if application.hasAlreadyAccess(app.user.id, service.id) %} disabled{% endif %}
+					>
 					<label for="{{ application.code }}"><strong>{{ application.code }}</strong> - {{ application.libelle }}</label>
 				</div>
 				{% endif %}
@@ -46,22 +52,33 @@
 		</div>
 		<div class="user-demand">
 			<p>Ressources supplémentaires</p>
-			<div>
+			<div style="padding: 0 25px;">
 				<div>
-					<label for="phone">Téléphone portable à réaffecter (facultatif) :
+					<label for="phone" class="crous-label">Téléphone portable à réaffecter (facultatif) : 
+						<span>
+							{% if currentPhone is not null %}(actuellement vous possédez le numéro {{ currentPhone }}){% endif %}
+						</span>
 					</label>
-					<input type="text" name="phone" id="phone" value="0698352892">
+					<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone (facultatif)" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}">
 				</div>
 				<div>
-					<label for="mailTo">Recoit les mails de (facultatif)<sup class="crous-tooltip" style="font-size: 0.9em; color: red;">1</sup> : </label>
-					<input type="text" name="mailTo" id="mailTo" value="gpp@crous-clemront.fr">
+					<label for="mailTo" class="crous-label">Reçoit les mails de (facultatif)<sup class="exposant">1</sup> : 
+						<span>
+							{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
+						</span>
+					</label>
+					<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: mail1; mail2; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}">
 				</div>
 				<div>
-					<label for="folders">Précisez les répertoires de travail (facultatif)<sup class="crous-tooltip" style="font-size: 0.9em; color: red;">2</sup> : </label>
-					<input type="text" name="folders" id="folders" value="ad server; blabla; folder2;">
+					<label for="folders" class="crous-label">Précisez les répertoires de travail (facultatif)<sup class="exposant">2</sup> : 
+						<span>
+							{% if currentFolders is not null %}(répertoire(s) actuel(s) : {{ currentFolders }}){% endif %}
+						</span>
+					</label>
+					<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}">
 				</div>
 			</div>
-			<div>
+			<div style="padding: 0 25px;">
 				<ul style="font-size: 0.8em;">
 					<li><em><span style="color: red;">1</span> : À compléter  si vous souhaitez que lesmails à destination d’une adresse générique arrivent dans la boite de cette personne (ex.: cite‐lebon@crous‐clermont.fr)</em></li>
 					<li><em><span style="color: red;">2</span> : En cas de champs vide, l’agent n’aura pas d’espace de stockage sauvegardé pour enregistrer ses documents. Le cas échéant, préciser le groupe si des profils différents d’accès aux fichiers sur serveur est en place dans votre service</em></li>

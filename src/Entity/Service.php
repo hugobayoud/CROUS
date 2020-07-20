@@ -192,7 +192,7 @@ class Service
 	}
 	
 	/**
-	 * Récupère les demandes lié à un service qui sont à l'état 0 (attente de validation d'un valideur)
+	 * Récupère les demandes liées à un service qui sont à l'état 0 (attente de validation d'un valideur)
 	 * 
 	 * @return Demande[]|NULL
 	 */
@@ -365,7 +365,7 @@ class Service
 	 * Retourne le nombre de demandes d'un service à l'état 0 et 1 (pour gestion des demandes pour un valideur)
 	 * @return int
 	 */
-	public function getNumberDemands0And1(): int
+	public function getNumberDemands0(): int
 	{
 		if ($this->demandes->isEmpty()) {
 			return 0;
@@ -374,7 +374,7 @@ class Service
 		$count = 0;
 
 		foreach ($this->demandes as $demande) {
-			if ($demande->getEtat() === 0 || $demande->getEtat() === 1) {
+			if ($demande->getEtat() === 0) {
 				$count++;
 			}
 		}

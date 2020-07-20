@@ -152,7 +152,7 @@ class Demande
 
     public function getTelephone(): ?string
     {
-        return $this->telephone;
+        return htmlentities($this->telephone);
     }
 
     public function setTelephone(?string $telephone): self
@@ -179,9 +179,9 @@ class Demande
 	 * @return int
 	 */
 	public function createdDaysAgo(): int
-         	{
-         		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
-         	}
+	{
+		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
+	}
 
     public function getMailDe(): ?string
     {
