@@ -65,14 +65,14 @@ class Demande
     private $mail_de;
 
     /**
-     * @ORM\Column(type="string", length=1, nullable=true)
+     * @ORM\Column(type="boolean", options={"default":"0"})
      */
     private $prioritaire;
 	
 	public function __construct()
-                  	{
-                  		$this->applications = new ArrayCollection();
-                  	}
+	{
+		$this->applications = new ArrayCollection();
+	}
 
     public function getId(): ?int
     {
@@ -200,12 +200,17 @@ class Demande
         return $this;
     }
 
-    public function getPrioritaire(): ?string
+    public function getPrioritaire(): bool
+    {
+        return $this->prioritaire;
+	}
+	
+	public function isPrioritaire(): bool
     {
         return $this->prioritaire;
     }
 
-    public function setPrioritaire(?string $prioritaire): self
+    public function setPrioritaire(bool $prioritaire): self
     {
         $this->prioritaire = $prioritaire;
 

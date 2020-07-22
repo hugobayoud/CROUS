@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
-use App\Data\SearchData;
+use DateTime;
+use App\Entity\Demande;
 use App\Entity\Service;
-use App\Entity\Valideurs;
+use App\Data\SearchData;
 use App\Form\SearchForm;
+use App\Entity\Valideurs;
 use App\Form\ValideursType;
+use App\Helper\ProtoHelper;
 use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
-use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -179,8 +181,10 @@ class ValideurController extends AbstractController
 
 			// Si le formulaire est envoyé en post
 			if (isset($_POST['custId'])) {
+				// On récupère le user
+				$user = $users[$_POST['custId']];
 				// Tous les droits effectifs de l'agent
-				$couple = $users[$_POST['custId']]->getCouple($service->getId());
+				$couple = $user->getCouple($service->getId());
 				$em = $this->getDoctrine()->getManager();
 
 				foreach ($_POST as $key => $v) {
@@ -203,7 +207,15 @@ class ValideurController extends AbstractController
 					}
 				}
 
-				
+				// On ajoute les ressources supplémentaires (formatées) à la demande
+				$demande = new Demande();
+				$demande->setUser($user);
+				$demande->setService($service);
+				$demande->setTelephone(ProtoHelper::formatMyPhoneNumber($_POST['phone']));
+				$demande->setMailDe(ProtoHelper::formatMyMails($_POST['mailTo']));
+				$demande->setRepertoiresServeur(ProtoHelper::formatMyFolders($_POST['folders']));
+				$demande->setPrioritaire(true);
+				// On rend prioritaire la demande associée = l'agent ne peut modifier les ressources supp
 			}
 
 			return $this->render('valideur/revue-droits/service.html.twig', [
