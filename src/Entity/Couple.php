@@ -91,9 +91,25 @@ class Couple
      * @return ArrayCollection|DroitEffectif[]
      */
 	public function getApplications()
-         	{
-         		return $this->applications;
-         	}
+	{
+		return $this->applications;
+	}
+
+	/**
+	 * Récupérer une application à partir d'un ID
+	 * 
+     * @return DroitEffectif|NULL
+     */
+	public function getApplication(int $idApplication): ?DroitEffectif
+	{
+		foreach ($this->applications as $appli) {
+			if ($appli->getId() === $idApplication) {
+				return $appli;
+			}
+		}
+		
+		return NULL;
+	}
 
     public function addApplication(Application $application)
     {

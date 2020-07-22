@@ -9,6 +9,7 @@ use App\Form\SearchForm;
 use App\Form\ValideursType;
 use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
+use DateTime;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -177,21 +178,32 @@ class ValideurController extends AbstractController
 			$users = $service->getValidatedUsers();
 
 			// Si le formulaire est envoyé en post
-			if (isset($_POST["custId"])) {
-				//dd($_POST);
+			if (isset($_POST['custId'])) {
+				// Tous les droits effectifs de l'agent
+				$couple = $users[$_POST['custId']]->getCouple($service->getId());
 				$em = $this->getDoctrine()->getManager();
+
 				foreach ($_POST as $key => $v) {
 					if (is_int($key)) {
+						// On récupère le droit_effectif associé à l'application
+						$droit_effectif = $couple->getApplication($key);
+
 						if ($v === 's') {
 							// On passe le champ "status" à 's'
-
+							$droit_effectif->setStatus('s');
 						} else {
 							// On a modification de date, on rempli le champ "nouvelle_date" dans DROIT_EFFECTIF
-
+							$droit_effectif->setNouvelleEcheance(new DateTime($v . '23:59:59'));
 							// On passe le champ "status" à 'c'
+							$droit_effectif->setStatus('c');
 						}
+
+						$em->persist($droit_effectif);
+						$em->flush();
 					}
 				}
+
+				
 			}
 
 			return $this->render('valideur/revue-droits/service.html.twig', [

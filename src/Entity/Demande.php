@@ -63,11 +63,16 @@ class Demande
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $mail_de;
+
+    /**
+     * @ORM\Column(type="string", length=1, nullable=true)
+     */
+    private $prioritaire;
 	
 	public function __construct()
-         	{
-         		$this->applications = new ArrayCollection();
-         	}
+                  	{
+                  		$this->applications = new ArrayCollection();
+                  	}
 
     public function getId(): ?int
     {
@@ -179,9 +184,9 @@ class Demande
 	 * @return int
 	 */
 	public function createdDaysAgo(): int
-	{
-		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
-	}
+         	{
+         		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
+         	}
 
     public function getMailDe(): ?string
     {
@@ -191,6 +196,18 @@ class Demande
     public function setMailDe(?string $mail_de): self
     {
         $this->mail_de = $mail_de;
+
+        return $this;
+    }
+
+    public function getPrioritaire(): ?string
+    {
+        return $this->prioritaire;
+    }
+
+    public function setPrioritaire(?string $prioritaire): self
+    {
+        $this->prioritaire = $prioritaire;
 
         return $this;
     }
