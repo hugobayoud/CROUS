@@ -706,7 +706,7 @@ class User implements UserInterface
 		$couple = $this->getCouple($serviceId);
 
 		if (!is_null($couple)) {
-			$mails = $couple->getRepertoiresServeur();
+			$mails = $couple->getMailDe();
 
 			if (!is_null($mails)) {
 				return htmlentities($mails);

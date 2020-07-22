@@ -36,13 +36,13 @@ class ValideurController extends AbstractController
 	}
 
 	/**
-     * @Route("/gestion/valideurs", name="gestion-valideurs.home")
-	 * 
 	 * On affiche tous les services de l'user et il choisit dans quel service il souhaite faire une modification de valideur
 	 * Trois types de personnes :
 	 * 		- C'est un admin ou un dsi en cours => il peut aller dans tous les services et nommer n'importe quel agent de ce service valideur
 	 * 		- C'est un agent mais il a le pouvoir valideur en cours dans ce service alors il peut promouvoir qui il souhaite valideur
 	 * 		- C'est un agent et il n'a pas de pouvoir valideur mais il peut regarder qui est valideur sans rien pouvoir modifier
+	 * 
+     * @Route("/gestion/valideurs", name="gestion-valideurs.home")
     */
 	public function servicesList(ServiceRepository $serviceRepo, Request $request)
 	{
@@ -68,6 +68,7 @@ class ValideurController extends AbstractController
 
 	/**
 	 * Page de gestion des valideurs pour modification des droits en tant que valideur d'un service
+	 * 
      * @Route("/gestion/valideurs/{id}", name="gestion-valideurs.service")
     */
 	public function administerValidators(Request $request, Service $service)
@@ -140,4 +141,67 @@ class ValideurController extends AbstractController
 			return $this->redirectToRoute('valideurs.home');
 		}
 	}
+		
+	/**
+	 * On affiche tous les services ou l'user est valideur pour qu'il puisse faire de la revue de droits quand les droits arrivent bientôt à expiration
+	 * 
+     * @Route("/revue-droits", name="revue-droits.home")
+	 */
+	public function checkAccessHome()
+	{
+		$user = $this->getUser();
+
+		if ($user->isAValidator()) {
+			$services = $user->getServicesWhereValidator();
+			return $this->render('valideur/revue-droits/index.html.twig', [
+				'services' => $services
+			]);
+
+		} else {
+			$this->addFlash('warning', "ACCES REFUSE : Vous n'êtes valideur d'aucun service.");
+			return $this->redirectToRoute('home');
+		}
+	}
+
+	/**
+	 * Page de revue des droits pour un service dont l'user est valideur. Il peut connaître toutes les autorisations accordées pour les agents de son service, les modifier, les supprimer
+	 * 
+     * @Route("/revue-droits/{id}", name="revue-droits.service")
+    */
+	public function administeAccessForOneService(Request $request, Service $service)
+	{
+		$currentUser = $this->getUser();
+
+		if ($currentUser->isValidator($service->getId())) {
+			// On récupère tous les les agents de ce service (dont leur compte ont été validé)
+			$users = $service->getValidatedUsers();
+
+			// Si le formulaire est envoyé en post
+			if (isset($_POST["custId"])) {
+				//dd($_POST);
+				$em = $this->getDoctrine()->getManager();
+				foreach ($_POST as $key => $v) {
+					if (is_int($key)) {
+						if ($v === 's') {
+							// On passe le champ "status" à 's'
+
+						} else {
+							// On a modification de date, on rempli le champ "nouvelle_date" dans DROIT_EFFECTIF
+
+							// On passe le champ "status" à 'c'
+						}
+					}
+				}
+			}
+
+			return $this->render('valideur/revue-droits/service.html.twig', [
+				'service' => $service,
+				'users' => $users
+			]);
+		} else {
+			$this->addFlash('warning', "ACCES INTERDIT : Vous n'êtes pas responsable de ce service.");
+			return $this->redirectToRoute('valideurs.home');
+		}
+	}
+
 }

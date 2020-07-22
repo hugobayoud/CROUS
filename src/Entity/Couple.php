@@ -54,9 +54,9 @@ class Couple
     private $mail_de;
 	
 	public function __construct()
-         	{
-         		$this->applications = new ArrayCollection();
-         	}
+	{
+		$this->applications = new ArrayCollection();
+	}
 
     public function getId(): ?int
     {

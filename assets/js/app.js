@@ -13,86 +13,6 @@ let $ = require('jquery')
 require('select2');
 $('select').select2()
 
-// /* CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIC et GERER L'AFFICHAGE DE LA LIGNE SELECTIONNEE
-//  * Utilisé dans tous les tableaux où les lignes ont une detail-box associées
-// */
-// jQuery(document).ready(function(){
-// 	// Variable stockée en locale pour savoir si on doit, après rechargement de la page, scrolle down pour montrer le detail d'un agent
-// 	var show = localStorage.getItem('show');
-	
-// 	// Si show vaut null, pas besoin de montrer la detail-box, pn supprime la variable stockée en local target
-// 	if (show == null) {
-// 		localStorage.removeItem('currentTarget');
-// 	} else {
-// 		localStorage.removeItem('show');
-// 	}
-
-// 	var currentTarget = localStorage.getItem('currentTarget');
-// 	// Si currentTarget est défini : une detail-box etait ouverte au moment où un form a été envoyé
-// 	if (currentTarget) {
-// 		// On réouvre la div
-// 		$(currentTarget).show();
-// 		// On regrise la ligne du tableau
-// 		changeColor(currentTarget);
-// 		// on scroll en bas de la page
-// 		$('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
-// 	}
-
-// 	$(".flip").on("click", function(e) {
-// 		// Div panel sur laquelle on  cliqué pour voir ou cacher les infos 
-// 		var target = $(this).attr("href");
-// 		// Ouvrir/Fermer la div panel cliquée
-// 		$(target).toggle();
-// 		// Fermer toutes les div panel sauf celle cliquée
-// 		$(".panel").not(target).hide();
-// 		e.preventDefault();
-
-// 		// Si la detail-box est ouverte en cliquant sur le pinceau, on scroll down
-// 		if (!$(target).is(':hidden')) {
-// 			$('html,body').animate({scrollTop: document.body.scrollHeight},"slow");
-// 		}
-
-// 		// Changer la couleur des lignes du tableau
-// 		changeColor(target);
-
-// 		// SSI une detail-box est ouverte, ajouter la classe "selected-row"
-// 		if (!$(target).is(':hidden')) {
-// 			// On stocke l'info qu'une detail-box est ouverte au cas où la page serait rechargée pour remettre dans le même état
-// 			localStorage.setItem('currentTarget', target);
-// 		} else {
-// 			localStorage.removeItem('currentTarget');
-// 		}
-// 	});
-
-// 	// En cliquant sur le bouton "ENREGISTRER", on retient l'info qu'après avoir rechargé la page, il faut scroll down
-// 	$("#save-div").click(function() {
-//  		localStorage.setItem('show', true);
-// 	});
-
-// 	// Changement de la couleur des lignes du tableau suivant si une detail-box est ouverte ou non
-// 	function changeColor(target) {
-// 		// Récupérer l'element TABLE de la page (s'il existe)
-// 		var table = document.getElementById("table");
-// 		if (table) {
-// 			// Enlever la classe "selected-row" de toutes les lignes du tableau
-// 			for(var i = 0; i < table.rows.length - 1; i++) {
-// 				table.rows[i+1].classList.remove("selected-row");
-// 			}
-
-// 			if (target) {
-// 				// SSI une detail-box est ouverte, ajouter la classe "selected-row"
-// 				if (!$(target).is(':hidden')) {
-// 					// Récupérer l'indice de la detail-box ouverte
-// 					var indice = parseInt(target.split('_')[2]);
-// 					// Ajouter la class "selected"
-// 					table.rows[indice + 1].classList.add("selected-row");
-// 				}
-// 			}
-// 		}
-// 	}
-// });
-
-
 
 /* CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIC et GERER L'AFFICHAGE DE LA LIGNE SELECTIONNEE
  * Utilisé dans tous les tableaux où les lignes ont une detail-box associées
@@ -111,7 +31,7 @@ jQuery(document).ready(function(){
 	}
 
 	$(".flip").on("click", function(e) {
-		// Div panel sur laquelle on  cliqué pour voir ou cacher les infos 
+		// Div panel sur laquelle on clique pour voir ou cacher les infos 
 		var target = $(this).attr("href");
 		// Ouvrir/Fermer la div panel cliquée
 		$(target).toggle();

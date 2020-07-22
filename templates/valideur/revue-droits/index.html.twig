@@ -8,26 +8,24 @@
 		<div class="subnavbar-title">
 			<h1>Choisir un service</h1> 
 			<p>
-				<em>Ici s'affiche tous les services dont vous êtes actuellement valideur. Choissez un service pour valider les demandes associées</em>
+				<em>Ici s'affiche tous les services dont vous êtes actuellement valideur. Choissez un service pour accéder à la revue des droits</em>
 			</p>
 		</div>
 	</nav>
 {% endblock %}
+{% block body %}
 
 {% include "bases/_display-flashes.html.twig" %}
-
-</div>
-{% endfor %}
 
 <div class="cards-crous">
 	{% for service in services %}
 	<div class="card">
-		<span class="notification-badge"><span>{{ service.getNumberDemands0() }}</span></span>
+		<span class="notification-badge"><span>x</span></span>
 		<div class="card-body">
 			<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 			<p class="card-libelle-long">{{ service.libelle_long }}</p>
-			<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
-				Traiter les demandes
+			<div class="status-btn create" onclick="location.href='{{ path('valideur.revue-droits.service', {'id': service.id}) }}';">
+				Revue des droits
 			</div>
 		</div>
 	</div>

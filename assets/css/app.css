@@ -86,7 +86,7 @@
 	height: 30px;
 	width: 30px;
 	border-radius: 50%;
-	background: red;
+	background: rgb(227, 6, 19);
 	color: white;
 }
 
@@ -157,7 +157,7 @@
 	text-decoration: none;
 	border: 2px solid white;
 	color: white;
-	background: red;
+	background: rgb(227, 6, 19);
 }
 
 .navbar-crous-link {
@@ -167,7 +167,7 @@
 }
 
 .navbar-crous-link:hover {
-	color: red;
+	color: rgb(227, 6, 19);
 	text-decoration: none;
 }
 
@@ -262,7 +262,7 @@
 
 /* Style de bouton principal */
 .bouton-crous {
-	background: red;
+	background: rgb(227, 6, 19);
 	color: white;
 	font-weight: 700;
 	padding: 5px 10px;
@@ -280,7 +280,7 @@
 /* Mettre le contenu des td du table au centre (verticalement) */
 .table {
 	border: 2px solid grey;
-	margin: 15px auto 25px auto;
+	margin: 15px auto;
 }
 
 .thead-crous {
@@ -294,7 +294,7 @@
 	vertical-align: middle;
 }
 
-.vert-middle {
+.vert-middle td {
 	vertical-align: middle;
 }
 
@@ -330,6 +330,21 @@ tr{
 	width: 80%;
 }
 
+/* Paragraphe indiquant que la demande a éjà été traitée par un valideur, ajout du panneau warning */
+.already-validate::before {
+	margin: 5px 5px 0 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 20px;
+    height: 20px;
+	display: inline-block;
+	background-image: url('/ressource/warning.png');
+}
+
+.already-validate {
+	font-size: 0.8em;
+}
+
 /* Aligner chaque ligne du formulaire (gestion) au milieu de la page (horizontalement) */
 .form-row-center {
 	width: 90%;
@@ -362,8 +377,8 @@ tr{
 	display: inline !important;
 }
 
-/* GESTION DES PSEUDO ELEMENTS pour Gestion des Utilisateurs */
-.pencil:hover, .trash:hover {
+/* GESTION DES PSEUDO ELEMENTS (Tableaux de gestion) */
+.pencil:hover, .trash:hover, .waiting:hover {
 	opacity: 0.6;
 	cursor: pointer;
 }
@@ -371,17 +386,34 @@ tr{
 	background-image: url('/ressource/pencil.png');
 }
 
+.waiting::before {
+	background-image: url('/ressource/clock.png');
+}
+
+.waiting {
+	color: rgb(224, 228, 2);
+}
+
+.waiting:hover {
+	color: rgb(165, 168, 0);	
+}
+
 .trash::before {
     background-image: url('/ressource/trash.png');
 }
 
-.pencil::before, .trash::before {
+.pencil::before, .trash::before, .waiting::before {
 	margin: 5px 10px;
 	content:'';
     background-size: 100% 100%;
     width: 25px;
     height: 25px;
     display: inline-block;
+}
+
+.pencil, .waiting, .trash {
+	display: flex;
+	align-items: center;
 }
 
 /* GESTION DES PSEUDO ELEMENTS pour les pages de gestion avec Formulaires Imbriqués */
@@ -464,7 +496,7 @@ tr{
 
 /* pour Bouton "Enregistrer" */
 .save-button {
-	background: red;
+	background: rgb(227, 6, 19);
 	color: white;
 	font-size: 1.2em;
 	font-weight: 700;
@@ -501,9 +533,6 @@ tr{
 .add-new-form > div:first-child {
 	flex: none;
 	width: 100%;
-	/*justify-content: start;
-	margin-bottom: 0;
-	padding: 5px 0;*/
 }
 
 /* Visuel de la notification OUI ou NON dsi dans le tableau Gestion des DSI */
@@ -518,7 +547,7 @@ tr{
 }
 
 .no-dsi {
-	color: red;
+	color: rgb(227, 6, 19);
 }
 
 .yes-dsi::before {
@@ -680,11 +709,11 @@ tr{
 }
 
 .user-demand > p:first-child {
+	margin: 2em 0 1em 0;
 	text-transform: uppercase;
 	color: rgb(227, 6, 19);
 	font-weight: 500;
 	font-size: 1.1em;
-	margin-bottom: 1em;
 }
 
 .applications-div {
@@ -701,7 +730,7 @@ tr{
 
 .exposant {
 	font-size: 0.9em; 
-	color: red;
+	color: rgb(227, 6, 19);
 }
 
 .crous-label {
@@ -772,7 +801,7 @@ tr{
 }
 
 .impossible {
-	background-color: red;
+	background-color: rgb(227, 6, 19);
 }
 
 .modify::before, .create::before, .impossible::before, .show::before {
@@ -916,7 +945,7 @@ tr{
 } 
 
 .to-delete > div {
-	color: red;
+	color: rgb(227, 6, 19);
 }
 
 .to-remain > div {
@@ -1021,4 +1050,40 @@ tr{
 .to-print:hover {
 	color: rgb(227, 6, 19);
 	text-decoration: underline;
+}
+
+/* REVUE DES DROITS EN TANT QUE VALIDEUR */
+.droit-effectif-row {
+	margin: 12px;
+	align-items: center;
+}
+
+.line * {
+	text-decoration: line-through red;
+}
+
+.droit-effectif-row .get-delete {
+	text-decoration: none;
+	font-weight: 500;
+	color: red;
+}
+
+.trash-check {
+	visibility: hidden;
+}
+
+.trash-check::before {
+	margin: 0;
+	visibility: visible;
+}
+
+.red-link {
+	color: rgb(227, 6, 19);
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.red-link:hover {
+	text-decoration: underline;
+	color: rgb(206, 0, 14)
 }

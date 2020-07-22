@@ -1,0 +1,35 @@
+<div class="user-demand">
+	<p>Ressources supplémentaires</p>
+	<div style="padding: 0 25px;">
+		<div>
+			<label for="phone" class="crous-label"><strong>Téléphone portable à réaffecter (facultatif)</strong> : 
+				<span>
+					{% if currentPhone is not null %}(actuellement vous possédez le numéro {{ currentPhone }}){% endif %}
+				</span>
+			</label>
+			<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone (facultatif)" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}">
+		</div>
+		<div>
+			<label for="mailTo" class="crous-label"><strong>Reçoit les mails de (facultatif)</strong><sup class="exposant">1</sup> : 
+				<span>
+					{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
+				</span>
+			</label>
+			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}">
+		</div>
+		<div>
+			<label for="folders" class="crous-label"><strong>Précisez les répertoires de travail (facultatif)</strong><sup class="exposant">2</sup> : 
+				<span>
+					{% if currentFolders is not null %}(répertoire(s) actuel(s) : {{ currentFolders }}){% endif %}
+				</span>
+			</label>
+			<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}">
+		</div>
+	</div>
+	<div style="padding: 0 25px;">
+		<ul style="font-size: 0.8em;">
+			<li><em><span style="color: red;">1</span> : À compléter si vous souhaitez que les mails à destination d’une adresse générique arrivent dans votre boîte mail (ex.: cite‐lebon@crous‐clermont.fr)</em></li>
+			<li><em><span style="color: red;">2</span> : En cas de champs vide, vous n’aurez pas d’espace de stockage sauvegardé pour enregistrer vos documents. Le cas échéant, préciser le groupe si des profils différents d’accès aux fichiers sur serveur est en place dans votre service</em></li>
+		</ul>
+	</div>
+</div>

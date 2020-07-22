@@ -50,42 +50,7 @@
 				{% endfor %}
 			</div>
 		</div>
-		<div class="user-demand">
-			<p>Ressources supplémentaires</p>
-			<div style="padding: 0 25px;">
-				<div>
-					<label for="phone" class="crous-label">Téléphone portable à réaffecter (facultatif) : 
-						<span>
-							{% if currentPhone is not null %}(actuellement vous possédez le numéro {{ currentPhone }}){% endif %}
-						</span>
-					</label>
-					<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone (facultatif)" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}">
-				</div>
-				<div>
-					<label for="mailTo" class="crous-label">Reçoit les mails de (facultatif)<sup class="exposant">1</sup> : 
-						<span>
-							{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
-						</span>
-					</label>
-					<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: mail1; mail2; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}">
-				</div>
-				<div>
-					<label for="folders" class="crous-label">Précisez les répertoires de travail (facultatif)<sup class="exposant">2</sup> : 
-						<span>
-							{% if currentFolders is not null %}(répertoire(s) actuel(s) : {{ currentFolders }}){% endif %}
-						</span>
-					</label>
-					<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}">
-				</div>
-			</div>
-			<div style="padding: 0 25px;">
-				<ul style="font-size: 0.8em;">
-					<li><em><span style="color: red;">1</span> : À compléter  si vous souhaitez que lesmails à destination d’une adresse générique arrivent dans la boite de cette personne (ex.: cite‐lebon@crous‐clermont.fr)</em></li>
-					<li><em><span style="color: red;">2</span> : En cas de champs vide, l’agent n’aura pas d’espace de stockage sauvegardé pour enregistrer ses documents. Le cas échéant, préciser le groupe si des profils différents d’accès aux fichiers sur serveur est en place dans votre service</em></li>
-				</ul>
-			</div>
-		</div>
-
+		{% include "bases/_ressources-supp.html.twig" %}
 		<hr>
 
 		<div class="info-term text-center">Une fois créée, votre demande doit être validée par un responsable du service associé puis traitée par la DSI qui se chargera de vous octroyer les droits. Tant qu'un responsable ne l'a pas validée ou refusée, vous pouvez modifier cette demande à votre guise. Seul le dernier enregistrement sera visible par votre responsable.</div>

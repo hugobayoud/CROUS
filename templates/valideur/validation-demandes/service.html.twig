@@ -30,15 +30,21 @@
 		<th>Nom</th>
 		<th>Prénom</th>
 		<th>Email</th>
+		<th></th>
 	</thead>
 	<tbody class="tbody-crous">
 		{% if demandes is not empty %}
 			{% for demande in demandes %}
-			<tr>
-				<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a><a class="trash" href=""></a></td>
-				<td class="vert-middle"><strong>{{ demande.user.nom }}</strong></td>
-				<td class="vert-middle"><strong>{{ demande.user.prenom }}</strong></td>
-				<td class="vert-middle">{{ demande.user.email }}</td>
+			<tr class="vert-middle">
+				{% if demande.etat == 0 %}
+				<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}">A valider</a></td>
+				{% else %}
+				<td><a class="flip waiting" href="#user_detail_{{ loop.index0 }}">En cours de validation</a></td>
+				{% endif %}
+				<td><strong>{{ demande.user.nom }}</strong></td>
+				<td><strong>{{ demande.user.prenom }}</strong></td>
+				<td>{{ demande.user.email }}</td>
+				<td><a class="trash" href=""></a></td>
 			</tr>
 			{% endfor %}
 		{% else %}
@@ -54,7 +60,11 @@
 <div class="detail-box">
 
 	{% for form in forms %}
-	{% set user = demandes[loop.index0].user %}
+	{% set demande = demandes[loop.index0] %}
+	{% set user = demande.user %}
+	{% set currentPhone = user.getPhoneByService(service.id) %}
+	{% set currentMails = user.getMailsByService(service.id) %}
+	{% set currentFolders = user.getFoldersByService(service.id) %}
 	<div class="panel" id="user_detail_{{ loop.index0 }}">
 
 		<div class="detail-box-banner banner_{{ loop.index0 }}">
@@ -71,7 +81,9 @@
 					{{ formMacros.printApplicationDemandeForm(appliForm) }}
 				{% endfor %}
 			</div>
+			{% include "bases/_ressources-supp.html.twig" %}
 			<hr>
+			{% if demande.etat == 1 %}<p class="already-validate">Cette demande a déjà été validée par vous ou un autre responsable de ce service. En validant de nouveau cette demande vous écrasez l'ancienne sauvegarde, c'est uniquement cette nouvelle demande qui sera traitée par la DSI.</p> {% endif %}
 			<div class="save-div">
 				{{ form_widget(form.save, {'label': 'Valider cette demande', 'attr': {'class': 'save-button'}}) }}
 			</div>

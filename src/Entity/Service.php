@@ -192,7 +192,7 @@ class Service
 	}
 	
 	/**
-	 * Récupère les demandes liées à un service qui sont à l'état 0 (attente de validation d'un valideur)
+	 * Récupère les demandes liées à un service qui sont à l'état 0 (attente de validation d'un valideur) ou 1 (que le valideur peut encore modifier)
 	 * 
 	 * @return Demande[]|NULL
 	 */
@@ -200,7 +200,7 @@ class Service
 	{
 		$toApprove = [];
 		foreach ($this->demandes as $demande) {
-			if ($demande->getEtat() === 0) {
+			if ($demande->getEtat() === 0 || $demande->getEtat() === 1) {
 				$toApprove[] = $demande;
 			}
 		}

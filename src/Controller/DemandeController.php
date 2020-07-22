@@ -194,6 +194,11 @@ class DemandeController extends AbstractController
 					}
 
 					$demandes[$index]->setEtat(1);
+					//On ajoute les ressources supplémentaires (formatées) à la demande
+					$demandes[$index]->setTelephone(ProtoHelper::formatMyPhoneNumber($_POST['phone']));
+					$demandes[$index]->setMailDe(ProtoHelper::formatMyMails($_POST['mailTo']));
+					$demandes[$index]->setRepertoiresServeur(ProtoHelper::formatMyFolders($_POST['folders']));
+
 					$em->persist($demandes[$index]);
 					$em->flush();
 		

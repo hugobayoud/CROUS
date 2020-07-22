@@ -1,0 +1,174 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('valideur.revue-droits.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Tous les agents du service et leurs droits effectifs</h1> 
+			<p>
+				<em>Vous êtes informés lorsque les droits effectifs pour une application arrive bientôt à terme</em>
+			</p>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<table id="table" class="table">
+	<thead class="thead-crous">
+		<th></th>
+		<th>Nom</th>
+		<th>Prénom</th>
+		<th>Email</th>
+		<th></th>
+	</thead>
+	<tbody class="tbody-crous">
+		{% if users is not empty %}
+			{% for user in users %}
+			<tr class="vert-middle">
+				<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}">Modifier</a></td>
+				<td><strong>{{ user.nom }}</strong></td>
+				<td><strong>{{ user.prenom }}</strong></td>
+				<td>{{ user.email }}</td>
+				<td><a class="trash red-link" href="">Supprimer du service</a></td>
+			</tr>
+			{% endfor %}
+		{% else %}
+			<tr>
+				<td colspan="5"><em>Il semble n'y avoir aucun agent dans ce service...</em></td>
+			</tr>
+		{% endif %}
+	</tbody>
+</table>
+
+{% include "bases/_display-flashes.html.twig" %}
+
+<div class="detail-box">
+	{% for user in users %}
+		{% set couple = user.getCouple(service.id) %}
+		{% set currentPhone = user.getPhoneByService(service.id) %}
+		{% set currentMails = user.getMailsByService(service.id) %}
+		{% set currentFolders = user.getFoldersByService(service.id) %}
+
+		<div class="panel" id="user_detail_{{ loop.index0 }}">
+			<div class="detail-box-banner">
+				<div class="detail-phrase">
+					Droits effectifs de l'agent <strong>{{ user.prenom }} {{ user.nom }}</strong>
+				</div>
+			</div>
+			{# <div class="form_{{ loop.index0 }}"> #}
+			{% if couple is null %}
+			<em>Cet agent ne possède aucun droit effectif pour le moment</em>
+			{% else %}
+			<form action="" method="post">
+				{% for droit_effectif in couple.applications %}
+					<div class="row droit-effectif-row" id="my_row_{{ user.id }}_{{ loop.index0 }}">
+						<div class="col-md-1"><input class="delete-link trash-check" type="checkbox" name="{{ droit_effectif.id }}" value="s" id="{{ user.id }}_{{ loop.index0 }}" ></div>
+						<div class="col-md-7"><strong>{{ droit_effectif.application.code }}</strong> : {{ droit_effectif.application.libelle }} <span style="float: right;">jusqu'au {{ user.formatDate(droit_effectif.dateFin) }}</span></div>
+						<div class="col-md-2"><input type="button" class="modify-date" id="modify_date_{{ user.id }}_{{ loop.index0 }}" name="{{droit_effectif.id}}" value="Modifier date"></div>
+					</div>
+				{% endfor %}
+				
+
+				<div class="user-demand">
+					<p>Ressources supplémentaires</p>
+					<div style="padding: 0 25px;">
+						<div>
+							<label for="phone" class="crous-label"><strong>Téléphone portable à réaffecter</strong> : 
+								{% if currentPhone is not null %}
+								<div>numéro actuel : {{ currentPhone }}</div>
+								{% endif %}
+							</label>
+							<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone" value="{{ currentPhone }}">
+						</div>
+						<div>
+							<label for="mailTo" class="crous-label"><strong>Reçoit les mails de</strong><sup class="exposant">1</sup> : 
+								{% if currentMails is not null %}
+								<div>reçoit les mails : {{ currentMails }})</div>
+								{% endif %}
+							</label>
+							<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{{ currentMails }}">
+						</div>
+						<div>
+							<label for="folders" class="crous-label"><strong>Précisez les répertoires de travail</strong><sup class="exposant">2</sup> : 
+								{% if currentFolders is not null %}
+								<div>répertoire(s) actuel(s) : {{ currentFolders }}</div>
+								{% endif %}
+							</label>
+							<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{{ currentFolders }}">
+						</div>
+					</div>
+					<div style="padding: 0 25px;">
+						<ul style="font-size: 0.8em;">
+							<li><em><span style="color: red;">1</span> : À compléter si vous souhaitez que les mails à destination d’une adresse générique arrivent dans votre boîte mail (ex.: cite‐lebon@crous‐clermont.fr)</em></li>
+							<li><em><span style="color: red;">2</span> : En cas de champs vide, vous n’aurez pas d’espace de stockage sauvegardé pour enregistrer vos documents. Le cas échéant, préciser le groupe si des profils différents d’accès aux fichiers sur serveur est en place dans votre service</em></li>
+						</ul>
+					</div>
+				</div>
+				<hr>
+				<p class="already-validate">Toute modification des droits effectifs (changement de date de fin ou suppression) doit faire l'objet d'un nouveau traitement par la DSI. Ces modifications ne prendront donc effet qu'après que la DSI l'ait validé. Tout enregistrement de modifications écrasera les sauvegardes précédentes qui n'ont pas encore été traité par la DSI.</p>
+				<div class="save-div">
+					<button type="submit" class="save-button">Modifier les droits</button>
+				</div>
+				<input type="hidden" id="custId" name="custId" value="{{ loop.index0 }}">
+				<input type="hidden" id="endDate" name="endDate" value="{{ user.fullyFormatDate(user.getDateFinValid()) }}">
+			</form>
+			{% endif %}
+			{# </div> #}
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	$(document).ready(function(){
+		// En cliquant sur un bouton "SUPPRIMER" pour retirer un droit effectif à un agent
+		$('.delete-link').on('click', function(e) {
+			let myID = $(this).attr('id');
+			let myRow = $('#my_row_' + myID);
+			let modifyDate = $('#modify_date_' + myID);
+			element = document.getElementById('my_row_' + myID);
+			
+			if ($(this).is(':checked')) {
+				// Barré le texte pour signfié que le droit va être supprimé
+				element.classList.add("line");
+				// Si on a ajouter une date de fin, on la supprime avant de mettre le mot supprimer
+				if ($('#date_' + myID).length) {
+					$('#date_' + myID).remove();
+				}
+				// Ajouter mot "a supprimer" à la fin de la ligne
+				myRow.append($('<div class="col-md-2 get-delete" id="get-delete_' + myID + '">à supprimer</div>'));
+				// Rendre 'disabled' le bouton "MODIFIER DATE" car le droit va être supprimé
+				modifyDate.attr('disabled', true);
+			} else {
+				// "Débarré" car le droit ne doit pas être supprimé au final
+				element.classList.remove("line");
+				// Enlever mot "a supprimer" à la fin de la ligne
+				$('#get-delete_' + myID).remove();
+				// Enlever 'disabled' le bouton "MODIFIER DATE" car le droit ne doit pas être supprimé au final
+				modifyDate.removeAttr("disabled");
+			}
+		});
+
+		// En cliquant sur un bouton "MODIFIER DATE" pour ralonger les droits pour une application d'un agent
+		$('.modify-date').on('click', function(e) {
+			// Récupérer l'ID du bouton "MODIFIER DATE" et ne garder que i_j
+			let myID = $(this).attr('id').substr(12);
+			let appliID = $(this).attr('name');
+			let myRow = $('#my_row_' + myID);
+			
+			if ($('#date_' + myID).length) {
+				// Enlever l'input[type=date] à la fin de la ligne
+				$('#date_' + myID).remove();
+			} else {
+				// Ajouter l'input[type=date] à la fin de la ligne
+				myRow.append($('<div class="col-md-2 change-date" id="date_' + myID + '"><input type="date" name="' + appliID + '" required></div>'));
+			}
+    	});
+		
+	});
+</script>
+{% endblock %}
