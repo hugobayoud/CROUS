@@ -37,6 +37,16 @@ class DroitEffectif
      * @ORM\Column(type="datetime")
      */
     private $date_fin;
+
+    /**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $nouvelle_echeance;
 	
     public function getId()
     {
@@ -64,9 +74,9 @@ class DroitEffectif
 	}
 
 	public function getDateDeb(): ?\DateTimeInterface
-    {
-        return $this->date_deb;
-    }
+                      {
+                          return $this->date_deb;
+                      }
 
     public function setDateDeb(\DateTimeInterface $date_deb): self
     {
@@ -83,6 +93,30 @@ class DroitEffectif
     public function setDateFin(\DateTimeInterface $date_fin): self
     {
         $this->date_fin = $date_fin;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getNouvelleEcheance(): ?\DateTimeInterface
+    {
+        return $this->nouvelle_echeance;
+    }
+
+    public function setNouvelleEcheance(?\DateTimeInterface $nouvelle_echeance): self
+    {
+        $this->nouvelle_echeance = $nouvelle_echeance;
 
         return $this;
     }
