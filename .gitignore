@@ -1,4 +1,7 @@
 
+.env
+Aubin est trop trop cool
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
