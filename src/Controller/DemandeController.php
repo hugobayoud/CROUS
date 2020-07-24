@@ -2,8 +2,6 @@
 namespace App\Controller;
 
 use DateTime;
-use Exception;
-use Twig\Environment;
 use App\Entity\Couple;
 use App\Entity\Demande;
 use App\Entity\Service;
@@ -11,17 +9,14 @@ use App\Helper\DateHelper;
 use App\Helper\ProtoHelper;
 use App\Entity\DroitEffectif;
 use App\Entity\ApplicationDemande;
-use App\Repository\UserRepository;
 use App\Entity\ApplicationDemandes;
 use App\Repository\CoupleRepository;
 use App\Form\ApplicationDemandesType;
 use App\Repository\DemandeRepository;
-use App\Repository\ServiceRepository;
 use App\Repository\ApplicationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DemandeController extends AbstractController
@@ -228,6 +223,11 @@ class DemandeController extends AbstractController
 
 	/**
 	 * Affichage de toutes les demandes à traiter pour un admin/dsi (état 1 -> état 2)
+	 * Il y a n"anmoins deux types de demandes à l'état 1 :
+	 * 		- la demande qui est validée par un valideur qui va faire l'objet de tout nouveaux droits effectifs pour l'agent
+	 * 		- la demande qui provient de modifications par un valideur sur des droits effectifs déjà effectifs
+	 * La différence entre les deux se tient sur le champ "prioritaire" dans la table DEMANDE
+	 *  
 	 * @Route("/admin/gestion-demandes", name="admin.gestion-demandes")
 	 */
 	public function administerDemandsDSI(DemandeRepository $demandRepo, CoupleRepository $coupleRepo)
@@ -235,11 +235,19 @@ class DemandeController extends AbstractController
 		// On récupère les demandes à l'état 1
 		$demandes = $demandRepo->findBy(['etat' => 1]);
 
+		// On tri les demandes en deux groupes (cf. doc au dessus de la signature)
+		foreach ($demandes as $demande) {
+			if ($demande->isPrioritaire()) {
+				$demandesPrioritaires[] = $demande;
+			} else {
+				$demandesOriginales[] = $demande;
+			}
+		}
+
 		if (isset($_POST['demande_id'])) {
 			// Pour les applications dans "droits à ajouter", on les ajoutent en base droitEffectif
 			// Pour les applications dans "droits à supprimer", on les enlève de la base droitEffectif si elles existaient bien avant
 			// Pour les applications dans "droits inchangés", on ne touche à rien
-
 			$demande = $demandRepo->findOneBy(['id' => $_POST['demande_id']]);
 			$user = $demande->getUser();
 			$service = $demande->getService();
@@ -283,12 +291,13 @@ class DemandeController extends AbstractController
 			$em->persist($demande);
 			$em->flush();
 
-			$this->addFlash('message', 'Drtois correctement modifiés pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
+			$this->addFlash('message', 'Droits correctement modifiés pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
 			return $this->redirectToRoute('admin.gestion-demandes');
 		}
 
 		return $this->render('admin/gestion-demandes/index.html.twig', [
-			'demandes' => $demandes
+			'demandesPrioritaires' => $demandesPrioritaires,
+			'demandesOriginales' => $demandesOriginales
 		]);
 	}
 }

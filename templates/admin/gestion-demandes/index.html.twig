@@ -19,52 +19,119 @@
 
 {% include "bases/_display-flashes.html.twig" %}
 
-{% for demande in demandes %}
-	<div class="large-card-crous">
-		<div class="large-card-title">
-			<div>
-				<strong>{{ demande.user.nom }}</strong> {{ demande.user.prenom }}
-			</div>
-			<em>{{ demande.user.email}}</em> {{ demande.service.getLibelleCourt() }}
-			<div>
-				<em style="font-size: 0.8em;">créée il y a <strong>{{ demande.createdDaysAgo() }}</strong> jour(s)</em>
-			</div>
+{# APPLICATIONS PRIORITAIRES #}
+<h5>Applications prioritaires</h5>
+<p>Demandes faites les valideurs dans revue-droits</p>
+{% for demande in demandesPrioritaires %}
+<div class="large-card-crous">
+	<div class="large-card-title">
+		<div>
+			<strong>{{ demande.user.nom }}</strong> {{ demande.user.prenom }}
 		</div>
-		<p>Applications demandées par l'agent :</p>
-		<div class="large-card-body">
-			<div class="to-add">
-				<p>Nouveaux droits</p>
-				<hr>
-				{% for applicationDemande in demande.applications %}
-				{% if applicationDemande.needNewAccess() and not applicationDemande.getASupprimer()  %}
-					<div>{{ applicationDemande.application.libelle }}</div>
-				{% endif %}
-				{% endfor %}
-			</div>
-			<div class="to-delete">
-				<p>Droits à supprimer</p>
-				<hr>
-				{% for applicationDemande in demande.applications %}
-				{% if applicationDemande.getASupprimer() %}
-					<div>{{ applicationDemande.application.libelle }}</div>
-				{% endif %}
-				{% endfor %}
-			</div>
-			<div class="to-remain">
-				<p>Droits inchangés</p>
-				<hr>
-				{% for applicationDemande in demande.applications %}
-				{% if not applicationDemande.needNewAccess() and not applicationDemande.getASupprimer() %}
-					<div>{{ applicationDemande.application.libelle }}</div>
-				{% endif %}
-				{% endfor %}
-			</div>
-			<form action="" method="POST" onsubmit="return confirm('Confirmation : je confirme avoir bien traité cette demande ?');">
-				<input type="hidden" name="demande_id" value="{{ demande.id }}">
-				<button type="submit" class="btn bouton-crous" >Traiter</button>
-			</form>
+		<em>{{ demande.user.email}}</em>
+		<div>
+			<em style="font-size: 0.8em;">créée il y a <strong>{{ demande.createdDaysAgo() }}</strong> jour(s)</em>
 		</div>
 	</div>
+	<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
+	{% if demande.hasAppliDemands() %}
+	<em>Aucune nouvelle application demandée pour cet agent</em>
+	{% else %}
+	<div class="large-card-body">
+		<div class="to-add">
+			<p>Date à modifier</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if applicationDemande.needNewAccess() and not applicationDemande.getASupprimer()  %}
+				<div><strong>{{ applicationDemande.application.libelle }}</strong> - {{ applicationDemande.application.libelle }}</div>
+				<div><em>désormais jusqu'au</em> <strong>{{ applicationDemande.getNouvelleEcheance() }}</strong></div>
+			{% endif %}
+			{% endfor %}
+		</div>
+		{# <div class="to-delete">
+			<p>Droits à supprimer</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if applicationDemande.getASupprimer() %}
+				<div>{{ applicationDemande.application.libelle }}</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+		<div class="to-remain">
+			<p>Droits inchangés</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if not applicationDemande.needNewAccess() and not applicationDemande.getASupprimer() %}
+				<div>{{ applicationDemande.application.libelle }}</div>
+			{% endif %}
+			{% endfor %}
+		</div> #}
+	</div>
+	<div class="buttons-selection">
+		<form action="" method="POST" onsubmit="return confirm('Confirmation : je confirme avoir bien traité cette demande ?');">
+			<input type="hidden" name="demande_id" value="{{ demande.id }}">
+			<button type="submit" class="btn bouton-crous" >Traiter</button>
+		</form>
+		<a class="trash red-link" href="" onclick="confirm('Corfirmation : je confirme vouloir supprimer toute la demande ?')">Refuser la demande</a>
+	</div>
+	{% endif %}
+</div>
 {% endfor %}
+
+{# APPLICATIONS NON PRIORITAIRES #}
+<h5>Applications non prioritaires</h5>
+{% for demande in demandesOriginales %}
+<div class="large-card-crous">
+	<div class="large-card-title">
+		<div>
+			<strong>{{ demande.user.nom }}</strong> {{ demande.user.prenom }}
+		</div>
+		<em>{{ demande.user.email}}</em> {{ demande.service.getLibelleCourt() }}
+		<div>
+			<em style="font-size: 0.8em;">créée il y a <strong>{{ demande.createdDaysAgo() }}</strong> jour(s)</em>
+		</div>
+	</div>
+	{% if demande.hasAppliDemands() %}
+	<em>Aucune nouvelle application demandée pour cet agent</em>
+	{% else %}
+	<p>Applications demandées par l'agent :</p>
+	<div class="large-card-body">
+		<div class="to-add">
+			<p>Nouveaux droits</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if applicationDemande.needNewAccess() and not applicationDemande.getASupprimer()  %}
+				<div>{{ applicationDemande.application.libelle }}</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+		<div class="to-delete">
+			<p>Droits à supprimer</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if applicationDemande.getASupprimer() %}
+				<div>{{ applicationDemande.application.libelle }}</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+		<div class="to-remain">
+			<p>Droits inchangés</p>
+			<hr>
+			{% for applicationDemande in demande.applications %}
+			{% if not applicationDemande.needNewAccess() and not applicationDemande.getASupprimer() %}
+				<div>{{ applicationDemande.application.libelle }}</div>
+			{% endif %}
+			{% endfor %}
+		</div>
+		<form action="" method="POST" onsubmit="return confirm('Confirmation : je confirme avoir bien traité cette demande ?');">
+			<input type="hidden" name="demande_id" value="{{ demande.id }}">
+			<button type="submit" class="btn bouton-crous" >Traiter</button>
+			<a class="trash red-link" href="">Refuser la demande</a>
+		</form>
+	</div>
+	{% endif %}
+</div>
+{% endfor %}
+
 {% endblock %}
 

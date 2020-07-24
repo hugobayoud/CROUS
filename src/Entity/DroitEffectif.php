@@ -74,9 +74,9 @@ class DroitEffectif
 	}
 
 	public function getDateDeb(): ?\DateTimeInterface
-                      {
-                          return $this->date_deb;
-                      }
+	{
+		return $this->date_deb;
+	}
 
     public function setDateDeb(\DateTimeInterface $date_deb): self
     {
@@ -119,5 +119,6 @@ class DroitEffectif
         $this->nouvelle_echeance = $nouvelle_echeance;
 
         return $this;
-    }
+	}
+	
 }
