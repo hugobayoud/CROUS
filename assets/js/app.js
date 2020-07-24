@@ -13,7 +13,6 @@ let $ = require('jquery')
 require('select2');
 $('select').select2()
 
-
 /* CACHER/MONTRER DETAILS D'UN TABLEAU APRES CLIC et GERER L'AFFICHAGE DE LA LIGNE SELECTIONNEE
  * Utilisé dans tous les tableaux où les lignes ont une detail-box associées
 */

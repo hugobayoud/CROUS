@@ -1,4 +1,5 @@
 <div class="user-demand">
+	{% set noChange = demande.isPrioritaire and app.user.isValidator(service.id) %}
 	<p>Ressources supplémentaires</p>
 	<div style="padding: 0 25px;">
 		<div>
@@ -7,7 +8,8 @@
 					{% if currentPhone is not null %}(actuellement vous possédez le numéro {{ currentPhone }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone (facultatif)" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}">
+			<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone (facultatif)" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}"{% if noChange %} disabled{% endif %}
+			>
 		</div>
 		<div>
 			<label for="mailTo" class="crous-label"><strong>Reçoit les mails de (facultatif)</strong><sup class="exposant">1</sup> : 
@@ -15,7 +17,8 @@
 					{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}">
+			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}"{% if noChange %} disabled{% endif %}
+			>
 		</div>
 		<div>
 			<label for="folders" class="crous-label"><strong>Précisez les répertoires de travail (facultatif)</strong><sup class="exposant">2</sup> : 
@@ -23,7 +26,8 @@
 					{% if currentFolders is not null %}(répertoire(s) actuel(s) : {{ currentFolders }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}">
+			<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}"{% if noChange %} disabled{% endif %}
+			>
 		</div>
 	</div>
 	<div style="padding: 0 25px;">

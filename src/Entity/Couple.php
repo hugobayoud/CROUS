@@ -170,5 +170,35 @@ class Couple
         $this->mail_de = $mail_de;
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Vérifie si un des droits effectifs d'un couple arrive bientôt à terme.
+	 * @return bool
+	 */
+	public function hasRightsFinishedSoon(): bool
+	{
+		foreach ($this->applications as $droit_effectif) {
+			if ($droit_effectif->finishedSoon()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Compte le nombre de droit effectifs qui arrivent bientôt à terme.
+	 * @return int
+	 */
+	public function getRightsFinishedSoon(): int
+	{
+		$count = 0;
+		foreach ($this->applications as $droit_effectif) {
+			if ($droit_effectif->finishedSoon()) {
+				$count++;
+			}
+		}
+		
+		return $count;
+	}
 }

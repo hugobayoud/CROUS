@@ -14,23 +14,24 @@
 	</nav>
 {% endblock %}
 
-{% include "bases/_display-flashes.html.twig" %}
+{# {% include "bases/_display-flashes.html.twig" %} #}
 
-</div>
-{% endfor %}
 
-<div class="cards-crous">
-	{% for service in services %}
-	<div class="card">
-		<span class="notification-badge"><span>{{ service.getNumberDemands0() }}</span></span>
-		<div class="card-body">
-			<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
-			<p class="card-libelle-long">{{ service.libelle_long }}</p>
-			<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
-				Traiter les demandes
+{# </div>
+{% endfor %} #}
+{% block body %}
+	<div class="cards-crous">
+		{% for service in services %}
+		<div class="card">
+			<span class="notification-badge"><span>{{ service.getNumberDemands0() }}</span></span>
+			<div class="card-body">
+				<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
+				<p class="card-libelle-long">{{ service.libelle_long }}</p>
+				<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
+					Traiter les demandes
+				</div>
 			</div>
 		</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
-</div>
 {% endblock %}
