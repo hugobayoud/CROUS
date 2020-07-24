@@ -59,7 +59,7 @@ class Service
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="service", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Demande", mappedBy="service", orphanRemoval=true)
      */
 	private $demandes;
 
@@ -377,6 +377,20 @@ class Service
 			if ($demande->getEtat() === 0) {
 				$count++;
 			}
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Retourne le nombre de droits-effectifs qui arrivent à terme bientôt dans l'ensemble d'un service
+	 * @return int
+	 */
+	public function getCouplesFinishedSoon(): int
+	{
+		$count = 0;
+		foreach ($this->couples as $couple) {
+			$count += $couple->getRightsFinishedSoon();
 		}
 
 		return $count;

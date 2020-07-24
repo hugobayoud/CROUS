@@ -2,70 +2,72 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass=DemandeRepository::class)
- * @UniqueEntity(
- * 		fields={"user_id", "service_id"},
- * 		message="Il existe deja une demande pour cet agent pour ce service en BDD"
- * 	)
+ * @Entity(repositoryClass=DemandeRepository::class)
  */
 class Demande
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+	 * @Id
+     * @GeneratedValue()
+     * @Column(type="integer", unique=true)
      */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="demandes")
-     * @ORM\JoinColumn(nullable=false)
+	 * @ManyToOne(targetEntity="User", inversedBy="demandes")
+     * @JoinColumn(nullable=false)
      */
-    private $user;
+	private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="demandes")
-     * @ORM\JoinColumn(nullable=false)
+	 * @ManyToOne(targetEntity="Service", inversedBy="demandes")
+     * @JoinColumn(nullable=false)
      */
     private $service;
 
     /**
-     * @ORM\Column(type="integer")
+     * @Column(type="integer")
      */
 	private $etat;
 	
     /**
-     * @ORM\Column(type="datetime")
+     * @Column(type="datetime")
      */
 	private $created_at;
 	
     /**
-     * @ORM\OneToMany(targetEntity="ApplicationDemande", mappedBy="demande")
+     * @OneToMany(targetEntity="ApplicationDemande", mappedBy="demande")
      */
 	private $applications;
 
     /**
-     * @ORM\Column(type="string", length=14, nullable=true)
+     * @Column(type="string", length=14, nullable=true)
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Column(type="string", length=255, nullable=true)
      */
     private $repertoires_serveur;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Column(type="string", length=255, nullable=true)
      */
     private $mail_de;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":"0"})
+     * @Column(type="boolean", options={"default":"0"})
      */
     private $prioritaire;
 	

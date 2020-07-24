@@ -27,8 +27,9 @@
 	<tbody class="tbody-crous">
 		{% if users is not empty %}
 			{% for user in users %}
+			{% set couple = user.getCouple(service.id) %}
 			<tr class="vert-middle">
-				<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}">Modifier</a></td>
+				<td><a class="flip pencil{% if couple is not null and couple.hasRightsFinishedSoon() %} yellow-warning{% endif %}" href="#user_detail_{{ loop.index0 }}">Modifier</a></td>
 				<td><strong>{{ user.nom }}</strong></td>
 				<td><strong>{{ user.prenom }}</strong></td>
 				<td>{{ user.email }}</td>
@@ -48,30 +49,35 @@
 <div class="detail-box">
 	{% for user in users %}
 		{% set couple = user.getCouple(service.id) %}
+		{% set demande = user.getDemande(service.id) %}
 		{% set currentPhone = user.getPhoneByService(service.id) %}
 		{% set currentMails = user.getMailsByService(service.id) %}
 		{% set currentFolders = user.getFoldersByService(service.id) %}
 
-		<div class="panel" id="user_detail_{{ loop.index0 }}">
+		<div class="panel" id="user_detail_{{ loop.index0 }}" style="position: relative;">
 			<div class="detail-box-banner">
 				<div class="detail-phrase">
 					Droits effectifs de l'agent <strong>{{ user.prenom }} {{ user.nom }}</strong>
 				</div>
 			</div>
-			{# <div class="form_{{ loop.index0 }}"> #}
 			{% if couple is null %}
 			<em>Cet agent ne possède aucun droit effectif pour le moment</em>
 			{% else %}
 			<form action="" method="post">
 				{% for droit_effectif in couple.applications %}
 					<div class="row droit-effectif-row" id="my_row_{{ user.id }}_{{ loop.index0 }}">
-						<div class="col-md-1"><input class="delete-link trash-check" type="checkbox" name="{{ droit_effectif.id }}" value="s" id="{{ user.id }}_{{ loop.index0 }}" ></div>
-						<div class="col-md-7"><strong>{{ droit_effectif.application.code }}</strong> : {{ droit_effectif.application.libelle }} <span style="float: right;">jusqu'au {{ user.formatDate(droit_effectif.dateFin) }}</span></div>
-						<div class="col-md-2"><input type="button" class="modify-date" id="modify_date_{{ user.id }}_{{ loop.index0 }}" name="{{droit_effectif.id}}" value="Modifier date"></div>
+						<div class="col-md-1">
+							<input class="delete-link trash-check" type="checkbox" name="{{ droit_effectif.id }}" value="s" id="{{ user.id }}_{{ loop.index0 }}"{% if droit_effectif.hasToBeDeleted() %} checked{% endif %}
+							>
+						</div>
+						<div class="col-md-7">
+							<strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }} <span style="float: right;" class="{% if droit_effectif.finishedSoon() %} yellow-warning{% endif %}">jusqu'au {{ user.formatDate(droit_effectif.dateFin) }}</span>
+						</div>
+						<div class="col-md-2">
+							<input type="button" class="modify-date" id="modify_date_{{ user.id }}_{{ loop.index0 }}" name="{{droit_effectif.id}}" value="Modifier date">
+						</div>
 					</div>
 				{% endfor %}
-				
-
 				<div class="user-demand">
 					<p>Ressources supplémentaires</p>
 					<div style="padding: 0 25px;">
@@ -81,7 +87,7 @@
 								<div>numéro actuel : {{ currentPhone }}</div>
 								{% endif %}
 							</label>
-							<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone" value="{{ currentPhone }}">
+							<input type="text" name="phone" id="phone" maxlength="10" placeholder="numéro de téléphone" value="{% if demande.telephone is null %}{% if currentPhone is not null %}{{ currentPhone }}{% endif %}{% else %}{{ demande.telephone }}{% endif %}">
 						</div>
 						<div>
 							<label for="mailTo" class="crous-label"><strong>Reçoit les mails de</strong><sup class="exposant">1</sup> : 
@@ -89,7 +95,7 @@
 								<div>reçoit les mails : {{ currentMails }})</div>
 								{% endif %}
 							</label>
-							<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{{ currentMails }}">
+							<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}">
 						</div>
 						<div>
 							<label for="folders" class="crous-label"><strong>Précisez les répertoires de travail</strong><sup class="exposant">2</sup> : 
@@ -97,7 +103,7 @@
 								<div>répertoire(s) actuel(s) : {{ currentFolders }}</div>
 								{% endif %}
 							</label>
-							<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{{ currentFolders }}">
+							<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}">
 						</div>
 					</div>
 					<div style="padding: 0 25px;">
@@ -116,8 +122,75 @@
 				<input type="hidden" id="endDate" name="endDate" value="{{ user.fullyFormatDate(user.getDateFinValid()) }}">
 			</form>
 			{% endif %}
-			{# </div> #}
+			{% if demande is not null %} {% if demande.isPrioritaire() %}
+			<div class="grey-overlay">
+				<div class="resume-crous">
+					<form action="" method="POST">
+						<h5>Des modifications ont été éffectuées pour cet agent mais n'ont pas encore été traitées par la DSI</h5>
+						<p>Récapitulatif des droits effectifs de l'agent</p>
+						<table class="table-resume">
+							<thead>
+								<th class="title-table">Droit effectif</th>
+								<th class="title-table">Modification à apporter</th>
+							</thead>
+							<tbody>
+								{% for droit_effectif in couple.applications %}
+								<tr>
+									<td>
+										<strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }}
+									</td>
+									<td>
+										{% if droit_effectif.hasToBeDeleted() %}
+										<div class="has-to-be-deleted">
+											Droit en cours de suppression par la DSI <sup>1</sup>
+										</div>
+										{% elseif droit_effectif.hasToBePostponed() %}
+										<div class="has-to-be-postponed">
+											Date repoussée du {{ user.formatDate(droit_effectif.getDateFin()) }} au {{ user.formatDate(droit_effectif.getNouvelleEcheance()) }}
+										</div>
+										{% else %}
+										<div class="no-change">
+											L'agent conserve l'accès jusqu'au {{ user.formatDate(droit_effectif.getDateFin()) }}
+										</div>
+										{% endif %}
+									</td>
+								</tr>
+								{% endfor %}
+								<tr>
+									<th colspan="2" class="title-table subtitle-table"> Ressources supplémentaires</td>
+								</tr>
+								<tr>
+									<td><strong>Téléphone</strong> : {% if currentPhone is null %}aucun{% else %}{{ currentPhone }}{% endif %}</td>
+									<td>{% if demande.telephone is null %}Aucun nouveau numéro{% else %}
+									<strong>nouveau numéro</strong> : {{ demande.telephone }}{% endif %}</td>
+								</tr>
+								<tr>
+									<td><strong>Récoit mail de</strong> : {% if currentMails is null %}personne{% else %}{{ currentMails }}{% endif %}</td>
+									<td>{% if demande.getMailDe() is null %}Aucun nouveau mail{% else %}<strong>nouveau(x) mail(s)</strong> :<br>{{ demande.getMailDe }}{% endif %}</td>
+								</tr>
+								<tr>
+									<td><strong>Accès aux répertoires</strong> : {% if currentFolders is null %}aucun{% else %}{{ currentFolders }}{% endif %}</td>
+									<td>{% if demande.getRepertoiresServeur is null %}Aucun nouveau répertoires{% else %}<strong>nouveau(x) répertoire(s)</strong> :<br>{{ demande.getRepertoiresServeur() }}{% endif %}</td>
+								</tr>
+							</tbody>
+						</table>
+						<ul style="font-size: 0.8em;">
+							<li><em><span style="color: red;">1</span> : Dès lors que la DSI a supprimé ce droit, l'agent n'aura plus aucun accès à cette application dans votre service.</em></li>
+						</ul>
+						
+						<hr>
+						<p class="already-validate">Si les modifications en cours ne vous conviennent pas, veuillez supprimer cette fiche et recommencer.</p>
+						<div class="save-div">
+							<button type="submit" class="save-button" onclick="confirm('Êtes-vous sûr de vouloir suppprimer ces modifications ?');">Je veux supprimer les modifications</button>
+						</div>
+						<div class="warning-text">Si vous choisissez de supprimer les mofications effectuées, la DSI ne traitera plus celles-ci.</div>
+						<input type="hidden" id="supp_{{ loop.index0 }}" name="suppID" value="{{ loop.index0 }}">
+					</form>
+				</div>
+			</div>
+			{% endif %}{% endif %}
 		</div>
+
 	{% endfor %}
 </div>
 {% endblock %}
@@ -126,10 +199,27 @@
 <script>
 	$(document).ready(function(){
 		// En cliquant sur un bouton "SUPPRIMER" pour retirer un droit effectif à un agent
+
+		// document.querySelector('delete-link')?.addEventListener('click', (evt) => {
+		//	const id = evt.target.id
+		//	const row = document.getElementById(`my_row_${id}`)
+		//	const modifyDate = document.getElementById(`modify_date_${id}`)
+
+		//	if (evt.target.checked) {
+		//		row.classList.add("line")
+
+
+		//		row.innerHTML= `<div class="col-md-2 get-delete" id="get-delete_${myID}">à supprimer</div>`
+
+		//		modifyDate.setAttribute('disabled', true);
+		//	}
+		//})
+
 		$('.delete-link').on('click', function(e) {
 			let myID = $(this).attr('id');
 			let myRow = $('#my_row_' + myID);
 			let modifyDate = $('#modify_date_' + myID);
+			//element = $('#my_row_' + myID)
 			element = document.getElementById('my_row_' + myID);
 			
 			if ($(this).is(':checked')) {
@@ -140,7 +230,7 @@
 					$('#date_' + myID).remove();
 				}
 				// Ajouter mot "a supprimer" à la fin de la ligne
-				myRow.append($('<div class="col-md-2 get-delete" id="get-delete_' + myID + '">à supprimer</div>'));
+				myRow.append($(`<div class="col-md-2 get-delete" id="get-delete_${myID}">à supprimer</div>`));
 				// Rendre 'disabled' le bouton "MODIFIER DATE" car le droit va être supprimé
 				modifyDate.attr('disabled', true);
 			} else {

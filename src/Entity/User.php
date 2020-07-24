@@ -117,7 +117,7 @@ class User implements UserInterface
     private $valideurs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Demande::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Demande", mappedBy="user", orphanRemoval=true)
 	 * @ORM\OrderBy({"created_at" = "ASC"})
      */
 	private $demandes;

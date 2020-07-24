@@ -183,7 +183,7 @@ class ValideurController extends AbstractController
 			if (isset($_POST['custId'])) {
 				// On récupère le user
 				$user = $users[$_POST['custId']];
-				// Tous les droits effectifs de l'agent
+				// Le couple associé
 				$couple = $user->getCouple($service->getId());
 				$em = $this->getDoctrine()->getManager();
 
@@ -207,15 +207,64 @@ class ValideurController extends AbstractController
 					}
 				}
 
-				// On ajoute les ressources supplémentaires (formatées) à la demande
-				$demande = new Demande();
-				$demande->setUser($user);
-				$demande->setService($service);
-				$demande->setTelephone(ProtoHelper::formatMyPhoneNumber($_POST['phone']));
-				$demande->setMailDe(ProtoHelper::formatMyMails($_POST['mailTo']));
-				$demande->setRepertoiresServeur(ProtoHelper::formatMyFolders($_POST['folders']));
-				$demande->setPrioritaire(true);
-				// On rend prioritaire la demande associée = l'agent ne peut modifier les ressources supp
+				// On formate les string des ressources supp.
+				$phone = ProtoHelper::formatMyPhoneNumber($_POST['phone']);
+				$mailTo = ProtoHelper::formatMyMails($_POST['mailTo']);
+				$folders = ProtoHelper::formatMyFolders($_POST['folders']);
+
+				// Si aucune modification n'a été apportée aux ressources supp, on ne crée pas de nouvelle demande
+				if ($phone !== $couple->getTelephone() || $mailTo !== $couple->getMailDe() || $folders !== $couple->getRepertoiresServeur()) {
+					$demande = $user->getDemande($service->getId());
+
+					// S'il n'existe pas encore de demande pour ce service pour cet agent en cours on la crée
+					if (is_null($demande)) {
+						$demande = new Demande();
+						// On ajoute le (user, service)
+						$demande->setUser($user);
+						$demande->setService($service);
+					}
+
+					// On ajoute les ressources supplémentaires (formatées) à la demande
+					$demande->setTelephone($phone);
+					$demande->setMailDe($mailTo);
+					$demande->setRepertoiresServeur($folders);
+					// Champs qui ne peuvent être null
+					$demande->setEtat(1);
+					$demande->setCreatedAt(new DateTime('now'));
+					// On rend prioritaire la demande = l'agent ne peut modifier les ressources supp
+					$demande->setPrioritaire(true);
+	
+					$em->persist($demande);
+					$em->flush();
+
+					$this->addFlash('message', "Modifications enregistrées avec succès");
+				}
+			// Si la demande de modification des droits effectifs est supprimée par un valideur
+			} else if (isset($_POST['suppID'])) {
+				// On récupère le user
+				$user = $users[$_POST['suppID']];
+				// Le couple associé
+				$couple = $user->getCouple($service->getId());
+				$em = $this->getDoctrine()->getManager();
+
+				// On supprime les modifications sur les ressources supplémentaires
+				$demande = $user->getDemande($service->getId());
+				$demande->setTelephone(NULL);
+				$demande->setMailDe(NULL);
+				$demande->setRepertoiresServeur(NULL);
+				$demande->setPrioritaire(false);
+				$em->persist($demande);
+				$em->flush();
+
+				// On ne prend plus en compte les modifications faites sur les droits effectifs
+				foreach ($couple->getApplications() as $droit_effectif) {
+					$droit_effectif->setNouvelleEcheance(NULL);
+					$droit_effectif->setStatus(NULL);
+					$em->persist($demande);
+					$em->flush();
+				}
+
+				$this->addFlash('message', "Modifications supprimées avec succès");
 			}
 
 			return $this->render('valideur/revue-droits/service.html.twig', [
@@ -227,5 +276,4 @@ class ValideurController extends AbstractController
 			return $this->redirectToRoute('valideurs.home');
 		}
 	}
-
 }
