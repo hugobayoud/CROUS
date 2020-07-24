@@ -124,37 +124,4 @@ class DroitEffectif
         return $this;
 	}
 	
-	/**
-	 * Vérifie si le droit effectif doit être supprimé de la Base
-	 * @return bool
-	 */
-	public function hasToBeDeleted(): bool
-	{
-		return $this->status === 's';
-	}
-
-	/**
-	 * Vérifie si le droit effectif voit son échéance repoussée.
-	 * @return bool
-	 */
-	public function hasToBePostponed(): bool
-	{
-		return ($this->status === 'c' && !is_null($this->nouvelle_echeance));
-	}
-
-	/**
-	 * Retourne si ce droit effectif arrive bientôt à terme. Lit un fichier conf qui donne le nombre de jours
-	 * @return bool
-	 */
-	public function finishedSoon(): bool
-	{
-		$now = new DateTime('now');
-		// On calcule le nombre de jour de différence (on ne prend pas la valeur absolue. Si la date est passée, on doit le notifier)
-		$days = intval(date_diff($now, $this->date_fin)->format('%r%a'));
-		if ($days < self::DAYS_BEFORE) {
-			return true;
-		}
-
-		return false;
-	}
 }

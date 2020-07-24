@@ -186,9 +186,9 @@ class Demande
 	 * @return int
 	 */
 	public function createdDaysAgo(): int
-         	{
-         		return (int)$this->created_at->diff(new DateTime('now'))->format('d'); 
-         	}
+	{
+		return (int)$this->created_at->diff(new DateTime('now'))->format('%a'); 
+	}
 
     public function getMailDe(): ?string
     {
@@ -217,5 +217,15 @@ class Demande
         $this->prioritaire = $prioritaire;
 
         return $this;
-    }
+	}
+	
+	/**
+	 * Vérifier si il y a bien des application_demande pour cette demande-ci
+	 * /!\ : pas d'application_demande ne veut pas dire que la demande ne devrait pas exister, il y a ressources supplémentaires qui peuvent avoir changées
+	 * @return bool
+	 */
+	public function hasAppliDemands(): bool
+	{
+		return $this->applications->isEmpty();
+	}
 }
