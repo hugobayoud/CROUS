@@ -732,4 +732,22 @@ class User implements UserInterface
 		}
 		return NULL;	
 	}
+
+	/**
+	 * Retourne le nombre total de droits effectifs qui vont bientôt se terminer dans tous les services dans lesquels l'user est valideur
+	 * @return int
+	 */
+	public function getTotalFinishedSoon(): int
+	{
+		$count = 0;
+		
+		foreach ($this->services as $service) {
+			if($this->isValidator($service->getId())) {
+				$count += $service->getCouplesFinishedSoon();
+			}
+		}
+
+		return $count;
+	}
+
 }

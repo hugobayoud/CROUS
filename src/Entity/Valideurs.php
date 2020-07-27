@@ -52,5 +52,4 @@ class Valideurs
 		$endDate = isset($_POST['endDate']) ? DateTime::createFromFormat("d/m/Y H:i:s", $_POST['endDate']) : NULL;
 		DateHelper::validateMyDates($this->valideurs, $context, $endDate);
 	}
-
 }

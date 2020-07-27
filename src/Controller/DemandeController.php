@@ -173,18 +173,18 @@ class DemandeController extends AbstractController
 									
 					// SUPPRESION EN BASE DES ANCIENNES DEMANDES DAPPLICATION FAITE PAR LAGENT
 					// POUR LES REMPLACER PAR CELLE VALIDES PAR LE VALIDEUR
-					foreach ($demandes[$index]->getApplications() as $applicationDemande) {
-						$em->remove($applicationDemande);
+					foreach ($demandes[$index]->getApplications() as $application_demande) {
+						$em->remove($application_demande);
 						$em->flush();
 					}
 		
 					// AJOUT EN BASE DES NOUVELLES PERIODES
-					foreach ($form->getData()->getApplicationDemandes() as $applicationDemande) {
-						$applicationDemande->setDemande($demandes[$index]);
-						$applicationDemande->getDateFin()->setTime(23, 59, 59);
-						$applicationDemande->setASupprimer(false);
+					foreach ($form->getData()->getApplicationDemandes() as $application_demande) {
+						$application_demande->setDemande($demandes[$index]);
+						$application_demande->getDateFin()->setTime(23, 59, 59);
+						$application_demande->setASupprimer(false);
 
-						$em->persist($applicationDemande);
+						$em->persist($application_demande);
 						$em->flush();
 					}
 
@@ -236,6 +236,7 @@ class DemandeController extends AbstractController
 		$demandes = $demandRepo->findBy(['etat' => 1]);
 
 		// On tri les demandes en deux groupes (cf. doc au dessus de la signature)
+		$demandesOriginales = $demandesPrioritaires = [];
 		foreach ($demandes as $demande) {
 			if ($demande->isPrioritaire()) {
 				$demandesPrioritaires[] = $demande;
@@ -245,8 +246,8 @@ class DemandeController extends AbstractController
 		}
 
 		if (isset($_POST['demande_id'])) {
-			// Pour les applications dans "droits à ajouter", on les ajoutent en base droitEffectif
-			// Pour les applications dans "droits à supprimer", on les enlève de la base droitEffectif si elles existaient bien avant
+			// Pour les applications dans "droits à ajouter", on les ajoute en base le droit effectif
+			// Pour les applications dans "droits à supprimer", on les enlève de la base le droit effectif si elles existaient bien avant
 			// Pour les applications dans "droits inchangés", on ne touche à rien
 			$demande = $demandRepo->findOneBy(['id' => $_POST['demande_id']]);
 			$user = $demande->getUser();
@@ -259,35 +260,48 @@ class DemandeController extends AbstractController
 				$couple = new Couple();
 				$couple->setUser($user);
 				$couple->setService($service);
-				$em->persist($couple);
-				$em->flush();
 			}
+			
+			// On associe les nouvelles ressources supplémentaires à la demande
+			$couple->setTelephone($demande->getTelephone());
+			$couple->setMailDe($demande->getMailDe());
+			$couple->setRepertoiresServeur($demande->getRepertoiresServeur());
+			$em->persist($couple);
+			$em->flush();
 
-			foreach ($demande->getApplications() as $applicationDemande) {
-				if ($applicationDemande->needNewAccess() && !$applicationDemande->getASupprimer()) {
-					$droitEffectif = new DroitEffectif();
-					$droitEffectif->setCouple($couple);
-					$droitEffectif->setApplication($applicationDemande->getApplication());
-					$droitEffectif->setDateDeb($applicationDemande->getDateDeb());
-					$droitEffectif->setDateFin($applicationDemande->getDateFin());
-
-					$em->persist($droitEffectif);
-					$em->flush();
-				} else if ($applicationDemande->getASupprimer()) {
-					foreach ($couple->getApplications() as $droitEffectif) {
-						if ($droitEffectif->getApplication() === $applicationDemande->getApplication()) {
-							$em->remove($droitEffectif);
-							$em->flush();
-						}
-					}
+			// Pour chaque droit effectif, on supprime s'il est a supprimer, on change la date de fin si elle est a changer
+			foreach ($couple->getApplications() as $droit_effectif) {
+				if ($droit_effectif->hasToBeDeleted()) {
+					$em->remove($droit_effectif);
+				} else if ($droit_effectif->hasToBePostponed()) {
+					$droit_effectif->setDateFin($droit_effectif->getNouvelleEcheance());
+					$droit_effectif->setNouvelleEcheance(NULL);
+					$droit_effectif->setStatus(NULL);
+					$em->persist($droit_effectif);
 				}
-				
-				// On supprime toutes les lignes dans application_demande car les droits ont bien été traités.
-				$em->remove($applicationDemande);
 				$em->flush();
 			}
 
+			// Application provenant de la demande qui sont obligatoirement à ajouter comme droit effectif
+			foreach ($demande->getApplications() as $application_demande) {
+				$droit_effectif = new DroitEffectif();
+				$droit_effectif->setCouple($couple);
+				$droit_effectif->setApplication($application_demande->getApplication());
+				$droit_effectif->setDateDeb($application_demande->getDateDeb());
+				$droit_effectif->setDateFin($application_demande->getDateFin());
+				
+				// On supprime l'application_demande car le droit associé a bien été traité
+				$em->remove($application_demande);
+				$em->flush();
+			}
+
+			// On passe la demande à l'état 2 (traitée par la DSI)
 			$demande->setEtat(2);
+			// On enlève les ressources supplémentaires de la demande qui ont bien été traitées
+			$demande->setTelephone(NULL);
+			$demande->setMailDe(NULL);
+			$demande->setRepertoiresServeur(NULL);
+			$demande->setPrioritaire(0);
 			$em->persist($demande);
 			$em->flush();
 

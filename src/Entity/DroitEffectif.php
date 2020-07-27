@@ -143,6 +143,15 @@ class DroitEffectif
 	}
 
 	/**
+	 * Si le droit reste inchangés, ni supprimé, ni date repoussée
+	 * @return bool
+	 */
+	public function hasToRemain(): bool
+	{
+		return (!$this->hasToBeDeleted() && !$this->hasToBePostponed());
+	}
+
+	/**
 	 * Retourne si ce droit effectif arrive bientôt à terme. Lit un fichier conf qui donne le nombre de jours
 	 * @return bool
 	 */

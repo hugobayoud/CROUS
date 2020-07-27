@@ -10,6 +10,11 @@
 	--subnavbar-min-height: 70px;
 }
 
+/* Classes très génériques */
+.crous-color {
+	color: rgb(227, 6, 19);
+}
+
 /* MESSAGE ALERTE / FLASH */
 .flash-crous {
 	position: relative;
@@ -902,46 +907,72 @@ sup {
 	width: 100%;
 	min-height: 150px;
 	margin: 20px 0;
-	padding: 0;
 	background-color: rgba(235, 235, 235, 0.767);
 	border: 1px solid grey;
+}
+
+.large-card-crous > p, .large-card-crous > em {
+	font-size: 1.1em;
 }
 
 .large-card-title {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	padding: 5px 15px;
 	font-size: 1.1em;
+	line-height: 1.6em;
+	padding: 0 10px;
 	color: white;
 	background-color: rgb(227, 6, 19);
 }
 
-.large-card-crous > p:first-child {
-	margin: 0;
-	padding: 5px 15px;
-	background-color: lightgrey;
+.large-card-body {
+	padding: 0 15px 15px 15px;
 }
 
-.large-card-body {
+.large-card-grid {
 	display: grid;
     grid-template-columns: repeat(3, 1fr);
 	grid-gap: 5px;
-	padding: 0 15px;
 	margin: 10px 0;
 }
 
-.large-card-body > div {
-	border: 1px solid grey;
+.large-card-new-demands {
+	margin: 0 0 40px 0;
+	padding: 0 15px;
 }
 
-.to-add, .to-delete, .to-remain {
+.large-card-new-demands div span:first-child {
+	float: left;
+}
+
+.large-card-new-demands div span:last-child {
+	float: right;
+}
+
+.large-card-new-demands div {
+	clear: both;
+}
+
+.large-card-grid > div {
+	padding: 0 15px 10px 15px;
+	border: 1px solid lightgrey;
+}
+
+.large-card-grid > div > p:first-child {
+	text-align: center;
+	justify-content: center;
+	font-size: 1.1em;
+	border-bottom: 1px solid rgba(211, 211, 211, 0.726);
+}
+
+/* .to-add, .to-delete, .to-remain {
 	text-align: center;
 	padding: 10px;
 	font-weight: 600;
-}
+} */
 
-.to-add > div {
+/* .to-add > div {
 	color: green;
 } 
 
@@ -951,12 +982,24 @@ sup {
 
 .to-remain > div {
 	color: grey;
-}
+} */
 
 .buttons-selection {
 	display: flex;
 	justify-content: space-around;
-	padding: 15px;
+}
+
+.ressources-supp {
+	margin: 5px 0 30px 0;
+	padding: 0 15px;
+}
+
+.crous-title {
+	font-weight: 500;
+	margin: 10px 0;
+	font-size: 1.8em;
+	text-transform: uppercase;
+	text-decoration: underline;
 }
 
 /* CONSULATION DES DROITS EFFETIFS PAR L'ADMIN */

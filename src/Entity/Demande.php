@@ -218,14 +218,4 @@ class Demande
 
         return $this;
 	}
-	
-	/**
-	 * Vérifier si il y a bien des application_demande pour cette demande-ci
-	 * /!\ : pas d'application_demande ne veut pas dire que la demande ne devrait pas exister, il y a ressources supplémentaires qui peuvent avoir changées
-	 * @return bool
-	 */
-	public function hasAppliDemands(): bool
-	{
-		return $this->applications->isEmpty();
-	}
 }

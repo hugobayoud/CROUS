@@ -1,0 +1,25 @@
+<p class="subtitle-table">Nouvelles applications demandées</p>
+<div class="large-card-new-demands">
+	{% if demande.applications is empty %}
+	<em>Aucune nouvelle application demandée pour cet agent</em>
+	{% else %}
+	{% for application_demande in demande.applications %}
+		<div><span><strong>{{ application_demande.application.code }}</strong> : {{ application_demande.application.libelle }}</span><span>du {{ application_demande.getDateDeb()|date("m/d/Y") }} au {{ application_demande.getDateFin()|date("m/d/Y") }}</span></div>
+	{% endfor %}
+	{% endif %}
+</div>
+<p class="subtitle-table" style="clear: both;">Ressources supplémentaires</p>
+<div class="ressources-supp">
+	<div>{% if couple %}<strong>numéro actuel</strong> : {{ couple.getTelephone() ?: 'aucun' }}<br>{% endif %}<strong>nouveau numéro</strong> : {{ demande.getTelephone() ?: 'aucun' }}</div>
+	<hr>
+	<div>{% if couple %}<strong>mail(s) actuel(s)</strong> : {{ couple.getMailDe() ?: 'aucun' }}<br>{% endif %}<strong>nouveau(x) mail(s)</strong> : {{ demande.getMailDe() ?: 'aucun' }}</div>
+	<hr>
+	<div>{% if couple %}<strong>répertoire(s) actuel(s)</strong> : {{ couple.getRepertoiresServeur() ?: 'aucun' }}<br>{% endif %}<strong>nouveau(x) répertoire(s)</strong> : {{ demande.getRepertoiresServeur() ?: 'aucun' }}</div>
+</div>
+<div class="buttons-selection">
+	<form action="" method="POST" onsubmit="return confirm('Confirmation : je confirme avoir bien traité cette demande ?');">
+		<input type="hidden" name="demande_id" value="{{ demande.id }}">
+		<button type="submit" class="btn bouton-crous" >Traiter</button>
+	</form>
+	<a class="trash red-link" href="" onclick="confirm('Confirmation : je confirme vouloir supprimer toute la demande ?')">Refuser la demande</a>
+</div>

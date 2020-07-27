@@ -35,6 +35,7 @@ class ValideurController extends AbstractController
 
 		return $this->render('valideur/index.html.twig', [
 			'demandsState0' => $user->getNumberToApprove(),
+			'finishedSoon' => $user->getTotalFinishedSoon()
 		]);
 	}
 

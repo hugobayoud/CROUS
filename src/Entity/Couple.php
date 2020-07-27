@@ -156,9 +156,9 @@ class Couple
 	}
 	
 	public function __toString()
-         	{
-         		return $this->user->getNom();
-         	}
+	{
+		return $this->user->getNom();
+	}
 
     public function getMailDe(): ?string
     {

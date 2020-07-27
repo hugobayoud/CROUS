@@ -197,6 +197,11 @@
 
 {% block javascripts %}
 <script>
+    if (window.history.replaceState) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+<script>
 	$(document).ready(function(){
 		// En cliquant sur un bouton "SUPPRIMER" pour retirer un droit effectif à un agent
 
@@ -230,7 +235,7 @@
 					$('#date_' + myID).remove();
 				}
 				// Ajouter mot "a supprimer" à la fin de la ligne
-				myRow.append($(`<div class="col-md-2 get-delete" id="get-delete_${myID}">à supprimer</div>`));
+				myRow.append($(`<div class="col-md-2 get-delete" id="get-delete_${myID}">supprimer immédiatement</div>`));
 				// Rendre 'disabled' le bouton "MODIFIER DATE" car le droit va être supprimé
 				modifyDate.attr('disabled', true);
 			} else {
