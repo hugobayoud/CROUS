@@ -1,0 +1,83 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des demandes pour la DSI</h1> 
+			<p>
+				<em>Ici s'affiche les demandes validée par un valideur du service (état 1). Veuillez notifier que cette demande à bien été prise en compte par un DSI en appuyant sur le bouton "Traiter".</a></em>
+			</p>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+{% include "bases/_display-flashes.html.twig" %}
+
+{# APPLICATIONS PRIORITAIRES #}
+{% if demandesPrioritaires is not empty %}
+	<h1 class="crous-color crous-title">Demandes prioritaires</h1>
+	<h5>Demandes de mofications des droits effectifs par le responsable d'un service</h5>
+	{% for demande in demandesPrioritaires %}
+	{% set couple = demande.user.getCouple(demande.service.id) %}
+	<div class="large-card-crous">
+		{% include "admin/gestion-demandes/_demande-title.html.twig" %}
+		<div class="large-card-body">
+			<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
+			<p class="subtitle-table">Droits effectifs avec modification</p>
+			<div class="large-card-grid">
+				<div>
+					<p class="has-to-be-postponed">Date à modifier</p>
+					{% for droit_effectif in couple.applications %}
+					{% if droit_effectif.hasToBePostponed() %}
+						<div><strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }}</div>
+						<div><em>désormais jusqu'au</em> <strong>{{ droit_effectif.getNouvelleEcheance()|date("m/d/Y") }}</strong></div>
+					{% endif %}
+					{% endfor %}
+				</div>
+				<div>
+					<p class="has-to-be-deleted">Droit à supprimer</p>
+					{% for droit_effectif in couple.applications %}
+					{% if droit_effectif.hasToBeDeleted() %}
+						<div><strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }} : {{ droit_effectif.application.getLibelleLong() }}</div>
+					{% endif %}
+					{% endfor %}
+				</div>
+				<div>
+					<p class="no-change">Droit inchangé</p>
+					{% for droit_effectif in couple.applications %}
+					{% if droit_effectif.hasToRemain() %}
+						<div><strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }} : {{ droit_effectif.application.getLibelleLong() }}</div>
+					{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+			{% include "admin/gestion-demandes/_nouvelles-demandes.html.twig" %}
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+
+{# APPLICATIONS NON PRIORITAIRES #}
+{% if demandesOriginales is not empty %}
+	<h1 class="crous-color crous-title">Demandes non prioritaires</h1>
+	<h5>Demandes pour tous les nouveaux droits effectifs à traiter</h5>
+	{% for demande in demandesOriginales %}
+	{% set couple = demande.user.getCouple(demande.service.id) %}
+	<div class="large-card-crous">
+		{% include "admin/gestion-demandes/_demande-title.html.twig" %}
+		<div class="large-card-body">
+			<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
+			{% include "admin/gestion-demandes/_nouvelles-demandes.html.twig" %}
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% endblock %}
+

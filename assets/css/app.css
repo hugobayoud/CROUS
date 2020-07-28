@@ -15,6 +15,10 @@
 	color: rgb(227, 6, 19);
 }
 
+.no-border {
+	border: none;
+}
+
 /* MESSAGE ALERTE / FLASH */
 .flash-crous {
 	position: relative;

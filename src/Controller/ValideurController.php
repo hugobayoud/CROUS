@@ -33,10 +33,7 @@ class ValideurController extends AbstractController
 			return $this->redirectToRoute('home');
 		}
 
-		return $this->render('valideur/index.html.twig', [
-			'demandsState0' => $user->getNumberToApprove(),
-			'finishedSoon' => $user->getTotalFinishedSoon()
-		]);
+		return $this->render('valideur/index.html.twig');
 	}
 
 	/**
@@ -72,6 +69,8 @@ class ValideurController extends AbstractController
 
 	/**
 	 * Page de gestion des valideurs pour modification des droits en tant que valideur d'un service
+	 * Un DSI peut se mettre des droits valideur
+	 * Un valideur qui n'est pas DSI ne peut pas s'ajouter des droits valideur
 	 * 
      * @Route("/gestion/valideurs/{id}", name="gestion-valideurs.service")
     */
@@ -80,8 +79,13 @@ class ValideurController extends AbstractController
 		$currentUser = $this->getUser();
 
 		if ($currentUser->isAdmin() || $currentUser->isDSI() || $currentUser->isValidator($service->getId())) {
-			// On récupère les agents de ce service (dont leur compte ont été validé)
-			$users = $service->getValidatedUsers();
+			if ($currentUser->isDSI()) {
+				// On récupère les agents de ce service (dont leur compte ont été validé)
+				$users = $service->getValidatedUsers();
+			} else {
+				// Si il n'est pas DSI, on enleve l'user du tableau
+				$users = $service->getValidatedUsers($currentUser);
+			}
 			$forms = [];
 
 			foreach ($users as $user) {

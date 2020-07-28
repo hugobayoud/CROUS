@@ -1,0 +1,18 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('admin.gestion-services.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Créer un nouveau service</h1>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+	{% include "admin/gestion-services/_form.html.twig" %}
+
+{% endblock %}

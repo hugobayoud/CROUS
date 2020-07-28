@@ -1,0 +1,45 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{# {% macro printDsiForm(dsiForm) %}
+<div class="row form-row-center row-flex">
+	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
+</div>
+{% endmacro %} #}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Consultation des droits effectifs</h1> 
+			<p>
+				<em>Consulter les droits en cours pour chaque agent du CROUS</em>
+			</p>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+{# {% include "bases/_research-form.html.twig" %} #}
+<a href="{{ path('toPDF-droits-effetifs') }}" target="_blank" class="to-print">Imprimer</a>
+
+{% if users is empty %}
+	<div>
+		Il semble qu'il n'y ait aucun droit effectif....
+	</div>
+{% else %}
+	{% for user in users %}
+	<div class="user-access-box">
+		{{ user.userInfo_html() | raw }}
+
+		{{ user.droitsEffectifs_html() | raw }}
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% endblock %}
+

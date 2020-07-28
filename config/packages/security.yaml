@@ -37,6 +37,8 @@ security:
     access_control:
         - { path: ^/connexion$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/dsi, roles: ROLE_DSI }
+        - { path: ^/valideur/gestion/valideurs$, roles: ROLE_USER }
         - { path: ^/agent, roles: ROLE_USER }
     
     role_hierarchy:

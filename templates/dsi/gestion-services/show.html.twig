@@ -1,0 +1,44 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('admin.gestion-services.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Service {{ service.libelleCourt }}</h1>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<table class="table">
+	<tbody>
+		<tr>
+			<th>Code</th>
+			<td>{{ service.code }}</td>
+		</tr>
+		<tr>
+			<th>Libellé court</th>
+			<td>{{ service.libelleCourt }}</td>
+		</tr>
+		<tr>
+			<th>Libellé long</th>
+			<td>{{ service.libelleLong }}</td>
+		</tr>
+		<tr>
+			<th>Nombre d'agents rattachés à ce service</th>
+			<td>{{ service.getNumberOfAgentsLinked() }}</td>
+		</tr>
+		<tr>
+			<th>Nombre de demandes dans ce service</th>
+			<td>{{ service.getNumberOfDemandsLinked() }}</td>
+		</tr>
+
+	</tbody>
+</table>
+
+<footer class="table-footer">
+	<a class="edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
+</footer>
+{% endblock %}

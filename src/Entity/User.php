@@ -284,11 +284,16 @@ class User implements UserInterface
     {
 		$roles = $this->roles;
 		
+		$roles[] = 'ROLE_USER';
+		
 		if ($this->isDSI()) {
-			$roles[] = 'ROLE_ADMIN';
+			$roles[] = 'ROLE_DSI';
+		}
+
+		if ($this->isAValidator()) {
+			$roles[] = 'ROLE_A_VALIDATOR';
 		}
 		
-        $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
 	}
@@ -484,7 +489,6 @@ class User implements UserInterface
 
         return $this;
 	}
-
 	
     /**
      * @return Collection|Couple[]
@@ -533,11 +537,12 @@ class User implements UserInterface
 
 	/**
 	 * Retourne si l'agent est un administrateur du site ou non
+	 * L'ajout du rôle administrateur ne se fait qu'en base de données
 	 * @return bool
 	 */
 	public function isAdmin(): bool
 	{
-		return in_array('ROLE_ADMIN', $this->getRoles());
+		return in_array('ROLE_ADMIN', $this->roles);
 	}
 	
 	/**
@@ -557,28 +562,15 @@ class User implements UserInterface
 	}
 
 	/**
-	 * Retourne la date de fin de dsi formatée si l'user est ACTUELLEMENT DSI, sinon, renvoie " "
-	 * @return string
-	 */
-	public function getDateEndDSI(): string
-	{
-		if ($this->isDSI()) {
-			return $this->formatDate($this->dsis[0]->getDateFin());
-		} else {
-			return " ";
-		}
-	}
-
-	/**
-	 * Retourne si l'agent est actuellement Valideur ou non
+	 * Retourne si l'agent est actuellement valideur d'un service ou non
 	 * @return bool : valideur ou non
 	 */
 	public function isValidator(int $serviceId): bool 
 	{
-		$currentDate = new DateTime('now');
+		$now = new DateTime('now');
 		foreach ($this->valideurs as $valideur) {
 			if ($valideur->getService()->getId() === $serviceId) {
-				if ($currentDate >= $valideur->getDateDeb() && $currentDate <= $valideur->getDateFin()) {
+				if ($now >= $valideur->getDateDeb() && $now <= $valideur->getDateFin()) {
 					return true;
 				}
 			}
@@ -593,8 +585,9 @@ class User implements UserInterface
 	 */
 	public function isAValidator()
 	{
-		foreach ($this->services as $service) {
-			if ($this->isValidator($service->getId())) {
+		$now = new DateTime('now');
+		foreach ($this->valideurs as $valideur) {
+			if ($now >= $valideur->getDateDeb() && $now <= $valideur->getDateFin()) {
 				return true;
 			}
 		}
@@ -603,23 +596,24 @@ class User implements UserInterface
 	}
 
 	/** 
-	 * retourne le nombre de demandes que peut valider un user en tant que valideur
+	 * Retourne le nombre de demandes en cours que doit valider un valideur d'un service
 	 * @return int
 	 */
-	public function getNumberToApprove()
+	public function countToValidate()
 	{
-		$countMe = 0;
+		$count = 0;
 
 		foreach ($this->services as $service) {
 			if ($this->isValidator($service->getId())) {
 				foreach ($service->getDemandes() as $demande) {
 					if ($demande->getEtat() === 0) {
-						$countMe++;
+						$count++;
 					}
 				}
 			}
 		}
-		return $countMe;
+
+		return $count;
 	}
 
 	/* TO HTML FUNCTIONS */
@@ -737,17 +731,16 @@ class User implements UserInterface
 	 * Retourne le nombre total de droits effectifs qui vont bientôt se terminer dans tous les services dans lesquels l'user est valideur
 	 * @return int
 	 */
-	public function getTotalFinishedSoon(): int
+	public function countFinishedSoon(): int
 	{
 		$count = 0;
 		
 		foreach ($this->services as $service) {
 			if($this->isValidator($service->getId())) {
-				$count += $service->getCouplesFinishedSoon();
+				$count += $service->countFinishedSoon();
 			}
 		}
 
 		return $count;
 	}
-
 }
