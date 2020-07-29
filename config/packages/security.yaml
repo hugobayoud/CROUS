@@ -25,6 +25,7 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
+            access_denied_handler: App\Security\AccessDeniedHandler
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -43,4 +44,4 @@ security:
     
     role_hierarchy:
         ROLE_DSI: ROLE_USER
-        ROLE_ADMIN: ROLE_DSI
+        ROLE_ADMIN: ROLE_DSI, ROLE_A_VALIDATOR

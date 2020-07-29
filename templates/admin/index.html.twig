@@ -12,44 +12,10 @@
 {% block body %}
 <div class="info-box">
 	<div class="card">
-		<a href="{{ path('admin.gestion-nouveaux-comptes') }}">
-			<span class="notification-badge"><span>{{ newAccounts }}</span></span>
-			<img class="card-vignette" src="/ressource/vignettes/gestion-nouveaux-comptes.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des nouveaux comptes
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="{{ path('admin.gestion-demandes') }}">
-			<span class="notification-badge"><span>{{ demandsState1 }}</span></span>
-			<img class="card-vignette" src="/ressource/vignettes/admin-gestion-demandes.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des demandes
-			</div>
-		</a>
-	</div>
-	<div class="card">
 		<a href="{{ path('admin.gestion-dsis') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-dsis.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
 				Gestion des fonctions DSI
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="{{ path('admin.gestion-utilisateurs') }}">
-			<img class="card-vignette" src="/ressource/vignettes/gestion-utilisateurs.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des utilisateurs
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="{{ path('valideur.gestion-valideurs.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des valideurs
 			</div>
 		</a>
 	</div>
@@ -70,10 +36,10 @@
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('admin.consultation-droits.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/consultation-droits-effectifs.jpg" alt="Card image cap">
+		<a href="{{ path('valideur.gestion-valideurs.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/connaitre-valideurs.jpg" alt="image pour connaitre les valideurs des services">
 			<div class="text-center card-crous-body">
-				Consultation des droits effectifs
+				Gestion des valideurs
 			</div>
 		</a>
 	</div>

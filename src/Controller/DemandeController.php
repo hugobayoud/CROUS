@@ -222,13 +222,13 @@ class DemandeController extends AbstractController
 	}
 
 	/**
-	 * Affichage de toutes les demandes à traiter pour un admin/dsi (état 1 -> état 2)
+	 * Affichage de toutes les demandes à traiter pour un dsi (état 1 -> état 2)
 	 * Il y a n"anmoins deux types de demandes à l'état 1 :
 	 * 		- la demande qui est validée par un valideur qui va faire l'objet de tout nouveaux droits effectifs pour l'agent
 	 * 		- la demande qui provient de modifications par un valideur sur des droits effectifs déjà effectifs
 	 * La différence entre les deux se tient sur le champ "prioritaire" dans la table DEMANDE
 	 *  
-	 * @Route("/admin/gestion-demandes", name="admin.gestion-demandes")
+	 * @Route("/dsi/gestion-demandes", name="dsi.gestion-demandes")
 	 */
 	public function administerDemandsDSI(DemandeRepository $demandRepo, CoupleRepository $coupleRepo)
 	{
@@ -306,10 +306,10 @@ class DemandeController extends AbstractController
 			$em->flush();
 
 			$this->addFlash('message', 'Droits correctement modifiés pour l\'agent ' . $user->getPrenom() . ' ' . $user->getNom());
-			return $this->redirectToRoute('admin.gestion-demandes');
+			return $this->redirectToRoute('dsi.gestion-demandes');
 		}
 
-		return $this->render('admin/gestion-demandes/index.html.twig', [
+		return $this->render('dsi/gestion-demandes/index.html.twig', [
 			'demandesPrioritaires' => $demandesPrioritaires,
 			'demandesOriginales' => $demandesOriginales
 		]);

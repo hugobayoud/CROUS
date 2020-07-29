@@ -14,10 +14,13 @@ use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/valideur", name="valideur.")
+ * 
+ * @IsGranted("ROLE_A_VALIDATOR")
  */
 class ValideurController extends AbstractController
 {
@@ -39,7 +42,7 @@ class ValideurController extends AbstractController
 	/**
 	 * On affiche tous les services de l'user et il choisit dans quel service il souhaite faire une modification de valideur
 	 * Trois types de personnes :
-	 * 		- C'est un admin ou un dsi en cours => il peut aller dans tous les services et nommer n'importe quel agent de ce service valideur
+	 * 		- C'est un dsi en cours => il peut aller dans tous les services et nommer n'importe quel agent de ce service valideur
 	 * 		- C'est un agent mais il a le pouvoir valideur en cours dans ce service alors il peut promouvoir qui il souhaite valideur
 	 * 		- C'est un agent et il n'a pas de pouvoir valideur mais il peut regarder qui est valideur sans rien pouvoir modifier
 	 * 
@@ -54,7 +57,7 @@ class ValideurController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($user->isAdmin() || $user->isDSI()) {
-			// Si l'user est un admin ou un dsi en cours alors il a accès à tous les services, qu'il soit valideur ou non
+			// Si l'user est DSI alors il a accès à tous les services, qu'il soit valideur ou non
 			$services = $serviceRepo->findSearch($data);
 		} else {
 			// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)

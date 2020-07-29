@@ -100,7 +100,7 @@ class SecurityController extends AbstractController
 		$em->persist($user);
 		$em->flush();
 
-		return $this->redirectToRoute('admin.gestion-nouveaux-comptes');
+		return $this->redirectToRoute('dsi.gestion-nouveaux-comptes');
 	}
 
 	/**

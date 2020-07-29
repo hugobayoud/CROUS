@@ -1,5 +1,5 @@
 <div class="user-demand">
-	{% if demande %}{% set noChange = demande.isPrioritaire() and app.user.isValidator(service.id) %}{% endif %}
+	{% set noChange = demande.isPrioritaire() and app.user.isValidator(service.id) %}
 	<p>Ressources supplémentaires</p>
 	<div style="padding: 0 25px;">
 		<div>
@@ -17,7 +17,15 @@
 					{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="{% if demande and demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else if demande %}{{ demande.MailDe }}{% endif %}"{% if noChange %} disabled{% endif %}
+			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="
+			{% if demande.MailDe is null %}
+				{% if currentMails is not null %}
+					{{ currentMails }}
+				{% endif %}
+			{% else %}
+				{{ demande.MailDe }}
+			{% endif %}"
+			{% if noChange %} disabled{% endif %}
 			>
 		</div>
 		<div>

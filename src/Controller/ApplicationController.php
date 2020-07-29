@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Entity\Application;
 use App\Form\ApplicationType;
 use App\Repository\ApplicationRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/admin/gestion-applications", name="admin.gestion-applications.")
+ * 
+ * @IsGranted("ROLE_ADMIN")
  */
 class ApplicationController extends AbstractController
 {

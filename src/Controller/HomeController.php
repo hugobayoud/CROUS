@@ -24,8 +24,10 @@ class HomeController extends AbstractController
 		if (is_null($user)) {
 			return $this->redirectToRoute('security.login');
 		} else {
-			if ($user->isAdmin() || $user->isDSI()) {
+			if ($user->isAdmin()) {
 				return $this->redirectToRoute('admin.home');
+			} else if ($user->isDSI()) {
+				return $this->redirectToRoute('dsi.home');
 			} else if ($user->isAValidator()) {
 				return $this->redirectToRoute('valideur.home');
 			} else {

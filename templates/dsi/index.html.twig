@@ -4,7 +4,7 @@
 	<nav class="subnavbar-crous">
 		<h1>Bonjour</h1>
 		<p>
-			<em>Vous êtes connectés en tant qu'administrateur.</em>
+			<em>Vous êtes connectés en tant que DSI</em>
 		</p>
 	</nav>
 {% endblock %}
@@ -12,8 +12,8 @@
 {% block body %}
 <div class="info-box">
 	<div class="card">
-		<a href="{{ path('admin.gestion-nouveaux-comptes') }}">
-			<span class="notification-badge"><span>{{ newAccounts }}</span></span>
+		<a href="{{ path('dsi.gestion-nouveaux-comptes') }}">
+			<span class="notification-badge"><span>{{ countNewAccounts }}</span></span>
 			<img class="card-vignette" src="/ressource/vignettes/gestion-nouveaux-comptes.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
 				Gestion des nouveaux comptes
@@ -21,8 +21,8 @@
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('admin.gestion-demandes') }}">
-			<span class="notification-badge"><span>{{ demandsState1 }}</span></span>
+		<a href="{{ path('dsi.gestion-demandes') }}">
+			<span class="notification-badge"><span>{{ countDemands1 }}</span></span>
 			<img class="card-vignette" src="/ressource/vignettes/admin-gestion-demandes.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
 				Gestion des demandes
@@ -30,15 +30,15 @@
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('admin.gestion-dsis') }}">
+		<a href="{{ path('dsi.consultation-dsis') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-dsis.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
-				Gestion des fonctions DSI
+				Consultation des fonctions DSI
 			</div>
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('admin.gestion-utilisateurs') }}">
+		<a href="{{ path('dsi.gestion-utilisateurs') }}">
 			<img class="card-vignette" src="/ressource/vignettes/gestion-utilisateurs.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
 				Gestion des utilisateurs
@@ -54,23 +54,7 @@
 		</a>
 	</div>
 	<div class="card">
-		<a href="{{ path('admin.gestion-applications.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/gestion-applications.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des applications
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="{{ path('admin.gestion-services.home') }}">
-			<img class="card-vignette" src="/ressource/vignettes/gestion-services.jpg" alt="Card image cap">
-			<div class="text-center card-crous-body">
-				Gestion des services
-			</div>
-		</a>
-	</div>
-	<div class="card">
-		<a href="{{ path('admin.consultation-droits.home') }}">
+		<a href="{{ path('dsi.consultation-droits.home') }}">
 			<img class="card-vignette" src="/ressource/vignettes/consultation-droits-effectifs.jpg" alt="Card image cap">
 			<div class="text-center card-crous-body">
 				Consultation des droits effectifs

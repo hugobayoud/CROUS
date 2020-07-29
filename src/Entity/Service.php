@@ -365,17 +365,12 @@ class Service
 	}
 
 	/**
-	 * Retourne le nombre de demandes d'un service à l'état 0 et 1 (pour gestion des demandes pour un valideur)
+	 * Retourne le nombre de demandes d'un service à l'état 0
 	 * @return int
 	 */
-	public function getNumberDemands0(): int
+	public function countDemands0(): int
 	{
-		if ($this->demandes->isEmpty()) {
-			return 0;
-		}
-
 		$count = 0;
-
 		foreach ($this->demandes as $demande) {
 			if ($demande->getEtat() === 0) {
 				$count++;
