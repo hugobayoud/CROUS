@@ -8,7 +8,7 @@
 		<div class="subnavbar-title">
 			<h1>Gestion des utilisateurs</h1> 
 			<p>
-				<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('admin.gestion-nouveaux-comptes') }}">ici</a></em>
+				<em>Si un utilisateur spécifique n'apparaît pas, c'est sûrement car vous n'avez pas encore validé son compte. Pour ce faire, se rendre <a href="{{ path('dsi.gestion-nouveaux-comptes') }}">ici</a></em>
 			</p>
 		</div>
 	</nav>
@@ -29,7 +29,7 @@
 		<tr>
 			<td class="vert-middle">
 				<a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a>
-				{# <form action="{{ path('admin.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
+				{# <form action="{{ path('dsi.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
 					<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
 					<input type="hidden" name="_method" value="DELETE">
 					<button class="btn btn-danger">Supprimer</button>

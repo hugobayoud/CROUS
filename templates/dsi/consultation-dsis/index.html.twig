@@ -1,0 +1,49 @@
+{% import _self as formMacros %}
+{% extends "bases/crous-base.html.twig" %}
+
+{% macro printDsiForm(dsiForm) %}
+<div class="row form-row-center row-flex">
+	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
+	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
+</div>
+{% endmacro %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="previous-link">
+			<a href="{{ path('home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Consultation des fonctions DSI</h1> 
+			<p>
+				<em>Veuillez voir avec administrateur si des droits concernant la fonction DSI doitvent être modifiés.</em>
+			</p>
+		</div>
+	</nav>
+{% endblock %}
+
+{% block body %}
+
+<table id="table" class="table">
+	<thead class="thead-crous">
+		<th >Nom</th>
+		<th >Prénom</th>
+		<th>Email</th>
+		<th style="text-align: center;">Actuellement DSI</th>
+	</thead>
+	<tbody>
+		{% for user in users %}
+		<tr>
+			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
+			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
+			<td class="vert-middle">{{ user.email }}</td>
+			<td style="text-align: center;" class="vert-middle 
+				{% if user.isDSI() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}
+

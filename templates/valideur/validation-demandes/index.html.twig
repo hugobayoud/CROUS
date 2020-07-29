@@ -14,22 +14,19 @@
 	</nav>
 {% endblock %}
 
-{# {% include "bases/_display-flashes.html.twig" %} #}
-
-
-{# </div>
-{% endfor %} #}
 {% block body %}
 	<div class="cards-crous">
 		{% for service in services %}
 		<div class="card">
-			<span class="notification-badge"><span>{{ service.getNumberDemands0() }}</span></span>
+			<span class="notification-badge"><span>{{ service.countDemands0() }}</span></span>
 			<div class="card-body">
 				<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 				<p class="card-libelle-long">{{ service.libelle_long }}</p>
+				{% if service.getDemandes is empty %}
 				<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
 					Traiter les demandes
 				</div>
+				{% endif %}
 			</div>
 		</div>
 		{% endfor %}

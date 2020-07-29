@@ -190,7 +190,7 @@ class Couple
 	 * Compte le nombre de droit effectifs qui arrivent bientôt à terme.
 	 * @return int
 	 */
-	public function getRightsFinishedSoon(): int
+	public function countRightsFinishedSoon(): int
 	{
 		$count = 0;
 		foreach ($this->applications as $droit_effectif) {

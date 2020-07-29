@@ -26,7 +26,7 @@
 	{% for demande in demandesPrioritaires %}
 	{% set couple = demande.user.getCouple(demande.service.id) %}
 	<div class="large-card-crous">
-		{% include "admin/gestion-demandes/_demande-title.html.twig" %}
+		{% include "dsi/gestion-demandes/_demande-title.html.twig" %}
 		<div class="large-card-body">
 			<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
 			<p class="subtitle-table">Droits effectifs avec modification</p>
@@ -57,7 +57,7 @@
 					{% endfor %}
 				</div>
 			</div>
-			{% include "admin/gestion-demandes/_nouvelles-demandes.html.twig" %}
+			{% include "dsi/gestion-demandes/_nouvelles-demandes.html.twig" %}
 		</div>
 	</div>
 	{% endfor %}
@@ -70,10 +70,10 @@
 	{% for demande in demandesOriginales %}
 	{% set couple = demande.user.getCouple(demande.service.id) %}
 	<div class="large-card-crous">
-		{% include "admin/gestion-demandes/_demande-title.html.twig" %}
+		{% include "dsi/gestion-demandes/_demande-title.html.twig" %}
 		<div class="large-card-body">
 			<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
-			{% include "admin/gestion-demandes/_nouvelles-demandes.html.twig" %}
+			{% include "dsi/gestion-demandes/_nouvelles-demandes.html.twig" %}
 		</div>
 	</div>
 	{% endfor %}

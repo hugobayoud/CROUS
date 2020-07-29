@@ -16,13 +16,16 @@
 		<div class="navbar-crous-items">
 			{% if app.user %}
 			<div class="navbar-crous-roles">
-				<a href="{{ path('agent.home') }}" focus>Agent</a>
-				{% if app.user.isAValidator() %}
-				<a href="{{ path('valideur.home') }}">Valideur</a>
-				{% elseif app.user.isDSI() %}
-				<a href="{{ path('admin.home') }}">DSI</a>
-				{% elseif app.user.isAdmin() %}
-				<a href="{{ path('admin.home') }}">Administrateur</a>
+				{% if app.user.isAdmin() %}
+				<a href="{{ path('admin.home') }}" focus>Administrateur</a>
+				{% else %}
+					<a href="{{ path('agent.home') }}" focus>Agent</a>
+					{% if app.user.isAValidator() %}
+					<a href="{{ path('valideur.home') }}">Valideur</a>
+					{% endif %}
+					{% if app.user.isDSI() %}
+					<a href="{{ path('dsi.home') }}">DSI</a>
+					{% endif %}
 				{% endif %}
 			</div>
 			<div class="status-connected">

@@ -8,7 +8,7 @@
 		<div class="subnavbar-title">
 			<h1>Gestion des validations de compte</h1>
 			<p>
-				<em>Pour modifier les informations liées à un agent, veuillez vous rendre <a href="{{ path('admin.gestion-utilisateurs') }}">ici</a></em>
+				<em>Pour modifier les informations liées à un agent, veuillez vous rendre <a href="{{ path('dsi.gestion-utilisateurs') }}">ici</a></em>
 			</p>
 		</div>
 	</nav>
@@ -37,7 +37,7 @@
 				</td>
 				<td>
 					<a href="{{ path('security.activation', {'token': user.activation_token}) }}" class="btn btn-success" onclick="return confirm('Valider ce compte ?')">Valider</a>
-					<form action="{{ path('admin.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
+					<form action="{{ path('dsi.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
 						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
 						<input type="hidden" name="_method" value="DELETE">
 						<button class="btn btn-danger">Supprimer</button>

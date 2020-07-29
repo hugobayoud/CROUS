@@ -20,6 +20,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
 	/**
+	 * Retourne tous les utilisateurs dont le compte n'a pas été validé
 	 * @return User[]
 	 */
 	public function findAllNotValidated(): array
@@ -34,6 +35,7 @@ class UserRepository extends ServiceEntityRepository
 	}
 
 	/**
+	 * Retourne tous les utilisateurs dont le compte a été validé
 	 * @return User[]
 	 */
 	public function findAllValidated(int $id = NULL): array
@@ -54,6 +56,7 @@ class UserRepository extends ServiceEntityRepository
 	}
 
 	/**
+	 * Retourne tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse maiil
 	 * @return User[]
 	 */
 	public function findAllValidatedByNameASC(int $id = NULL): array
@@ -63,7 +66,7 @@ class UserRepository extends ServiceEntityRepository
 				->where('p.activation_token IS NULL')
 				->andwhere('p.id != :id')
 				->setParameter('id', $id)
-				->add('orderBy','p.nom ASC, p.prenom ASC')
+				->add('orderBy','p.nom ASC, p.prenom ASC, p.email ASC')
 				;
 		} else {
 			$qb = $this->createQueryBuilder('p')

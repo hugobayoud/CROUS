@@ -55,6 +55,7 @@ class Service
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="services")
+	 * @ORM\OrderBy({"nom" = "ASC", "prenom" = "ASC", "email" = "ASC"})
      */
     private $users;
 
@@ -144,13 +145,15 @@ class Service
 	    /**
      * @return Collection|User[]
      */
-    public function getValidatedUsers(): Collection
+    public function getValidatedUsers(User $userToBeRemoved = NULL): Collection
     {
 		$allValidated = new ArrayCollection();
 
 		foreach ($this->users as $user) {
-			if (is_null($user->getActivationToken())) {
-				$allValidated->add($user);
+			if ($userToBeRemoved !== $user) {
+				if (is_null($user->getActivationToken())) {
+					$allValidated->add($user);
+				}
 			}
 		}
 
@@ -362,17 +365,12 @@ class Service
 	}
 
 	/**
-	 * Retourne le nombre de demandes d'un service à l'état 0 et 1 (pour gestion des demandes pour un valideur)
+	 * Retourne le nombre de demandes d'un service à l'état 0
 	 * @return int
 	 */
-	public function getNumberDemands0(): int
+	public function countDemands0(): int
 	{
-		if ($this->demandes->isEmpty()) {
-			return 0;
-		}
-
 		$count = 0;
-
 		foreach ($this->demandes as $demande) {
 			if ($demande->getEtat() === 0) {
 				$count++;
@@ -386,11 +384,11 @@ class Service
 	 * Retourne le nombre de droits-effectifs qui arrivent à terme bientôt dans l'ensemble d'un service
 	 * @return int
 	 */
-	public function getCouplesFinishedSoon(): int
+	public function countFinishedSoon(): int
 	{
 		$count = 0;
 		foreach ($this->couples as $couple) {
-			$count += $couple->getRightsFinishedSoon();
+			$count += $couple->countRightsFinishedSoon();
 		}
 
 		return $count;

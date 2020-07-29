@@ -14,10 +14,13 @@ use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/valideur", name="valideur.")
+ * 
+ * @IsGranted("ROLE_A_VALIDATOR")
  */
 class ValideurController extends AbstractController
 {
@@ -33,16 +36,13 @@ class ValideurController extends AbstractController
 			return $this->redirectToRoute('home');
 		}
 
-		return $this->render('valideur/index.html.twig', [
-			'demandsState0' => $user->getNumberToApprove(),
-			'finishedSoon' => $user->getTotalFinishedSoon()
-		]);
+		return $this->render('valideur/index.html.twig');
 	}
 
 	/**
 	 * On affiche tous les services de l'user et il choisit dans quel service il souhaite faire une modification de valideur
 	 * Trois types de personnes :
-	 * 		- C'est un admin ou un dsi en cours => il peut aller dans tous les services et nommer n'importe quel agent de ce service valideur
+	 * 		- C'est un dsi en cours => il peut aller dans tous les services et nommer n'importe quel agent de ce service valideur
 	 * 		- C'est un agent mais il a le pouvoir valideur en cours dans ce service alors il peut promouvoir qui il souhaite valideur
 	 * 		- C'est un agent et il n'a pas de pouvoir valideur mais il peut regarder qui est valideur sans rien pouvoir modifier
 	 * 
@@ -57,7 +57,7 @@ class ValideurController extends AbstractController
 		$form->handleRequest($request);
 
 		if ($user->isAdmin() || $user->isDSI()) {
-			// Si l'user est un admin ou un dsi en cours alors il a accès à tous les services, qu'il soit valideur ou non
+			// Si l'user est DSI alors il a accès à tous les services, qu'il soit valideur ou non
 			$services = $serviceRepo->findSearch($data);
 		} else {
 			// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)
@@ -72,6 +72,8 @@ class ValideurController extends AbstractController
 
 	/**
 	 * Page de gestion des valideurs pour modification des droits en tant que valideur d'un service
+	 * Un DSI peut se mettre des droits valideur
+	 * Un valideur qui n'est pas DSI ne peut pas s'ajouter des droits valideur
 	 * 
      * @Route("/gestion/valideurs/{id}", name="gestion-valideurs.service")
     */
@@ -80,8 +82,13 @@ class ValideurController extends AbstractController
 		$currentUser = $this->getUser();
 
 		if ($currentUser->isAdmin() || $currentUser->isDSI() || $currentUser->isValidator($service->getId())) {
-			// On récupère les agents de ce service (dont leur compte ont été validé)
-			$users = $service->getValidatedUsers();
+			if ($currentUser->isDSI()) {
+				// On récupère les agents de ce service (dont leur compte ont été validé)
+				$users = $service->getValidatedUsers();
+			} else {
+				// Si il n'est pas DSI, on enleve l'user du tableau
+				$users = $service->getValidatedUsers($currentUser);
+			}
 			$forms = [];
 
 			foreach ($users as $user) {

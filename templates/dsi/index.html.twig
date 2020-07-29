@@ -1,0 +1,65 @@
+{% extends 'bases/crous-base.html.twig' %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<h1>Bonjour</h1>
+		<p>
+			<em>Vous êtes connectés en tant que DSI</em>
+		</p>
+	</nav>
+{% endblock %}
+
+{% block body %}
+<div class="info-box">
+	<div class="card">
+		<a href="{{ path('dsi.gestion-nouveaux-comptes') }}">
+			<span class="notification-badge"><span>{{ countNewAccounts }}</span></span>
+			<img class="card-vignette" src="/ressource/vignettes/gestion-nouveaux-comptes.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Gestion des nouveaux comptes
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('dsi.gestion-demandes') }}">
+			<span class="notification-badge"><span>{{ countDemands1 }}</span></span>
+			<img class="card-vignette" src="/ressource/vignettes/admin-gestion-demandes.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Gestion des demandes
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('dsi.consultation-dsis') }}">
+			<img class="card-vignette" src="/ressource/vignettes/gestion-dsis.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Consultation des fonctions DSI
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('dsi.gestion-utilisateurs') }}">
+			<img class="card-vignette" src="/ressource/vignettes/gestion-utilisateurs.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Gestion des utilisateurs
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('valideur.gestion-valideurs.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/gestion-valideurs.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Gestion des valideurs
+			</div>
+		</a>
+	</div>
+	<div class="card">
+		<a href="{{ path('dsi.consultation-droits.home') }}">
+			<img class="card-vignette" src="/ressource/vignettes/consultation-droits-effectifs.jpg" alt="Card image cap">
+			<div class="text-center card-crous-body">
+				Consultation des droits effectifs
+			</div>
+		</a>
+	</div>
+</div>
+{% endblock %}
