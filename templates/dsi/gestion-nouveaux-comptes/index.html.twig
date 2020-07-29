@@ -19,7 +19,7 @@
 {% include "bases/_display-flashes.html.twig" %}
 
 <table class="table">
-	<thead>
+	<thead class="thead-crous">
 		<th>Identité</th>
 		<th>Services demandés</th>
 		<th>Action</th>
@@ -35,12 +35,12 @@
 					{% endfor %}
 					</ul>
 				</td>
-				<td>
+				<td class="buttons-selection">
 					<a href="{{ path('security.activation', {'token': user.activation_token}) }}" class="btn btn-success" onclick="return confirm('Valider ce compte ?')">Valider</a>
-					<form action="{{ path('dsi.supprimer-utilisateur', {id: user.id}) }}" style="display: inline-block;" method="POST" onsubmit="return confirm('Supprimer cette creation de compte ?')">
-						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+					<form method="post" action="{{ path('dsi.supprimer-nouveau-compte', {'id': user.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer ce nouveau compte ?');">
 						<input type="hidden" name="_method" value="DELETE">
-						<button class="btn btn-danger">Supprimer</button>
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+						<button class="btn bouton-crous">Supprimer</button>
 					</form>
 				</td>
 			</tr>

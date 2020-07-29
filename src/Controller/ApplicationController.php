@@ -105,9 +105,9 @@ class ApplicationController extends AbstractController
     public function deleteApplication(Request $request, Application $application): Response
     {
         if ($this->isCsrfTokenValid('delete'.$application->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($application);
-            $entityManager->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($application);
+            $em->flush();
         }
 
 		$this->addFlash('message', 'Application (' . $application->getCode() . ') supprimée');

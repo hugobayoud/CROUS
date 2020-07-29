@@ -99,7 +99,8 @@ class SecurityController extends AbstractController
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($user);
 		$em->flush();
-
+		
+		$this->addFlash('message', 'Le compte de l\'agent ' . $user->getNom() . ' ' . $user->getPrenom() . ' a bien été enregistré');
 		return $this->redirectToRoute('dsi.gestion-nouveaux-comptes');
 	}
 

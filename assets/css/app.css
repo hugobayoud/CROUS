@@ -270,6 +270,13 @@
 	display: none;
 }
 
+.btn-success {
+	font-weight: 700;
+	padding: 5px 10px;
+	border-radius: 0;
+	border: 1px solid black;
+}
+
 /* Style de bouton principal */
 .bouton-crous {
 	background: rgb(227, 6, 19);

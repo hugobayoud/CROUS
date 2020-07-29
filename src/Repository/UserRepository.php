@@ -1,10 +1,12 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
+use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql as DqlFunctions;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -35,46 +37,57 @@ class UserRepository extends ServiceEntityRepository
 	}
 
 	/**
-	 * Retourne tous les utilisateurs dont le compte a été validé
+	 * Récupère tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse maiil
 	 * @return User[]
 	 */
 	public function findAllValidated(int $id = NULL): array
 	{
-		if (!is_null($id)) {
-			$qb = $this->createQueryBuilder('p')
-				->where('p.activation_token IS NULL')
-				->andwhere('p.id != :id')
-				->setParameter('id', $id)
-				->orderBy('p.date_deb_valid', 'ASC');
-		} else {
-			$qb = $this->createQueryBuilder('p')
-				->where('p.activation_token IS NULL')
-				->orderBy('p.date_deb_valid', 'ASC');
-		}
+		$query = $this->createQueryBuilder('u');
+		$query->where('u.activation_token IS NULL');
 
-		return $qb->getQuery()->execute();
+		if (!is_null($id)) {
+			$query
+				->andwhere('u.id != :id')
+				->setParameter('id', $id);
+		}
+			
+		$query->add('orderBy','u.nom ASC, u.prenom ASC, u.email ASC');
+		return $query->getQuery()->getResult();
 	}
 
 	/**
-	 * Retourne tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse maiil
+	 * Récupère tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse mail sans les ADMIN
 	 * @return User[]
 	 */
-	public function findAllValidatedByNameASC(int $id = NULL): array
+	public function findAllValidatedWithoutAdmin(int $id = NULL): array
 	{
-		if (!is_null($id)) {
-			$qb = $this->createQueryBuilder('p')
-				->where('p.activation_token IS NULL')
-				->andwhere('p.id != :id')
-				->setParameter('id', $id)
-				->add('orderBy','p.nom ASC, p.prenom ASC, p.email ASC')
-				;
-		} else {
-			$qb = $this->createQueryBuilder('p')
-				->where('p.activation_token IS NULL')
-				->orderBy('p.nom', 'ASC');
-		}
+		//$config = new \Doctrine\ORM\Configuration();
+		//$config->addCustomStringFunction(DqlFunctions\JsonContains::FUNCTION_NAME, DqlFunctions\JsonContains::class);
 
-		return $qb->getQuery()->execute();
+		//$em = EntityManager::create($dbParams, $config);
+		//$queryBuilder = $em->createQueryBuilder();
+
+		// $query = $this->createQueryBuilder('u');
+		// $query
+		// 	->where('u.activation_token IS NULL')
+		// 	//->andWhere('JSON_CONTAINS(u.roles, "ROLE_ADMIN") = 1');
+		// 	->andWhere($query->expr()->like('u.roles', ':role'))
+		// 	->setParameter('role', "ROLE_ADMIN");
+
+		// if (!is_null($id)) {
+		// 	$query
+		// 		->andwhere('u.id != :id')
+		// 		->setParameter('id', $id);
+		// }
+			
+		// $query->add('orderBy','u.nom ASC, u.prenom ASC, u.email ASC');
+		$query = $this->createQueryBuilder('u');
+		$query
+			->where('u.activation_token IS NULL')
+			->andWhere($query->expr()->notLike('u.roles', ':role'))
+			->setParameter('role', '%ROLE_ADMIN%')
+			->add('orderBy','u.nom ASC, u.prenom ASC, u.email ASC');
+		return $query->getQuery()->getResult();
 	}
 
 	

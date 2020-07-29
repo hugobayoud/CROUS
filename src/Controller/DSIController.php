@@ -49,7 +49,23 @@ class DSIController extends AbstractController
 	}
 
 	/**
-	 * Liste tous les utilisateurs validés pour modification de leurs status
+	 * Suppression d'un nouveau compte
+     * @Route("/gestion/nouveaux-comptes/{id}/supprimer", name="supprimer-nouveau-compte", methods={"DELETE"})
+     */
+    public function deleteNewAccounts(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($user);
+            $em->flush();
+        }
+
+		$this->addFlash('message', 'Le compte pour l\'agent ' . $user->getNom() . ' ' . $user->getPrenom() . ' a bien été supprimé');
+        return $this->redirectToRoute('dsi.gestion-nouveaux-comptes');
+    }
+
+	/**
+	 * Liste tous les utilisateurs validés pour modification de leurs identités
 	 * @Route("/gestion/utilisateurs", name="gestion-utilisateurs")
 	 */
 	public function administerUsers(UserRepository $userRepo, Request $request)
@@ -58,7 +74,8 @@ class DSIController extends AbstractController
 		// On crée un ArrayCollection de tous les users
 		$users = new Users();
 		// On récupère tous les users validés dans BDD (à l'exception de l'user connecté, il ne peut pas se modifier lui-même)
-		$allUsers = $userRepo->findAllValidatedByNameASC($currentUser->getId());
+		// On enlève aussi tous les users avec le role ADMIN
+	$allUsers = $userRepo->findAllValidatedWithoutAdmin(/*$currentUser->getId()*/);
 
 		// On ajoute les users au tableau
 		foreach ($allUsers as $user) {
@@ -92,49 +109,15 @@ class DSIController extends AbstractController
 	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS
 	 * @Route("/consultation/dsis", name="consultation-dsis")
 	 */
-	public function administerDSIS(UserRepository $userRepo, Request $request)
+	public function showDSIS(UserRepository $userRepo)
 	{
-		// On récupère tous les users
-		$users = $userRepo->findAllValidatedByNameASC();
-
 		return $this->render('dsi/consultation-dsis/index.html.twig', [
-			'users' => $users,
+			'users' => $userRepo->findAllValidated()
 		]);
 	}
 
-
 	/**
-	 * Supprimer une demande de nouveau compte ou supprimer un user de la BDD
-	 * @Route("/utilisateur/{id}/supprimer", name="supprimer-utilisateur", methods="DELETE")
-	 * @return Response
-	 */
-	public function deleteUser(int $userId, Request $request): Response
-	{
-		$user = $this->getDoctrine()->getManager()->find(User::class, $userId);
-
-		if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
-			$em = $this->getDoctrine()->getManager();
-			//$em->remove($user);
-			//$em->flush();
-			$this->addFlash('message', 'Suppression correctement effectuée');
-		}
-
-		// On cherche la bonne redirection car le bouton suppr est utilisé à plusieurs endroits
-		$url = $_SERVER['HTTP_REFERER'];
-		$target = 'dsi.gestion';
-		$parts = explode('/', $url);
-
-		if (end($parts) === 'nouveaux-comptes') {
-			$target .= '-nouveaux-comptes';
-		} else {
-			$target .= '-utilisateurs';
-		}
-		
-		return $this->redirectToRoute($target);
-	}
-
-	/**
-	 * Consultation des droits effetifs en cours pour tout le centre Clermont-Auvergne
+	 * Consultation des droits effetifs en cours pour tout le CROUS
 	 * @Route("/consultation-droits", name="consultation-droits.home")
 	 */
 	public function consultAccess(UserRepository $userRepo)

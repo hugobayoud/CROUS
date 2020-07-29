@@ -21,9 +21,4 @@
 		<input type="hidden" name="demande_id" value="{{ demande.id }}">
 		<button type="submit" class="btn bouton-crous" >Traiter</button>
 	</form>
-	<form action="" method="POST" onsubmit="return confirm('Confirmation : je confirme vouloir supprimer toute la demande ?');">
-		<input type="hidden" name="supp_id" value="{{ demande.id }}">
-		<button type="submit" class="trash red-link no-border" >Refuser la demande</button>
-	</form>
-	{# <a class="trash red-link" href="" onclick="confirm('Confirmation : je confirme vouloir supprimer toute la demande ?')">Refuser la demande</a> #}
 </div>
