@@ -19,6 +19,18 @@
 	border: none;
 }
 
+.center {
+	vertical-align: middle;
+	text-align: center;
+	margin: 0 auto;
+}
+
+.flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 /* MESSAGE ALERTE / FLASH */
 .flash-crous {
 	position: relative;
@@ -283,7 +295,7 @@
 	color: white;
 	font-weight: 700;
 	padding: 5px 10px;
-	border: 1.5px solid rgb(121, 0, 0);
+	border: 1px solid rgb(121, 0, 0);
 	border-radius: 0;
 }
 
@@ -552,29 +564,26 @@ tr{
 }
 
 /* Visuel de la notification OUI ou NON dsi dans le tableau Gestion des DSI */
-.yes-dsi, .no-dsi {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.yes, .no {
 	padding: 0 auto;
 }
-.yes-dsi {
+.yes {
 	color: green;
 }
 
-.no-dsi {
+.no {
 	color: rgb(227, 6, 19);
 }
 
-.yes-dsi::before {
+.yes::before {
 	background-image: url('/ressource/check.png');
 }
 
-.no-dsi::before {
+.no::before {
 	background-image: url('/ressource/ban.png');
 }
 
-.yes-dsi::before, .no-dsi::before {
+.yes::before, .no::before {
 	margin: 5px 10px 5px 5px;
 	content:'';
 	background-size: 100% 100%;
@@ -638,6 +647,10 @@ tr{
 	opacity: 0.6;
 }
 
+.edit-link {
+	float: right;
+}
+
 .previous-link {
 	position: absolute;
 	left: 120px;
@@ -660,17 +673,10 @@ tr{
 	text-decoration: underline;
 }
 
-/*Footer dans "Editer un service"*/
-.table-footer {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
 /*Bouton ajout d'un service*/
 .add-item-div {
 	position: fixed;
-	top: 165px;
+	top: 220px;
 	right: 10%;
     display: flex;
     justify-content: center;
@@ -684,7 +690,6 @@ tr{
 	padding-right: 5px;
 	transition: 0.3s;
 }
-
 
 .add-item-div::before {
 	background-image: url('/ressource/+.png');
@@ -704,7 +709,7 @@ tr{
 
 /* GESTION DES APPLICATIONS */
 .table-applications {
-	width: 70%;
+	width: 60%;
 }
 
 /* DEMANDE POUR UN USER */
@@ -897,7 +902,8 @@ sup {
 	background-color: rgba(208, 199, 255, 0.637);
 	padding: 15px;
 	margin: 10px auto;
-	width: 50%;
+	min-width: 60%;
+	width: fit-content;
 }
 
 .search-box > p {
@@ -908,8 +914,14 @@ sup {
 
 .search-box > form {
 	display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
+	grid-template-columns: 50% auto auto;
+	grid-gap: 20px;
+}
+
+.btn-primary {
+	font-weight: 700;
+	border: 1px solid rgb(0, 0, 138);
+	border-radius: 0;
 }
 
 /* GESTION DES DEMANDES POUR UN ADMIN/DSI */

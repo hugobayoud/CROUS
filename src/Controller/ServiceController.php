@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use Exception;
+use PDOException;
 use App\Entity\Service;
 use App\Form\ServiceType;
+use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\DBALException;
 use App\Repository\ServiceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +28,7 @@ class ServiceController extends AbstractController
     public function index(ServiceRepository $serviceRepo): Response
     {
         return $this->render('admin/gestion-services/index.html.twig', [
-            'services' => $serviceRepo->findAll(),
+            'services' => $serviceRepo->findAllCodeASC()
         ]);
     }
 
@@ -88,13 +92,18 @@ class ServiceController extends AbstractController
      */
     public function deleteService(Request $request, Service $service): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$service->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($service);
-            $entityManager->flush();
+		try {
+			if ($this->isCsrfTokenValid('delete'.$service->getId(), $request->request->get('_token'))) {
+				$entityManager = $this->getDoctrine()->getManager();
+				$entityManager->remove($service);
+				$entityManager->flush();
+				$this->addFlash('message', 'Service (' . $service->getCode() . ') supprimé');
+			}
+		} catch (DBALException | PDOException | ORMException | Exception $e) {
+			$this->addFlash('warning', 'Exception : Le service ne peut être supprimé car ' . $service->countAgentsIn() . ' agent(s) y appartienne(nt) encore');
 		}
+	
+		return $this->redirectToRoute('admin.gestion-services.home');
 		
-		$this->addFlash('message', 'Service (' . $service->getCode() . ') supprimé');
-        return $this->redirectToRoute('admin.gestion-services');
-    }
+	}
 }

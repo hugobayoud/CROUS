@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Repository;
 
 use App\Entity\Application;
@@ -19,32 +18,15 @@ class ApplicationRepository extends ServiceEntityRepository
         parent::__construct($registry, Application::class);
     }
 
-    // /**
-    //  * @return Application[] Returns an array of Application objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+	/**
+	 * Retourne l'ensemble des applications triées par ordre croissant selon le code unique
+	 * @return Application[]
+	 */
+	public function findAllCodeASC(): array
+	{
+		$query = $this->createQueryBuilder('a');
+		$query->add('orderBy','a.code ASC');
 
-    /*
-    public function findOneBySomeField($value): ?Application
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+		return $query->getQuery()->getResult();
+	}
 }

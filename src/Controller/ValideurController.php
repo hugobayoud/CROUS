@@ -14,13 +14,11 @@ use App\Repository\DemandeRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/valideur", name="valideur.")
  * 
- * @IsGranted("ROLE_A_VALIDATOR")
  */
 class ValideurController extends AbstractController
 {
@@ -50,22 +48,12 @@ class ValideurController extends AbstractController
     */
 	public function servicesList(ServiceRepository $serviceRepo, Request $request)
 	{
-		$user = $this->getUser();
-
 		$data = new SearchData();
 		$form = $this->createForm(SearchForm::class, $data);
 		$form->handleRequest($request);
 
-		if ($user->isAdmin() || $user->isDSI()) {
-			// Si l'user est DSI alors il a accès à tous les services, qu'il soit valideur ou non
-			$services = $serviceRepo->findSearch($data);
-		} else {
-			// Sinon, on ne lui affiche que les services dont il fait partie (qu'il soit valideur ou non)
-			$services = $user->getServices();
-		}
-
 		return $this->render("valideur/gestion-valideurs/index.html.twig", [
-			'services' => $services,
+			'services' => $serviceRepo->findSearch($data),
 			'form' => $form->createView()
 		]);
 	}

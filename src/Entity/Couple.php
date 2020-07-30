@@ -34,7 +34,7 @@ class Couple
     private $service;
 
     /**
-     * @ORM\OneToMany(targetEntity="DroitEffectif", mappedBy="couple")
+     * @ORM\OneToMany(targetEntity="DroitEffectif", mappedBy="couple", cascade={"remove"})
      */
 	private $applications;
 

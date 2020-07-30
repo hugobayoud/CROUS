@@ -3,9 +3,10 @@ namespace App\Form;
 
 use App\Data\SearchData;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
 
 class SearchForm extends AbstractType
 {
@@ -18,7 +19,10 @@ class SearchForm extends AbstractType
 				'attr' => [
 					'placeholder' => 'Rechercher un service'
 				]
-			])	
+			])
+			// ->add('save', ResetType::class, [
+			// 	'attr' => ['class' => 'save'],
+			// ])
 			;
 	}
 

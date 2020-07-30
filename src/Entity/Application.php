@@ -267,4 +267,33 @@ class Application
 
 		return false;
 	}
+
+	/**
+	 * Compte le nombre de demandes en cours (état 0 ou 1) où cette application apparait
+	 * 
+	 * @return int
+	 */
+	public function countInDemands(): int
+	{
+		return count($this->demandes);
+	}
+
+	/**
+	 * Compte le nombre de droits effectifs en cours ou a venir où cette application apparait
+	 * 
+	 * @return int
+	 */
+	public function countInRights(): int
+	{
+		$count = 0;
+		$now = new DateTime('now');
+
+		foreach ($this->couples as $droit_effectif) {
+			if ($droit_effectif->getDateFin() > $now) {
+				$count++;
+			}
+		}
+
+		return $count;
+	}
 }

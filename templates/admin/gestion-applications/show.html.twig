@@ -20,13 +20,23 @@
 				<td>{{ application.code }}</td>
 			</tr>
 			<tr>
-				<th>Libellé</th>
+				<th>Libellé court</th>
                 <td>{{ application.libelle }}</td>
+			</tr>
+			<tr>
+				<th>Libellé long</th>
+                <td>{{ application.getLibelleLong() }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de demandes en cours</th>
+                <td>{{ application.countInDemands() }}</td>
+			</tr>
+			<tr>
+				<th>Nombre de droits effectifs en cours ou à venir</th>
+                <td>{{ application.countInRights() }}</td>
 			</tr>
         </tbody>
     </table>
 
-	<footer class="table-footer">
-		<a class="edit-link" href="{{ path('admin.gestion-applications.editer-application', {'id': application.id}) }}"></a>
-	</footer>
+	<a class="edit-link flex-center" href="{{ path('admin.gestion-applications.editer-application', {'id': application.id}) }}">MODIFIER</a>
 {% endblock %}

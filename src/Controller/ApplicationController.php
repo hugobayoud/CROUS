@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use Exception;
+use PDOException;
 use App\Entity\Application;
 use App\Form\ApplicationType;
+use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\DBALException;
 use App\Repository\ApplicationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +28,7 @@ class ApplicationController extends AbstractController
     public function index(ApplicationRepository $applicationRepo): Response
     {
         return $this->render('admin/gestion-applications/index.html.twig', [
-            'applications' => $applicationRepo->findAll(),
+            'applications' => $applicationRepo->findAllCodeASC(),
         ]);
     }
 
@@ -103,14 +107,18 @@ class ApplicationController extends AbstractController
      * @Route("/{id}/supprimer", name="supprimer-application", methods={"DELETE"})
      */
     public function deleteApplication(Request $request, Application $application): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$application->getId(), $request->request->get('_token'))) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($application);
-            $em->flush();
+    {		
+		try {
+			if ($this->isCsrfTokenValid('delete'.$application->getId(), $request->request->get('_token'))) {
+				$em = $this->getDoctrine()->getManager();
+				$em->remove($application);
+				$em->flush();
+				$this->addFlash('message', 'Application (' . $application->getCode() . ') supprimée');
+			}
+        } catch (DBALException | PDOException | ORMException | Exception $e) {
+            $this->addFlash('warning', 'Exception : L\'application ne peut être supprimé car il existe' . $application->countInDemands() . ' demande(s) et ' . $application->countInRights() . ' droit(s) effectif(s) en cours ou à venir pour cette application');
         }
 
-		$this->addFlash('message', 'Application (' . $application->getCode() . ') supprimée');
         return $this->redirectToRoute('admin.gestion-applications.home');
     }
 }

@@ -8,7 +8,6 @@ use App\Entity\Couple;
 use App\Entity\Service;
 use App\Entity\Valideur;
 use App\Helper\DateHelper;
-use App\Entity\DroitEffectif;
 use App\Helper\HtmlHelper;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
@@ -105,25 +104,25 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Dsi::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Dsi::class, mappedBy="user", orphanRemoval=true, cascade={"remove"})
 	 * @ORM\OrderBy({"date_deb" = "ASC"})
      */
 	private $dsis;
 	
     /**
-     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="user", orphanRemoval=true, cascade={"remove"})
 	 * @ORM\OrderBy({"date_deb" = "ASC"})
      */
     private $valideurs;
 
     /**
-     * @ORM\OneToMany(targetEntity="Demande", mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Demande", mappedBy="user", orphanRemoval=true, cascade={"remove"})
 	 * @ORM\OrderBy({"created_at" = "ASC"})
      */
 	private $demandes;
 
 	/**
-     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="user", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="user", orphanRemoval=true, cascade={"remove"})
      */
 	private $couples;
 
@@ -277,7 +276,7 @@ class User implements UserInterface
 	/* AUTRES FONCTIONS !*/
 	
     /**
-	 * S'assurer en autre que le role_admin nest pas disponible pour la user en cours s'il n'est pas DSI
+	 * Role de l'user
      * @see UserInterface
      */
     public function getRoles(): array
@@ -294,7 +293,6 @@ class User implements UserInterface
 			$roles[] = 'ROLE_A_VALIDATOR';
 		}
 		
-
         return array_unique($roles);
 	}
 	
@@ -742,5 +740,32 @@ class User implements UserInterface
 		}
 
 		return $count;
+	}
+
+	/**
+	 * Compte le nombre pour être valideur
+	 * @return int
+	 * 		0 	: Il ne sera jamais valideur
+	 * 		-x 	: Il est actuellement valideur et le reste pendant x jours
+	 * 		x 	: Il n'est pas encore valideur mais l'est dans x jours
+	 */
+	public function countDaysBeforeValidator(int $serviceId): int
+	{
+		$now = new DateTime('now');
+		$count = 999;
+
+		foreach ($this->valideurs as $valideur) {
+			if ($valideur->getService()->getId() === $serviceId) {
+				// S'il est actuellement valideur, on calcule x négatif
+				if ($now >= $valideur->getDateDeb() && $now <= $valideur->getDateFin()) {
+					return -(int)date_diff($now, $valideur->getDateFin())->format('%a');
+				// Sinon, si il va devenir valideur, on prend l'enregistrement le plus proche
+				} else if ($now < $valideur->getDateDeb() && $count > (int)date_diff($now, $valideur->getDateDeb())->format('%a')) {
+					$count = (int)date_diff($now, $valideur->getDateDeb())->format('%a');
+				}
+			}
+		}
+
+		return $count === 999 ? 0 : $count;
 	}
 }

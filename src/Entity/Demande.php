@@ -47,7 +47,7 @@ class Demande
 	private $created_at;
 	
     /**
-     * @OneToMany(targetEntity="ApplicationDemande", mappedBy="demande")
+     * @OneToMany(targetEntity="ApplicationDemande", mappedBy="demande", cascade={"remove"})
      */
 	private $applications;
 

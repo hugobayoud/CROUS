@@ -29,11 +29,8 @@ class DemandeController extends AbstractController
 	 */
 	public function servicesList(): Response
 	{
-		$user = $this->getUser();
-		$services = $user->getServices();
-
 		return $this->render('agent/gestion-demandes/index.html.twig', [
-			'services' => $services
+			'services' => $this->getUser()->getServices()
 		]);
 	}
 	

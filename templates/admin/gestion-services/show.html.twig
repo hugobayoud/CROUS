@@ -27,18 +27,11 @@
 			<td>{{ service.libelleLong }}</td>
 		</tr>
 		<tr>
-			<th>Nombre d'agents rattachés à ce service</th>
-			<td>{{ service.getNumberOfAgentsLinked() }}</td>
+			<th>Nombre d'agents dans ce service</th>
+			<td>{{ service.countAgentsIn() }}</td>
 		</tr>
-		<tr>
-			<th>Nombre de demandes dans ce service</th>
-			<td>{{ service.getNumberOfDemandsLinked() }}</td>
-		</tr>
-
 	</tbody>
 </table>
 
-<footer class="table-footer">
-	<a class="edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
-</footer>
+<a class="edit-link flex-center" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}">MODIFIER</a>
 {% endblock %}

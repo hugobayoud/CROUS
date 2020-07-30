@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use Exception;
+use PDOException;
 use App\Entity\User;
 use App\Entity\Users;
 use App\Form\UsersType;
+use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\DBALException;
 use App\Repository\UserRepository;
 use App\Repository\DemandeRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +79,7 @@ class DSIController extends AbstractController
 		$users = new Users();
 		// On récupère tous les users validés dans BDD (à l'exception de l'user connecté, il ne peut pas se modifier lui-même)
 		// On enlève aussi tous les users avec le role ADMIN
-	$allUsers = $userRepo->findAllValidatedWithoutAdmin(/*$currentUser->getId()*/);
+	$allUsers = $userRepo->findAllValidatedWithoutAdmin($currentUser->getId());
 
 		// On ajoute les users au tableau
 		foreach ($allUsers as $user) {
@@ -104,6 +108,22 @@ class DSIController extends AbstractController
 			'users' => $allUsers
         ]);
 	}
+
+	/**
+	 * Suppression d'un compte du CROUS
+     * @Route("/gestion/utilisateurs/{id}/supprimer", name="supprimer-utilisateur", methods={"DELETE"})
+     */
+    public function deleteUser(Request $request, User $user): Response
+    {
+		if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+			$em = $this->getDoctrine()->getManager();
+			$em->remove($user);
+			$em->flush();
+			$this->addFlash('message', 'Le compte de l\'agent ' . $user->getNom() . ' ' . $user->getPrenom() . ' a été supprimé de la base de données');
+		}
+
+        return $this->redirectToRoute('dsi.gestion-utilisateurs');
+    }
 
 	/**
 	 * Liste de tous les utilisateurs validés pour modification de leurs rôles de DSI au sein du CROUS

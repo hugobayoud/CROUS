@@ -4,28 +4,22 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>ACCESS DENIED</title>
+	<!-- CSS from app.css -->
+	{{ encore_entry_link_tags('app') }}
 	<style>
-		.main {
-			display: flex;
-			font-size: 2em;
-			font-weight: 500;
-			width: 70%;
-			text-align: center;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
-		}
+	.flex-center > div {
+		margin: 0 15px;
+		font-weight: 500;
+		font-size: 1.3em;
+	}
 	</style>
 </head>
 <body>
-	<div class="main">
+	<div class="flex-center" style="height: 100vh;">
+		<img src="/ressource/logo_Crous.png" alt="logo CROUS Clermont-Auvergne">
 		<div>
-			<img src="/ressource/logo_Crous.png" alt="logo CROUS Clermont-Auvergne">
-		</div>
-			<div>
-				Vous essayez d'accéder à une page sans avoir les droits. L'accès vous est refusé.
-				<a href="{{ path('home') }}">Page d'accueil</a>
+			Vous essayez d'accéder à une page sans avoir les droits. L'accès vous est refusé.
+			<a href="{{ path('home') }}">Page d'accueil</a>
 		</div>
 	</div>	
 </body>

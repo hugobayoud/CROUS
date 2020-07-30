@@ -6,9 +6,9 @@
 			<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
-			<h1>{{ service.libelle_court }}</h1> 
+			<h1>Service {{ service.libelle_court }}</h1> 
 			<p>
-				<em>Vous ne pouvez que voir qui est valideur car vous n'êtes qu'un agent de ce service.</em>
+				<em>Consulter qui est valideur parmi tous les agents du service</em>
 			</p>
 		</div>
 	</nav>
@@ -21,19 +21,29 @@
 		<th>Prénom</th>
 		<th>Email</th>
 		<th style="text-align: center;">Actuellement valideur</th>
+		<th></th>
 	</thead>
 	<tbody>
-		{% if users is empty %}
+		{% if service.users is empty %}
 		<tr>
-			<td colspan="5">Il n'existe pas d'agent pour ce service</td>
+			<td colspan="5">Il y a aucun pas d'agent pour ce service</td>
 		</tr>
 		{% else %}
-		{% for user in users %}
+		{% for user in service.users %}
+		{% set daysBefore = user.countDaysBeforeValidator(service.id) %}
 			<tr>
 				<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
 				<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
 				<td class="vert-middle">{{ user.email }}</td>
-				<td style="text-align: center;" class="vert-middle {% if user.isValidator(service.id) %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
+				<td class="flex-center {% if user.isValidator(service.id) %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
+				<td class="vert-middle">
+					{% if daysBefore < 0 %}
+						 pendant encore <strong>{{ daysBefore|abs }}</strong> jour(s)
+					{% elseif daysBefore > 0 %}
+						l'est dans <strong>{{ daysBefore }}</strong> jour(s)						
+					{% endif %}
+
+				</td>
 			</tr>
 		{% endfor %}
 		{% endif %}

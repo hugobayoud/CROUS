@@ -2,11 +2,8 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
-use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql as DqlFunctions;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -61,51 +58,21 @@ class UserRepository extends ServiceEntityRepository
 	 */
 	public function findAllValidatedWithoutAdmin(int $id = NULL): array
 	{
-		//$config = new \Doctrine\ORM\Configuration();
-		//$config->addCustomStringFunction(DqlFunctions\JsonContains::FUNCTION_NAME, DqlFunctions\JsonContains::class);
-
-		//$em = EntityManager::create($dbParams, $config);
-		//$queryBuilder = $em->createQueryBuilder();
-
-		// $query = $this->createQueryBuilder('u');
-		// $query
-		// 	->where('u.activation_token IS NULL')
-		// 	//->andWhere('JSON_CONTAINS(u.roles, "ROLE_ADMIN") = 1');
-		// 	->andWhere($query->expr()->like('u.roles', ':role'))
-		// 	->setParameter('role', "ROLE_ADMIN");
-
-		// if (!is_null($id)) {
-		// 	$query
-		// 		->andwhere('u.id != :id')
-		// 		->setParameter('id', $id);
-		// }
-			
-		// $query->add('orderBy','u.nom ASC, u.prenom ASC, u.email ASC');
 		$query = $this->createQueryBuilder('u');
 		$query
 			->where('u.activation_token IS NULL')
 			->andWhere($query->expr()->notLike('u.roles', ':role'))
-			->setParameter('role', '%ROLE_ADMIN%')
+			->setParameter('role', '%ROLE_ADMIN%');
+
+		if (!is_null($id)) {
+			$query
+				->andwhere('u.id != :id')
+				->setParameter('id', $id);
+		}
+
+		$query
 			->add('orderBy','u.nom ASC, u.prenom ASC, u.email ASC');
 		return $query->getQuery()->getResult();
-	}
-
-	
-	/**
-	 * Récupérer tous les users d'un service donné
-	 * @return User[]
-	 */
-	public function findAllByServiceId(int $serviceId): array
-	{
-		$conn = $this->getEntityManager()->getConnection();
-		$sql = "SELECT *
-				FROM User u
-				JOIN user_service us ON us.user_id = u.id
-				WHERE us.service_id = $serviceId";
-		$stmt = $conn->prepare($sql);
-		$stmt->execute();
-		
-		return $stmt->fetchAll();
 	}
 
 	/**

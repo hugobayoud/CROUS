@@ -25,12 +25,8 @@ class AgentController extends AbstractController
     */
 	public function showValidators(Service $service)
 	{
-		// On récupère les agents de ce service (dont leur compte ont été validé)
-		$users = $service->getValidatedUsers();
-
 		return $this->render('agent/connaitre-valideurs/service_show.html.twig', [
-			'service' => $service,
-			'users' => $users,
+			'service' => $service
 		]);
 	}
 }

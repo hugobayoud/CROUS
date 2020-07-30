@@ -16,9 +16,7 @@
 
 {% block body %}
 
-{% if app.user.isAdmin()  or app.user.isDSI() %}
-	{% include "bases/_research-form.html.twig" %}
-{% endif %}
+{% include "bases/_research-form.html.twig" %}
 
 {% include "bases/_display-flashes.html.twig" %}
 

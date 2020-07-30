@@ -21,21 +21,35 @@ class ServiceRepository extends ServiceEntityRepository
 	
 	/**
 	 * Récupère les services en lien avec une recherche
+	 * @param SearchData : toutes les données qui sont les contraintes pour la requête SQL
+	 * @param int : id de l'utilisateur pour ne faire la recherche que sur les services dont il fait partie
 	 * @return Service[]
 	 */
 	public function findSearch(SearchData $search): array
 	{
-		$query = $this
-			->createQueryBuilder('p');
+		$query = $this->createQueryBuilder('s');
 
 		if (!empty($search->q)) {
 			$query = $query
-			->where('p.code LIKE :q')
-			->orWhere('p.libelle_court LIKE :q')
-			->orWhere('p.libelle_long LIKE :q')
-			->setParameter('q', "%{$search->q}%")
-			;
+				->where('s.code LIKE :q')
+				->orWhere('s.libelle_court LIKE :q')
+				->orWhere('s.libelle_long LIKE :q')
+				->setParameter('q', "%{$search->q}%")
+				;
 		}
+
+		return $query->getQuery()->getResult();
+	}
+
+	/**
+	 * Retourne l'ensemble des service triés par ordre croissant selon le code unique
+	 * @return Service[]
+	 */
+	public function findAllCodeASC(): array
+	{
+		$query = $this->createQueryBuilder('s');
+		$query->add('orderBy','s.code ASC');
+
 		return $query->getQuery()->getResult();
 	}
 }

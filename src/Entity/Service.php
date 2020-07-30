@@ -60,17 +60,17 @@ class Service
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="Demande", mappedBy="service", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Demande", mappedBy="service")
      */
 	private $demandes;
 
 	/**
-     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="service", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Couple::class, mappedBy="service")
      */
 	private $couples;
 	
 	/**
-     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="service", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Valideur::class, mappedBy="service")
      */
 	private $valideurs;
 	
@@ -140,24 +140,6 @@ class Service
     public function getUsers(): Collection
     {
         return $this->users;
-	}
-	
-	    /**
-     * @return Collection|User[]
-     */
-    public function getValidatedUsers(User $userToBeRemoved = NULL): Collection
-    {
-		$allValidated = new ArrayCollection();
-
-		foreach ($this->users as $user) {
-			if ($userToBeRemoved !== $user) {
-				if (is_null($user->getActivationToken())) {
-					$allValidated->add($user);
-				}
-			}
-		}
-
-        return $allValidated;
 	}
 
     public function addUser(User $user): self
@@ -263,24 +245,6 @@ class Service
         }
 
         return $this;
-	}
-
-	/**
-	 * Retourne le nombre d'agent liés à ce service
-	 * @return int : nombre d'agent 
-	*/
-	public function getNumberOfAgentsLinked()
-	{
-		return count($this->users);
-	}
-
-	/**
-	 * Retourne le nombre de demandes actuelles pour ce service
-	 * @return int : nombre de demandes 
-	*/
-	public function getNumberOfDemandsLinked()
-	{
-		return count($this->demandes);
 	}
 
 	/**
@@ -392,5 +356,14 @@ class Service
 		}
 
 		return $count;
+	}
+
+	/**
+	 * Compte le nombre d'agent a l'intérieur du service
+	 * @return int
+	 */
+	public function countAgentsIn(): int
+	{
+		return count($this->users);
 	}
 }
