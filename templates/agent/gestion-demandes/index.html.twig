@@ -2,14 +2,12 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
 			<h1>Faire une demande</h1>
-			<p>
-				<em>Veuillez choisir le service pour lequel pour souhaitez faire une demande</em>
-			</p>
+			<em>Veuillez choisir le service pour lequel pour souhaitez faire une demande</em>
 		</div>
 	</nav>
 {% endblock %}
@@ -18,7 +16,7 @@
 
 {% include "bases/_display-flashes.html.twig" %}
 
-<div class="cards-crous">
+<div class="grid-3 cards-crous">
 	{% for service in services %}
 	{% set etat = service.getStateDemand(app.user.id) %}
 
@@ -27,23 +25,23 @@
 			<h5 class="card-title text-center"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 			{% if etat == -1 %}
 			<p class="card-text">Aucune demande n'a encore été faite pour ce service.</p>
-			<div class="status-btn create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<div class="status-btn flex-center create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Faire une nouvelle demande
 			</div>
 			{% elseif etat == 0 %}
 			<p class="card-text">La demande associée à ce service est en attente de traitement par votre responsable. Vous pouvez encore la modifier.
 			<em>derniere modification : le <strong>{{ service.getLastModif(app.user.id) }}</strong></em></p>
-			<div class="status-btn modify" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<div class="status-btn flex-center modify" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Modifier ma demande
 			</div>
 			{% elseif etat == 1 %}
 			<p class="card-text">Demande validée par un responsable de ce service. En attente de traitement par la DSI</p>
-			<div class="status-btn impossible">
+			<div class="status-btn flex-center impossible">
 				Modification impossible
 			</div>
 			{% else %}
 			<p class="card-text">Votre dernière demande a été traitée par la DSI. Vous pouvez à tout moment en refaire une en cliquant sur le bouton.</p>
-			<div class="status-btn create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
+			<div class="status-btn flex-center create" onclick="location.href='{{ path('agent.gestion-demandes.editer', {'id': service.id}) }}';">
 				Faire une nouvelle demande
 			</div>			
 			{% endif %}

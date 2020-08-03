@@ -17,16 +17,8 @@
 					{% if currentMails is not null %}(reçoit actuellement les mails : {{ currentMails }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="mailTo" id="mailTo" maxlength="255" placeholder="ex.: nom.domaine@crous-clermont.fr; autre.domaine@crous-clermont.fr; ..." value="
-			{% if demande.MailDe is null %}
-				{% if currentMails is not null %}
-					{{ currentMails }}
-				{% endif %}
-			{% else %}
-				{{ demande.MailDe }}
-			{% endif %}"
-			{% if noChange %} disabled{% endif %}
-			>
+			<input type="text" name="mailTo" id="mailTo" maxlength="255" value="{% if demande.MailDe is null %}{% if currentMails is not null %}{{ currentMails }}{% endif %}{% else %}{{ demande.MailDe }}{% endif %}"{% if noChange %} disabled{% endif %}>
+			<div>ex.: "nom1.domaine@crous-clermont.fr"; "nom2.domaine@crous-clermont.fr"</div> 
 		</div>
 		<div>
 			<label for="folders" class="crous-label"><strong>Précisez les répertoires de travail (facultatif)</strong><sup class="exposant">2</sup> : 
@@ -34,8 +26,9 @@
 					{% if currentFolders is not null %}(répertoire(s) actuel(s) : {{ currentFolders }}){% endif %}
 				</span>
 			</label>
-			<input type="text" name="folders" id="folders" maxlength="255" placeholder="ex.: répertoire1; répertoire2; ..." value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}"{% if noChange %} disabled{% endif %}
+			<input type="text" name="folders" id="folders" maxlength="255" value="{% if demande.RepertoiresServeur is null %}{% if currentFolders is not null %}{{ currentFolders }}{% endif %}{% else %}{{ demande.RepertoiresServeur }}{% endif %}"{% if noChange %} disabled{% endif %}
 			>
+			<div>ex.: "répertoire1"; "répertoire2"; "répertoire3"</div> 
 		</div>
 	</div>
 	<div style="padding: 0 25px;">

@@ -2,14 +2,12 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
 			<h1>Gestion des applications</h1> 
-			<p>
-				<em>Modifier, créer, supprimer une application du CROUS.</em>
-			</p>
+			<em>Modifier, créer, supprimer une application du CROUS.</em>
 		</div>
 	</nav>
 {% endblock %}
@@ -29,12 +27,12 @@
 	</thead>
 	<tbody>
 	{% for application in applications %}
-		<tr>
+		<tr class="vert-middle">
 			<td><strong>{{ application.code }}</strong></td>
 			<td>{{ application.libelle }}</td>
-			<td style="text-align: center;" class="vert-middle {% if application.isTransverse() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
+			<td class="flex-center {% if application.isTransverse() %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 			<td class="actions">
-				<div class="modify-links">
+				<div class="flex-space-around">
 					<a class="show-link" href="{{ path('admin.gestion-applications.voir-application', {'id': application.id}) }}"></a>
 					<a class="edit-link" href="{{ path('admin.gestion-applications.editer-application', {'id': application.id}) }}"></a>
 					<form method="post" action="{{ path('admin.gestion-applications.supprimer-application', {'id': application.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer cette application ?');">
@@ -53,7 +51,7 @@
 	</tbody>
 </table>
 
-<div class="add-item-div" onclick="location.href='{{ path('admin.gestion-applications.nouvelle-application') }}';" style="cursor: pointer;">
+<div class="flex-center add-item-div" onclick="location.href='{{ path('admin.gestion-applications.nouvelle-application') }}';" style="cursor: pointer;">
 		Créer application
 </div>
 

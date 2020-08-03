@@ -153,7 +153,7 @@ function addTagForm($formsHolder, indice) {
 
 function addTagFormDeleteLink($form) {
 	// Création du bouton "RETIRER"
-	var $removeFormButton = $('<div class="col-md-3"><button type="button" class="remove-button">Retirer</button></div>');
+	var $removeFormButton = $('<div class="col-md-3"><button type="button" class="flex-center remove-button">Retirer</button></div>');
 	
 	// Ajouter le bouton "RETIRER" pour périodes déjà existantes
 	$form.append($removeFormButton);

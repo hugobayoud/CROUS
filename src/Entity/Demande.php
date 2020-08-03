@@ -74,6 +74,7 @@ class Demande
 	public function __construct()
 	{
 		$this->applications = new ArrayCollection();
+		$this->prioritaire = 0;
 	}
 
     public function getId(): ?int

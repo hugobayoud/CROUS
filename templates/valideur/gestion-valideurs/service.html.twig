@@ -1,26 +1,26 @@
 {% import _self as formMacros %}
 {% extends "bases/crous-base.html.twig" %}
 
-{% block subnavbar %}
-	<nav class="subnavbar-crous">
-		<div class="previous-link">
-			<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
-		</div>
-		<div class="subnavbar-title">
-			<h1>Gestion des valideurs pour {{ service.libelle_court }}</h1> 
-			<p>
-				<em>Modifier les droits de valideur pour un agent de ce service en cliquant sur celui-ci.</em>
-			</p>
-		</div>
-	</nav>
-{% endblock %}
-
 {% macro printValidatorForm(validatorForm) %}
 <div class="row form-row-center row-flex">
 	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(validatorForm.date_deb) }}</div>
 	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(validatorForm.date_fin) }}</div>
 </div>
 {% endmacro %}
+
+{% block subnavbar %}
+	<nav class="subnavbar-crous">
+		<div class="flex-center pseudo-elt previous-link">
+			<a href="{{ path('valideur.gestion-valideurs.home') }}">Page précédente</a>
+		</div>
+		<div class="subnavbar-title">
+			<h1>Gestion des valideurs pour {{ service.libelle_court }}</h1> 
+			<p class="m-0">
+				<em>Modifier les droits de valideur pour un agent de ce service en cliquant sur celui-ci.</em>
+			</p>
+		</div>
+	</nav>
+{% endblock %}
 
 {% block body %}
 <table id="table" class="table">
@@ -29,7 +29,7 @@
 		<th >Nom</th>
 		<th >Prénom</th>
 		<th>Email</th>
-		<th style="text-align: center;">Actuellement valideur</th>
+		<th class="center">Actuellement valideur</th>
 	</thead>
 	<tbody>
 		{% if users is empty %}
@@ -38,16 +38,16 @@
 		</tr>
 		{% else %}
 		{% for user in users %}
-			<tr>
-				<td class="vert-middle">
+			<tr class="vert-middle">
+				<td>
 				{% if app.user.isValidator(service.id) or app.user.isAdmin() or app.user.isDSI() %}
-					<a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a>
+					<a class="flip pseudo-elt pencil" href="#user_detail_{{ loop.index0 }}"></a>
 				{% endif %}
 				</td>
-				<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
-				<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
-				<td class="vert-middle">{{ user.email }}</td>
-				<td style="text-align: center;" class="vert-middle {% if user.isValidator(service.id) %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
+				<td><strong>{{ user.nom }}</strong></td>
+				<td><strong>{{ user.prenom }}</strong></td>
+				<td>{{ user.email }}</td>
+				<td class="flex-center {% if user.isValidator(service.id) %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 			</tr>
 		{% endfor %}
 		{% endif %}

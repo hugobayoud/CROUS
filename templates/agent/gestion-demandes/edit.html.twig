@@ -2,14 +2,12 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('agent.gestion-demandes.home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
 			<h1>Demande pour le service {{ service.getLibelleCourt() }}</h1>
-			<p>
-				<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleLong() }}"</em>
-			</p>
+			<em>Vous souhaitez faire une demande d'ouverture de droit d'accès pour le service "{{ service.getLibelleLong() }}"</em>
 		</div>
 	</nav>
 {% endblock %}
@@ -24,7 +22,7 @@
 		<p><em>Cocher l'ensemble des applications nécessaires. Vous ne pouvez pas décocher une application dont vous avez actuellement les droits. Seul un responsable du service peut le faire.</em></p>
 		<div class="user-demand">
 			<p>Applications transverses</p>
-			<div class="applications-div">
+			<div class="grid-3 applications-div">
 			{% for application in applications %}
 				{% if application.isTransverse() %}
 				<div>
@@ -38,7 +36,7 @@
 		</div>
 		<div class="user-demand">
 			<p>Applications à profil</p>
-			<div class="applications-div">
+			<div class="grid-3 applications-div">
 			{% for application in applications %}
 				{% if not application.isTransverse() %}
 				<div>
@@ -53,10 +51,10 @@
 		{% include "bases/_ressources-supp.html.twig" %}
 		<hr>
 
-		<div class="info-term text-center">Une fois créée, votre demande doit être validée par un responsable du service associé puis traitée par la DSI qui se chargera de vous octroyer les droits. Tant qu'un responsable ne l'a pas validée ou refusée, vous pouvez modifier cette demande à votre guise. Seul le dernier enregistrement sera visible par votre responsable.</div>
+		<div class="info-term center">Une fois créée, votre demande doit être validée par un responsable du service associé puis traitée par la DSI qui se chargera de vous octroyer les droits. Tant qu'un responsable ne l'a pas validée ou refusée, vous pouvez modifier cette demande à votre guise. Seul le dernier enregistrement sera visible par votre responsable.</div>
 
-		<div class="save-form-demand">
-			<button type="submit" class="bouton-crous">Faire la demande</button>
+		<div class="text-center">
+			<button type="submit" class="bouton-crous mb-4 margin">Faire la demande</button>
 		</div>
 	</form>
 </div>

@@ -25,10 +25,36 @@
 	margin: 0 auto;
 }
 
-.flex-center {
+.flex-center, .flex-start, .flex-space-around, .flex-space-between {
 	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
+}
+
+.flex-space-around {
+	justify-content: space-around;
+}
+
+.flex-space-between {
+	justify-content: space-between;
+}
+
+.flex-start {
+	justify-content: start;
+}
+
+.pseudo-elt::before {
+	margin: 5px;
+	content:'';
+	background-size: 100% 100%;
+    width: 25px;
+    height: 25px;
+	display: inline-block;
+}
+
+.grid-3 {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
 }
 
 /* MESSAGE ALERTE / FLASH */
@@ -83,7 +109,6 @@
 	text-decoration: none;
 }
 
-
 /* card dans la homepage */
 .card {
 	background-color: rgba(241, 241, 241, 0.7);
@@ -134,12 +159,6 @@
 	position: absolute;
 	left: 5px;
 	top: 5px;
-}
-
-.navbar-crous-gestion {
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
 }
 
 .navbar-crous-items {
@@ -197,17 +216,13 @@
 	top: var(--navbar-height);
 	width: auto;
 	min-height: var(--subnavbar-min-height);
-	padding: 10px;
+	padding: 5px;
 	z-index: 2;
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	background-color: rgb(238, 238, 238);
 	box-shadow: 0 4px 2px -2px rgba(0,0,0,.2);
-}
-
-.subnavbar-crous p {
-	margin: 0;
 }
 
 .subnavbar-title {
@@ -379,17 +394,8 @@ tr{
 	margin: 5px auto;
 }
 
-.row-flex {
-	margin-bottom: 8px;
-	display: flex;
-	align-items: center;
-	justify-content: space-around;
-}
-
 .row-flex-start {
 	margin-bottom: 8px;
-	display: flex;
-	align-items: center;
 	justify-content: flex-start;
 }
 
@@ -430,15 +436,6 @@ tr{
     background-image: url('/ressource/trash.png');
 }
 
-.pencil::before, .trash::before, .waiting::before {
-	margin: 5px 10px;
-	content:'';
-    background-size: 100% 100%;
-    width: 25px;
-    height: 25px;
-    display: inline-block;
-}
-
 .pencil, .waiting, .trash {
 	display: flex;
 	align-items: center;
@@ -469,9 +466,6 @@ tr{
 }
 
 .remove-button {
-    display: flex;
-    justify-content: center;
-	align-items: center;
 	border-radius: 0;
 	color: rgb(255, 0, 0);
 	font-weight: 700;
@@ -504,14 +498,14 @@ tr{
 	background-image: url('/ressource/+.png');
 }
 
-.add-button::before {
+/* .add-button::before {
 	margin: 5px 10px 5px 5px;
 	content:'';
 	background-size: 100% 100%;
     width: 25px;
     height: 25px;
 	display: inline-block;
-}
+} */
 
 .remove-button::before {
 	margin: 5px 10px 5px 5px;
@@ -540,9 +534,9 @@ tr{
 }
 
 .save-div {
-	display: flex;
+	/*display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: center;*/
 	width: 70%;
 	margin: 0 auto;
 }
@@ -564,9 +558,6 @@ tr{
 }
 
 /* Visuel de la notification OUI ou NON dsi dans le tableau Gestion des DSI */
-.yes, .no {
-	padding: 0 auto;
-}
 .yes {
 	color: green;
 }
@@ -583,15 +574,6 @@ tr{
 	background-image: url('/ressource/ban.png');
 }
 
-.yes::before, .no::before {
-	margin: 5px 10px 5px 5px;
-	content:'';
-	background-size: 100% 100%;
-    width: 25px;
-    height: 25px;
-	display: inline-block;
-}
-
 /* GESTION DES SERVICES */
 /* Icônes */
 .table-services {
@@ -600,12 +582,6 @@ tr{
 
 .actions {
 	width: 20%;
-}
-
-.modify-links {
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
 }
 
 .show-link::before {
@@ -618,15 +594,6 @@ tr{
 
 .delete-link::before {
 	background-image: url('/ressource/trash.png');
-}
-
-.show-link::before, .edit-link::before, .delete-link::before, .previous-link::before {
-	margin: 5px 10px 5px 5px;
-	content:'';
-	background-size: 100% 100%;
-    width: 25px;
-    height: 25px;
-	display: inline-block;
 }
 
 .previous-link::before {
@@ -655,9 +622,9 @@ tr{
 	position: absolute;
 	left: 120px;
 	top: 20px;
-	display: flex;
+	/*display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: center;*/
 	width: 170px;
 }
 
@@ -678,11 +645,8 @@ tr{
 	position: fixed;
 	top: 220px;
 	right: 10%;
-    display: flex;
-    justify-content: center;
-	align-items: center;
-	border-radius: 0;
 	border: 2px solid rgb(0, 63, 24);
+	border-radius: 0;
 	background: rgb(1, 165, 1);
 	font-weight: 700;
 	font-size: 1.1em;
@@ -693,14 +657,9 @@ tr{
 
 .add-item-div::before {
 	background-image: url('/ressource/+.png');
-	margin: 5px 10px 5px 5px;
-	content:'';
-	background-size: 100% 100%;
-    width: 40px;
-    height: 40px;
-	display: inline-block;
+	width: 40px;
+	height: 40px;
 }
-
 
 .add-item-div:hover {
 	cursor: pointer;
@@ -738,15 +697,16 @@ tr{
 }
 
 .applications-div {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-gap: 10px;
+	grid-gap: 0 10px;
 	padding: 0 25px;
+}
+
+.user-demand label {
+	margin-top: 15px;
 }
 
 .user-demand input[type="text"] {
 	width: 100%;
-	margin-bottom: 13px;
 }
 
 sup {
@@ -766,10 +726,8 @@ sup {
 
 /* SELECTION DU SERVICE POUR UN USER POUR FAIRE SA DEMANDE (/agent/gestion/demandes) */
 .cards-crous {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	justify-items: center;
 	grid-gap: 40px 0;
+	justify-items: center;
 	margin-top: 20px;
 }
 
@@ -802,9 +760,9 @@ sup {
 }
 
 .status-btn {
-    display: flex;
+    /*display: flex;
     justify-content: center;
-	align-items: center;
+	align-items: center;*/
 	padding: 5px;
 	border-radius: 0;
 	font-size: 0.9em;
@@ -889,13 +847,6 @@ sup {
 	background-color: rgba(248, 192, 61, 0.8);
 }
 
-/* Enregistrer le formulaire de demande */
-.save-form-demand {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
 /* BOITE DE RECHERCHE */
 .search-box {
 	top: 200px;
@@ -954,8 +905,8 @@ sup {
 }
 
 .large-card-grid {
-	display: grid;
-    grid-template-columns: repeat(3, 1fr);
+	/*display: grid;
+    grid-template-columns: repeat(3, 1fr);*/
 	grid-gap: 5px;
 	margin: 10px 0;
 }
@@ -1006,11 +957,11 @@ sup {
 .to-remain > div {
 	color: grey;
 } */
-
+/*
 .buttons-selection {
 	display: flex;
 	justify-content: space-around;
-}
+}*/
 
 .ressources-supp {
 	margin: 5px 0 30px 0;
@@ -1037,66 +988,10 @@ sup {
 }
 
 /* information sur l'agent */
-.user-access-box > .user-info-box {
+.user-info-box {
+	position: relative;
 	background-color: rgb(227, 6, 19);
 	color: white;
-	position: relative;
-	font-weight: 500;
-}
-
-.user-info-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}
-
-.user-info-header > div:first-child {
-	font-size: 1.8em;
-}
-
-.user-info-body > div {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-}
-
-.user-info-body > div > div:first-child {
-	color: black;
-}
-
-/* informations sur les droits effectifs */
-.yes-validator-box, .no-validator-box {
-	background-color: rgb(192, 192, 192);
-	border-bottom: 1px solid rgba(7, 7, 19, 0.4);
-}
-
-.no-droits-effectifs-box, .yes-droits-effectifs-box {
-	background-color: rgb(238, 238, 238);
-}
-
-.one-service-div > div:first-child, .transverses-div > p {
-	text-transform: uppercase;
-	color: rgb(227, 6, 19);
-	font-weight: 600;
-	font-size: 1.1em;
-	margin-bottom: 1em;
-}
-
-.myServiceLibelle {
-	text-transform: none;
-	font-style: italic;
-	font-weight: 400;
-	line-height: 0.7em;
-	font-size: 1em;
-}
-
-.one-service-div {
-	margin: 20px 0 30px 0;
-}
-
-.application-row {
-	display: flex;
-	justify-content: space-between;
 }
 
 /* Bouton "IMPRIMER */
@@ -1104,16 +999,8 @@ sup {
 	background-image: url('/ressource/print.png');
 }
 
-.to-print::before {
-	margin: 5px 10px 5px 5px;
-	content:'';
-	background-size: 100% 100%;
-    width: 30px;
-	height: 30px;
-	display: inline-block;
-}
-
 .to-print {
+	background-color: lightgrey;
 	font-size: 1.1em;
 	color: black;
 	text-decoration: none;
@@ -1121,7 +1008,8 @@ sup {
 }
 
 .to-print:hover {
-	color: rgb(227, 6, 19);
+	color: black;
+	background-color: rgb(196, 196, 196);
 	text-decoration: underline;
 }
 

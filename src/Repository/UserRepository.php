@@ -34,7 +34,7 @@ class UserRepository extends ServiceEntityRepository
 	}
 
 	/**
-	 * Récupère tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse maiil
+	 * Récupère tous les utilisateurs dont le compte a été validé par ordre croissant sur le nom, le prenom puis l'adresse mail
 	 * @return User[]
 	 */
 	public function findAllValidated(int $id = NULL): array

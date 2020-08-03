@@ -768,4 +768,18 @@ class User implements UserInterface
 
 		return $count === 999 ? 0 : $count;
 	}
+
+	/**
+	 * Obtenir la date de fin de la fonction DSI pour un agent
+	 * @return string|NULL
+	 */
+	public function getDateFinDSI(): ?string
+	{
+		$currentDate = new DateTime('now');
+		foreach ($this->dsis as $dsi) {
+			if ($currentDate >= $dsi->getDateDeb() && $currentDate <= $dsi->getDateFin()) {
+				return $dsi->getDateFin()->format('d/m/Y');
+			}
+		}
+	}
 }

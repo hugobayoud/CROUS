@@ -142,7 +142,7 @@ class DSIController extends AbstractController
 	 */
 	public function consultAccess(UserRepository $userRepo)
 	{
-		$users = $userRepo->findAll();
+		$users = $userRepo->findAllValidatedWithoutAdmin();
 		
 		return $this->render('dsi/consultation-droits/index.html.twig', [
 			'users' => $users

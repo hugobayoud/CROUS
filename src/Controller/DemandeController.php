@@ -42,28 +42,31 @@ class DemandeController extends AbstractController
 	 */
 	public function demandForOneService(Service $service, ApplicationRepository $appliRepo): Response
 	{
+		$now = new DateTime('now');
 		$user = $this->getUser();
+		// Onrécupère toutes les applications qui existent
 		$applications = $appliRepo->findAll();
+		// On récupère la demande en cours pour l'agent
 		$demande = $user->getDemande($service->getId());
 
+		// S'il n'existe pas encore de demande pour ce service pour ce user en base on la crée
+		if (is_null($demande)) {
+			$demande = new Demande();
+			$demande->setUser($user)
+					->setService($service)
+					->setEtat(0)
+					->setCreatedAt($now);
+		}
+
 		if (!empty($_POST)) {
-			$now = new DateTime('now');
+			
+			//On ajoute les ressources supplémentaires (formatées) à la demande
+			$demande->setTelephone(ProtoHelper::formatMyPhoneNumber($_POST['phone']))
+					->setMailDe(ProtoHelper::formatMyMails($_POST['mailTo']))
+					->setRepertoiresServeur(ProtoHelper::formatMyFolders($_POST['folders']));
+			
+			
 			$em = $this->getDoctrine()->getManager();
-
-			// S'il n'existe pas encore de demande pour ce service pour ce user en base on la crée
-			if (is_null($demande)) {
-				$demande = new Demande();
-				$demande->setUser($user);
-				$demande->setService($service);
-			}
-
-			//On ajoute les ressources supplémentaires (formatées) à la demande 
-			$demande->setTelephone(ProtoHelper::formatMyPhoneNumber($_POST['phone']));
-			$demande->setMailDe(ProtoHelper::formatMyMails($_POST['mailTo']));
-			$demande->setRepertoiresServeur(ProtoHelper::formatMyFolders($_POST['folders']));
-			$demande->setEtat(0);
-			$demande->setCreatedAt($now);
-
 			$em->persist($demande);
 			$em->flush();
 			

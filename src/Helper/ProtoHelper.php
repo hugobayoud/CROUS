@@ -38,6 +38,24 @@ class ProtoHelper
 		// Arrivé ici : length=10, nécessairement le numéro est sous la forme 0623568754
 		return $myNumber;
 	}
+	
+	/**
+	 * Formatage pour liste de mails
+	 * @return string|NULL
+	 */
+	public static function formatMyMails(string $mails): ?string
+	{
+		$parts = self::preFormatedData($mails, TRUE);
+
+		$goodParts = [];
+		foreach ($parts as $part) {
+			if (preg_match("/[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,5}$/", $part) === 1) {
+				$goodParts[] = '"' . $part . '"';
+			}
+		}
+
+		return empty($goodParts) ? NULL : implode('; ', $goodParts);
+	}
 
 	/**
 	 * Formater un string pour les noms des répertoires auxquels à accès l'agent
@@ -45,68 +63,46 @@ class ProtoHelper
 	 * @return string|NULL
 	 * @param $delimiters : delimiter a supprimer pour les remplacer par ';'
 	 */
-	public static function formatMyFolders(string $folders, array $delimiters = [',', ':', '.', '/', '|', '\\']): ?string
+	public static function formatMyFolders(string $folders): ?string
 	{
-		if (is_null($folders)) {
-			return NULL;
-		}
+		// array $delimiters = [',', ':', '.', '/', '|', '\\']
+		$parts = self::preFormatedData($folders);
 
-		// On enlève les possibles balises html
-		$myFolders = strip_tags($folders);
-
-		// On suppose que l'utilisateur a séparé les différents dossiers par ',' ';' ':' '.' '/' '|' ou '\' que l'on veut remplacer par ';'
-		$parts = $myFolders;
-		foreach ($delimiters as $delimiter) {
-			$parts = implode(';', explode($delimiter, $parts));
-		}
-
-		// On supprime les ";" et espaces doublons pour n'en garder qu'un
-		$parts = self::getRideOfDuplicates($parts);
-
-		return $parts;
-	}
-
-	/**
-	 * Formatage pour liste de mails
-	 * @return string|NULL
-	 */
-	public static function formatMyMails(string $mails): ?string
-	{
-		$mails = strtolower($mails);
-		// On le formate comme pour les répertoires mais on va s'assure que chaque élement a le motif d'une adresse mail
-		$mails = self::formatMyFolders($mails, [',', ':', '/', '|', '\\', ' ']);
-
-		if (is_null($mails)) {
-			return NULL;
-		}
-
-		// On récupère chaque élement comme élement d'un tableau
-		$parts = explode(';', $mails);
-		$goodParts = [];
-
+		$good_parts = [];
 		foreach ($parts as $part) {
-			if (preg_match("/[a-z0-9._-]+@[a-z0-9._-]+\.[a-z]{2,5}$/", $part) === 1) {
-				$goodParts[] = $part;
+			if (preg_match("/[a-z0-9._-]+$/", $part) === 1) {
+				$good_parts[] = '"' . $part . '"';
 			}
 		}
 
-		if (empty($goodParts)) {
-			return NULL;
-		}
-		
-		return implode(';', $goodParts);
+		return empty($good_parts) ? NULL : implode('; ', $good_parts);
 	}
 
 	/**
-	 * Supprimer les doublons
+	 * Pré-formater la chaine de caractères avant traitement spécifique
+	 * @param string $data 	: chaine de caractères à pré-formater
+	 * @param bool $toLower : si la chaîne doit être en minuscule ou non 
+	 * @return array
 	 */
-	public static function getRideOfDuplicates(string $myString): ?string
+	public static function preFormatedData(string $data, bool $toLower = FALSE): array
 	{
-		// Supprimer tous les espaces
-		$myString = preg_replace("/ */", "", $myString);
-		// Séparer tous les fichiers d'un "; "
-		$myString = preg_replace("/;+/", "; ", $myString);
+		// Si le champs n'est pas rempli, on renvoie null
+		if (is_null($data) || empty(trim($data))) {
+			return [];
+		}
 
-		return $myString;
+		// On enlève les possibles balises html
+		$data = strip_tags($data);
+
+		// On met tout en minuscule
+		if ($toLower) {
+			$data = strtolower($data);
+		}
+
+		// On enlève tous les espaces blancs
+		$data = trim($data);
+
+		// On récupère chaque élement comme élement d'un tableau
+		return explode('"', $data);
 	}
 }

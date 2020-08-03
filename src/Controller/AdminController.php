@@ -34,7 +34,7 @@ class AdminController extends AbstractController
 	{
 		$user = $this->getUser();
 		// On récupère tous les users
-		$users = $userRepo->findAllValidatedByNameASC($user->getId());
+		$users = $userRepo->findAllValidated($user->getId());
 
 		$forms = [];
 		foreach ($users as $user) {

@@ -2,7 +2,7 @@
 {% extends "bases/crous-base.html.twig" %}
 
 {% macro printDsiForm(dsiForm) %}
-<div class="row form-row-center row-flex">
+<div class="row form-row-center flex-space-around mb-2">
 	<div class="col-md-4" style="display: inline-flex;">de&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_deb) }}</div>
 	<div class="col-md-4" style="display: inline-flex;">&nbsp;&nbsp;à&nbsp;&nbsp;&nbsp;{{ form_widget(dsiForm.date_fin) }}</div>
 </div>
@@ -10,7 +10,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -24,19 +24,19 @@
 <table id="table" class="table">
 	<thead class="thead-crous">
 		<th></th>
-		<th >Nom</th>
-		<th >Prénom</th>
+		<th>Nom</th>
+		<th>Prénom</th>
 		<th>Email</th>
-		<th style="text-align: center;">Actuellement DSI</th>
+		<th class="center">Actuellement DSI</th>
 	</thead>
 	<tbody>
 		{% for user in users %}
-		<tr>
-			<td class="vert-middle"><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
-			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
-			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
-			<td class="vert-middle">{{ user.email }}</td>
-			<td style="text-align: center;" class="vert-middle {% if user.isDSI() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}</td>
+		<tr class="vert-middle">
+			<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
+			<td><strong>{{ user.nom }}</strong></td>
+			<td><strong>{{ user.prenom }}</strong></td>
+			<td>{{ user.email }}</td>
+			<td class="flex-center {% if user.isDSI() %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

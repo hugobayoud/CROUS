@@ -13,31 +13,23 @@ class HtmlHelper {
 	public static function userInfo(User $user): string
 	{
 		$myHTML = '<div class="user-info-box">';
-		$myHTML .= 		'<div class="user-info-header">';
-		$myHTML .= 			'<div>' . $user->getNom() . ' ' . $user->getPrenom() . '</div>';
+		$myHTML .= 		'<div class="flex-space-between">';
+		$myHTML .= 			'<h2>' . $user->getNom() . ' ' . $user->getPrenom() . '</h2>';
 		$myHTML .= 			'<div>' . $user->getEmail() . '</div>';
 		$myHTML .= 		'</div>';
-		$myHTML .= 		'<div class="user-info-body">';
-		$myHTML .= 			'<div>';
-		$myHTML .= 				'<div>Contrat terminé le : </div><div class="user-info-services">&nbsp' . DateHelper::formatMyDate($user->getDateFinValid()) . '</div>';
-		$myHTML .= 			'</div>';
+		$myHTML .= 		'<div>';
+		$myHTML .= 			'<div>Contrat terminé le : <strong>' . DateHelper::formatMyDate($user->getDateFinValid()) . '</strong></div>';
 
 
 		$listServices = self::listServices($user);
-		$myHTML .= 			'<div>';
 		if ($listServices === '') {
 			$myHTML .= 			'<div>N\'est membre d\'aucun service</div>';
 		} else {
-			$myHTML .= 			'<div>Membre des services : </div><div class="user-info-services">&nbsp' . $listServices . '</div>';
+			$myHTML .= 			'<div>Membre des services : ' . $listServices . '</div>';
 		}
-		$myHTML .= 			'</div>';
 
-
-		$myHTML .= '</div>';
-		$myHTML .= 			'<div>';
 		$myHTML .= self::dsi($user);
-		$myHTML .= 			'</div>';
-		return $myHTML . '</div>';
+		return $myHTML . '</div></div>';
 	}
 
 	/**
@@ -47,14 +39,12 @@ class HtmlHelper {
 	public static function dsi(User $user): string
 	{
 		if (!$user->isDSI()) {
-			$myHTML = '	<div class="no-dsi-box">';
-			$myHTML .= '<div><em>Ne possède pas la fonction DSI</em></div>';
+			$myHTML = '	<div>Ne possède pas la fonction DSI</div>';
 		} else {
-			$myHTML = '<div class="yes-dsi-box">';
-			$myHTML .= '<em>Occupe la fonction DSI (jusqu\'au <strong>' . $user->getDateEndDSI() .'</strong>)</em>';
+			$myHTML = '<div>Occupe la fonction DSI (jusqu\'au <strong> ' . $user->getDateFinDSI() . '</strong>)</div>';
 		}
 
-		return $myHTML . '</div>';
+		return $myHTML;
 	}
 
 	/**
@@ -71,17 +61,16 @@ class HtmlHelper {
 			if ($currentDate >= $valideur->getDateDeb() && $currentDate <= $valideur->getDateFin()) {
 				$service = $valideur->getService();
 
-				$sv[] = '<strong>' . $service->getCode() . ' : ' . $service->getLibelleCourt() . '</strong> (jusqu\'au ' . DateHelper::formatMyDate($valideur->getDateFin()) . ')';
+				$sv[] = '<div class="flex-space-between"><div><strong>' . $service->getCode() . '</strong> - ' . $service->getLibelleCourt() . '</div><div>du ' . DateHelper::formatMyDate($valideur->getDateDeb()) . ' au <strong>' . DateHelper::formatMyDate($valideur->getDateFin()) . '</strong></div></div>';
 			}
 		}
 
+		$myHTML = '<div style="background-color: rgb(192, 192, 192, 0.7);">';
 		if (!empty($sv)) {
-			$myHTML = '<div class="yes-validator-box">';
-			$myHTML .= '<p>Actuellement valideur :</p>';
-			$myHTML .= implode("<br>", $sv);
+			$myHTML .= '<h5>Actuellement valideur :</h5>';
+			$myHTML .= implode("", $sv);
 		} else {
-			$myHTML = '<div class="no-validator-box">';
-			$myHTML .= 'Valideur d\'aucun service actuellement';
+			$myHTML .= '<h5>Valideur d\'aucun service actuellement</h5>';
 		}
 
 		return $myHTML . '</div>';
@@ -102,27 +91,28 @@ class HtmlHelper {
 			// Service associé à ce couple
 			$service = $couple->getService();
 			// Toutes les applications non transverses d'un service
-			$applications = [];
+			$profils = [];
 
 			foreach ($couple->getApplications() as $droitEffectif) {
 				$application = $droitEffectif->getApplication();
 				$libelle = '<strong>' . $application->getCode() . '</strong> - ' . $application->getLibelleLong();
 
 				if ($application->isTransverse()) {
-					$transverses[] = $libelle;
+					$transverses[] = '<div class="flex-space-between"><div>' . $libelle . '</div><div>date limite le <strong>' . DateHelper::formatMyDate($droitEffectif->getDateFin()) . '</strong></div></div>';
 				} else {
-					$applications[] = '<div class="application-row"><div>' . $libelle . '</div><div>jusqu\'au ' . DateHelper::formatMyDate($droitEffectif->getDateFin()) . '</div></div>';
+					$profils[] = '<div class="flex-space-between"><div>' . $libelle . '</div><div>jusqu\'au ' . DateHelper::formatMyDate($droitEffectif->getDateFin()) . '</div></div>';
 				}
 			}
 
-			sort($applications);
+			// On trie les applications PROFIL par ordre alphanumérique asc
+			sort($profils);
 
 			// Si il y a des applications PROFIL dans le service
-			if (!empty($applications)) {
-				$libelle = '<div><div><strong>' . $service->getCode() . '</strong></div><div class="myServiceLibelle">' . $service->getLibelleLong() . '</div></div>';
-				$html = '<div class="one-service-div">';
-				$html .= $libelle;
-				$html .= implode(" ", $applications);
+			if (!empty($profils)) {
+				$html = '<div>';
+				$html .= '<div class="crous-color"><strong>' . $service->getCode() . '</strong></div>';
+				$html .= '<div class="crous-color">' . $service->getLibelleLong() . '</div>';
+				$html .= implode("", $profils);
 				$html .= '</div>';
 
 				$html_services[] = $html;
@@ -132,12 +122,12 @@ class HtmlHelper {
 		$myHTML = self::servicesWhereValidator($user);
 
 		if(empty($transverses) && empty($html_services)) {
-			$myHTML .= '<div class="no-droits-effectifs-box">';
-			$myHTML .= '<div>Ne possède aucun droit pour aucune application</div>';
+			$myHTML .= '<div>';
+			$myHTML .= '<h5>Ne possède aucun droit pour aucune application</h5>';
 		} else {
 			$myHTML .= '<div class="yes-droits-effectifs-box">';
 			if (!empty($transverses)) {
-				$myHTML .= '<div class="transverses-div"><p>Applications transverses :</p><div>' . implode("&nbsp; / &nbsp;", array_unique($transverses)) . '</div></div>';
+				$myHTML .= '<div><h5 class="crous-color">Applications transverses :</h5><div>' . implode("", array_unique($transverses)) . '</div></div>';
 
 				if (!empty($html_services)) {
 					$myHTML .= '<hr>';
@@ -145,8 +135,8 @@ class HtmlHelper {
 			}
 
 			if (!empty($html_services)) {
-				$myHTML .= '<div class="profils-div">';
-				$myHTML .= implode("<hr>", $html_services);
+				$myHTML .= '<div>';
+				$myHTML .= implode("", $html_services);
 				$myHTML .= '</div>';
 			}
 		}
@@ -162,21 +152,13 @@ class HtmlHelper {
 	{
 		$servicesLibelle = [];
 		foreach ($user->getServices() as $service) {
-			$servicesLibelle[] = $service->getLibelleCourt();
+			$servicesLibelle[] = '<strong>' . $service->getCode() . '</strong> - ' . $service->getLibelleCourt();
 		}
 
 		return empty($servicesLibelle) ? NULL : implode(" / ", $servicesLibelle);
 	}
 
-
-
-
-
-
-	/* POUR PDF */
-
-
-
+	/* ----------------------------------------POUR PDF---------------------------------------- */
 
 	/**
 	 * Retourne les informations d'un agent en HTML
@@ -286,7 +268,6 @@ class HtmlHelper {
 		}
 
 		$myHTML = '<div class="info-body">';
-
 		$myHTML .= self::servicesWhereValidator_toPDF($user);
 
 		if(empty($transverses) && empty($html_services)) {

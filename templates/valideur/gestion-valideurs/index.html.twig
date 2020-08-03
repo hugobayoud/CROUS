@@ -2,14 +2,12 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
 			<h1>Gestion des valideurs</h1> 
-			<p>
-				<em>Choisir un service pour lequel vous avez les droits de valideur. Si vous n'avez pas les droits, vous pouvez toujours consulter ce service et connaître qui possède actuellement les droits de valideur</em>
-			</p>
+			<em>Choisir un service pour lequel vous avez les droits de valideur. Si vous n'avez pas les droits, vous pouvez toujours consulter ce service et connaître qui possède actuellement les droits de valideur</em>
 		</div>
 	</nav>
 {% endblock %}
@@ -20,7 +18,7 @@
 
 {% include "bases/_display-flashes.html.twig" %}
 
-<div class="cards-crous">
+<div class="grid-3 cards-crous">
 	{% for service in services %}
 	<div class="card">
 		<div class="card-body">
@@ -30,11 +28,11 @@
 			<p class="card-libelle-long">{{ service.libelle_long }}</p>
 			
 			{% if app.user.isValidator(service.id) or app.user.isDSI() or app.user.isAdmin() %}
-			<div class="status-btn modify" onclick="location.href='{{ path('valideur.gestion-valideurs.service', {'id': service.id}) }}';">
+			<div class="status-btn flex-center modify" onclick="location.href='{{ path('valideur.gestion-valideurs.service', {'id': service.id}) }}';">
 				Gérer les valideurs
 			</div>
 			{% else %}
-			<div class="status-btn show" onclick="location.href='{{ path('agent.connaitre-valideurs', {'id': service.id}) }}';">
+			<div class="status-btn flex-center show" onclick="location.href='{{ path('agent.connaitre-valideurs', {'id': service.id}) }}';">
 				Connaître les valideurs
 			</div>
 			{% endif %}
