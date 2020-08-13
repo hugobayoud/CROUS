@@ -2,7 +2,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -25,13 +25,11 @@
 	</thead>
 	<tbody>
 		{% for user in users %}
-		<tr>
-			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
-			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
-			<td class="vert-middle">{{ user.email }}</td>
-			<td style="text-align: center;" class="vert-middle 
-				{% if user.isDSI() %}yes-dsi"><em>oui</em>{% else %}no-dsi"><em>non</em>{% endif %}
-			</td>
+		<tr class="vert-middle">
+			<td><strong>{{ user.nom }}</strong></td>
+			<td><strong>{{ user.prenom }}</strong></td>
+			<td>{{ user.email }}</td>
+			<td class="flex-center pseudo-elt {% if user.isDSI() %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

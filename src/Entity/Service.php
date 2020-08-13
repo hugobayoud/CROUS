@@ -137,9 +137,9 @@ class Service
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public function getUsers(User $notWantedUser = NULL): Collection
     {
-        return $this->users;
+		return $this->users;
 	}
 
     public function addUser(User $user): self
@@ -160,6 +160,30 @@ class Service
         }
 
         return $this;
+	}
+
+	/**
+	 * Retourne tous les users du service dont le compte a été validé. Si un user est passé en paramètre, il est supprimé de ce tableau car non voulu
+     * @return User[]
+     */
+    public function getValidatedUsers(User $notWantedUser = NULL)
+    {
+		$users = [];
+		// Si user passé en paramètre, on enlève ce user de la liste
+		if (!is_null($notWantedUser)) {
+			if ($this->users->contains($notWantedUser)) {
+				$this->users->removeElement($notWantedUser);
+			}
+		}
+
+		// On ne garde que les utilisateurs dont le compte à été validé
+		foreach ($this->users as $user) {
+			if (is_null($user->getActivationToken())) {
+				$users[] = $user;
+			}
+		}
+
+        return $users;
 	}
 	
 	/* AUTRES FONCTIONS */

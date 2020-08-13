@@ -31,12 +31,12 @@
 			<td>{{ service.libelleCourt }}</td>
 			<td class="actions">
 				<div class="flex-space-around">
-					<a class="show-link" href="{{ path('admin.gestion-services.voir-service', {'id': service.id}) }}"></a>
-					<a class="edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
+					<a class="pseudo-elt show-link" href="{{ path('admin.gestion-services.voir-service', {'id': service.id}) }}"></a>
+					<a class="pseudo-elt edit-link" href="{{ path('admin.gestion-services.editer-service', {'id': service.id}) }}"></a>
 					<form method="post" action="{{ path('admin.gestion-services.supprimer-service', {'id': service.id}) }}" onsubmit="return confirm('Confirmation : Êtes-vous sûr de supprimer ce service ?')">
 						<input type="hidden" name="_method" value="DELETE">
 						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
-						<button class="delete-link"></button>
+						<button class="pseudo-elt delete-link"></button>
 					</form>
 				</div>
 			</td>

@@ -11,7 +11,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class=" pseudo-elt flex-center previous-link">
 			<a href="{{ path('valideur.validation-demandes.home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -37,9 +37,9 @@
 			{% for demande in demandes %}
 			<tr class="vert-middle">
 				{% if demande.etat == 0 %}
-				<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}">A valider</a></td>
+				<td><a class="flip pencil pseudo-elt" href="#user_detail_{{ loop.index0 }}">A valider</a></td>
 				{% else %}
-				<td><a class="flip waiting" href="#user_detail_{{ loop.index0 }}">En cours de validation</a></td>
+				<td><a class="flip waiting pseudo-elt" href="#user_detail_{{ loop.index0 }}">En cours de validation</a></td>
 				{% endif %}
 				<td><strong>{{ demande.user.nom }}</strong></td>
 				<td><strong>{{ demande.user.prenom }}</strong></td>

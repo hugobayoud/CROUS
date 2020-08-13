@@ -47,7 +47,7 @@
 				<td><strong>{{ user.nom }}</strong></td>
 				<td><strong>{{ user.prenom }}</strong></td>
 				<td>{{ user.email }}</td>
-				<td class="flex-center {% if user.isValidator(service.id) %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
+				<td class="flex-center pseudo-elt {% if user.isValidator(service.id) %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 			</tr>
 		{% endfor %}
 		{% endif %}

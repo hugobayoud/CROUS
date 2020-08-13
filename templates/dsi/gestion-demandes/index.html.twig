@@ -3,7 +3,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -30,7 +30,7 @@
 		<div class="large-card-body">
 			<p>Applications pour le service <strong>{{ demande.service.code }}</strong> - {{ demande.service.getLibelleCourt() }}</p>
 			<p class="subtitle-table">Droits effectifs avec modification</p>
-			<div class="large-card-grid">
+			<div class="large-card-grid grid-3">
 				<div>
 					<p class="has-to-be-postponed">Date à modifier</p>
 					{% for droit_effectif in couple.applications %}

@@ -71,7 +71,7 @@ class ValideurController extends AbstractController
 
 		if ($currentUser->isAdmin() || $currentUser->isDSI() || $currentUser->isValidator($service->getId())) {
 			if ($currentUser->isDSI()) {
-				// On récupère les agents de ce service (dont leur compte ont été validé)
+				// On récupère les agents de ce service
 				$users = $service->getValidatedUsers();
 			} else {
 				// Si il n'est pas DSI, on enleve l'user du tableau

@@ -2,7 +2,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -22,8 +22,8 @@
 			<div class="card-body">
 				<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 				<p class="card-libelle-long">{{ service.libelle_long }}</p>
-				{% if service.getDemandes is empty %}
-				<div class="status-btn modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
+				{% if service.getDemandes is not empty %}
+				<div class="status-btn flex-center modify" onclick="location.href='{{ path('valideur.validation-demandes.service', {'id': service.id}) }}';">
 					Traiter les demandes
 				</div>
 				{% endif %}

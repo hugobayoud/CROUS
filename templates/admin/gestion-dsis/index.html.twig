@@ -32,11 +32,11 @@
 	<tbody>
 		{% for user in users %}
 		<tr class="vert-middle">
-			<td><a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
+			<td><a class="flip pseudo-elt pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
 			<td><strong>{{ user.nom }}</strong></td>
 			<td><strong>{{ user.prenom }}</strong></td>
 			<td>{{ user.email }}</td>
-			<td class="flex-center {% if user.isDSI() %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
+			<td class="flex-center pseudo-elt {% if user.isDSI() %}yes"><em>oui</em>{% else %}no"><em>non</em>{% endif %}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

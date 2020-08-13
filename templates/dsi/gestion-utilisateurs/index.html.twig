@@ -2,7 +2,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -26,14 +26,12 @@
 	</thead>
 	<tbody class="tbody-crous">
 		{% for user in users %}
-		<tr>
-			<td class="vert-middle">
-				<a class="flip pencil" href="#user_detail_{{ loop.index0 }}"></a>
-			</td>
-			<td class="vert-middle"><strong>{{ user.nom }}</strong></td>
-			<td class="vert-middle"><strong>{{ user.prenom }}</strong></td>
-			<td class="vert-middle">{{ user.email }}</td>
-			<td class="text-center vert-middle">{{ user.formatDate(user.getDateFinValid()) }}</td>
+		<tr class="vert-middle">
+			<td><a class="flip pseudo-elt pencil" href="#user_detail_{{ loop.index0 }}"></a></td>
+			<td><strong>{{ user.nom }}</strong></td>
+			<td><strong>{{ user.prenom }}</strong></td>
+			<td>{{ user.email }}</td>
+			<td>{{ user.formatDate(user.getDateFinValid()) }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -86,7 +84,7 @@
 				{{ form_widget(userForm.services) }}
 			</div>
 		</div>
-		<div class="buttons-selection">
+		<div class="flex-space-around">
 			<div id="save-div">
 				{{ form_widget(userForm.enregistrer, {'attr': {'class': 'btn btn-success'}}) }}
 			</div>
@@ -96,7 +94,7 @@
 				<button class="btn btn-danger">Supprimer</button>
 			</form>
 		</div>
-		<div class="yellow-warning warning-text">Attention, si vous décidez de supprimer un agent, tous ses enregistrements seront également supprimés (droits effectifs et à venir, droit DSI, responsable de service, ...)</div>
+		<div class="pseudo-elt flex-center yellow-warning warning-text">Attention, si vous décidez de supprimer un agent, tous ses enregistrements seront également supprimés (droits effectifs et à venir, droit DSI, responsable de service, ...)</div>
 
 	</div>
 	{% endfor %}

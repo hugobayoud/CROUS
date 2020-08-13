@@ -2,7 +2,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -24,7 +24,7 @@
 		<div class="card-body">
 			<h5 class="text-center card-title"><span>{{ service.code }}</span> : {{ service.libelle_court }}</h5>
 			<p class="card-libelle-long">{{ service.libelle_long }}</p>
-			<div class="status-btn create" onclick="location.href='{{ path('valideur.revue-droits.service', {'id': service.id}) }}';">
+			<div class="status-btn flex-center create" onclick="location.href='{{ path('valideur.revue-droits.service', {'id': service.id}) }}';">
 				Revue des droits
 			</div>
 		</div>

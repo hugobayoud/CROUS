@@ -651,7 +651,7 @@ tr{
 	font-weight: 700;
 	font-size: 1.1em;
 	color: white;
-	padding-right: 5px;
+	padding: 5px;
 	transition: 0.3s;
 }
 
@@ -760,9 +760,6 @@ sup {
 }
 
 .status-btn {
-    /*display: flex;
-    justify-content: center;
-	align-items: center;*/
 	padding: 5px;
 	border-radius: 0;
 	font-size: 0.9em;
@@ -1091,7 +1088,7 @@ sup {
 }
 
 /* états des droits lors de modification */
-.has-to-be-deleted::before, .has-to-be-postponed::before, .no-change::before, .yellow-warning::before {
+/* .has-to-be-deleted::before, .has-to-be-postponed::before, .no-change::before, .yellow-warning::before {
 	margin-right: 5px;
 	content:'';
 	background-size: 100% 100%;
@@ -1104,7 +1101,7 @@ sup {
 	display: flex;
 	align-items: center;
 	margin: 5px 0;
-}
+} */
 
 .has-to-be-deleted {
 	color: rgb(227, 6, 19);

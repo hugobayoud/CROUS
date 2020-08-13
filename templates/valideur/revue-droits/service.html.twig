@@ -3,7 +3,7 @@
 
 {% block subnavbar %}
 	<nav class="subnavbar-crous">
-		<div class="previous-link">
+		<div class="flex-center pseudo-elt previous-link">
 			<a href="{{ path('valideur.revue-droits.home') }}">Page précédente</a>
 		</div>
 		<div class="subnavbar-title">
@@ -29,11 +29,11 @@
 			{% for user in users %}
 			{% set couple = user.getCouple(service.id) %}
 			<tr class="vert-middle">
-				<td><a class="flip pencil{% if couple is not null and couple.hasRightsFinishedSoon() %} yellow-warning{% endif %}" href="#user_detail_{{ loop.index0 }}">Modifier</a></td>
+				<td><a class="flip pseudo-elt pencil{% if couple is not null and couple.hasRightsFinishedSoon() %} yellow-warning{% endif %}" href="#user_detail_{{ loop.index0 }}">Modifier</a></td>
 				<td><strong>{{ user.nom }}</strong></td>
 				<td><strong>{{ user.prenom }}</strong></td>
 				<td>{{ user.email }}</td>
-				<td><a class="trash red-link" href="">Supprimer du service</a></td>
+				<td><a class="trash pseudo-elt red-link" href="">Supprimer du service</a></td>
 			</tr>
 			{% endfor %}
 		{% else %}
@@ -67,11 +67,11 @@
 				{% for droit_effectif in couple.applications %}
 					<div class="row droit-effectif-row" id="my_row_{{ user.id }}_{{ loop.index0 }}">
 						<div class="col-md-1">
-							<input class="delete-link trash-check" type="checkbox" name="{{ droit_effectif.id }}" value="s" id="{{ user.id }}_{{ loop.index0 }}"{% if droit_effectif.hasToBeDeleted() %} checked{% endif %}
+							<input class="delete-link pseudo-elt trash-check" type="checkbox" name="{{ droit_effectif.id }}" value="s" id="{{ user.id }}_{{ loop.index0 }}"{% if droit_effectif.hasToBeDeleted() %} checked{% endif %}
 							>
 						</div>
 						<div class="col-md-7">
-							<strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }} <span style="float: right;" class="{% if droit_effectif.finishedSoon() %} yellow-warning{% endif %}">jusqu'au {{ user.formatDate(droit_effectif.dateFin) }}</span>
+							<strong>{{ droit_effectif.application.code }}</strong> - {{ droit_effectif.application.libelle }} <span style="float: right;" class="pseudo-elt flex-center{% if droit_effectif.finishedSoon() %} yellow-warning{% endif %}">jusqu'au {{ user.formatDate(droit_effectif.dateFin) }}</span>
 						</div>
 						<div class="col-md-2">
 							<input type="button" class="modify-date" id="modify_date_{{ user.id }}_{{ loop.index0 }}" name="{{droit_effectif.id}}" value="Modifier date">
